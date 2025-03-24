@@ -69,7 +69,7 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 			if (WasShortClick)
 			{
 				Debug.Log($"OnPointerUp-click {this.transform.name}");
-				Singleton.clickAndDrag.AddClickPoint(this, eventData);
+				Singleton.clickAndDrag.AddClickPoint(this, eventData, true);
 			}
 			else
 			{
@@ -89,7 +89,7 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 					if (asLetterTile)
 					{
 						Debug.Log("OnPointerUp-drag: " + hit.transform.name); // ensure you picked right object
-						Singleton.clickAndDrag.AddClickPoint(asLetterTile, eventData);
+						Singleton.clickAndDrag.AddClickPoint(asLetterTile, eventData, true); //only the endpoint
 						return;
 					}
 				}

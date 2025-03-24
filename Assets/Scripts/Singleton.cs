@@ -58,38 +58,46 @@ public class Singleton
 			set => lastClickTime = Time.fixedTime;
 		}
 		private bool clickLocked;
+		/// <summary>
+		/// track letter tiles selected by clicking/draging
+		/// </summary>
+		/// <param name="letterTileTouched">Tile to register as Start/End</param>
+		/// <param name="endpointOnly">Set only the End tile</param>
 		public void AddClickPoint(LetterTileScript letterTileTouched, PointerEventData eventData, bool endpointOnly = false)
 		{
 			if (clickLocked) return;
 
-			if (!tileStart || WasShortClick)
+			if (tileStart)
 			{
-				tileStart = letterTileTouched;
-				WasShortClick = true;
-				tileEnd = null;
+				if (!WasShortClick)
+				{
+					tileEnd = letterTileTouched;
+					clickLocked = true;
+					FinishDrawingLine?.Invoke(this, tileEnd);
+					Thread thread = new Thread(new ThreadStart(_FinishLineDelayed));
+					thread.Start();
+				}
+			}
+			else if (endpointOnly == false && (!tileStart || WasShortClick)) 
+            {
+                tileStart = letterTileTouched;
+                WasShortClick = true;
+                tileEnd = null;
 
-				//Thread thread = new Thread(new ThreadStart(_StartDrawingLineAsync));
-				//thread.Start();
-				StartDrawingLine?.Invoke(this, tileStart);
-			}
-			else if (!WasShortClick)
-			{
-				tileEnd = letterTileTouched;
-				clickLocked = true;
-				FinishDrawingLine?.Invoke(this, tileEnd);
-				Thread thread = new Thread(new ThreadStart(_FinishLineDelayed));
-				thread.Start();
-				//tileStart = null;
-			}
+                //Thread thread = new Thread(new ThreadStart(_StartDrawingLineAsync));
+                //thread.Start();
+                StartDrawingLine?.Invoke(this, tileStart);
+            }
+
 		}
 		public void CancelClickPoints(LetterTileScript requester)
 		{
-            CancelDrawingLine?.Invoke(this, requester);
+			CancelDrawingLine?.Invoke(this, requester);
 
-            Singleton.clickAndDrag.tileStart = null;
-            Singleton.clickAndDrag.clickLocked = false;
+			Singleton.clickAndDrag.tileStart = null;
+			Singleton.clickAndDrag.clickLocked = false;
 
-        }
+		}
 
 	}
 	public static ClickAndDrag clickAndDrag;
