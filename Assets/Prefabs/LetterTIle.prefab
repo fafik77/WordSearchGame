@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8963510186714374066}
   - component: {fileID: 7998528175637596787}
   - component: {fileID: -7956567135225860003}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LetterTIle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,9 +104,9 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -123,6 +123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Letter: 66
+  TileLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &3468847955642253935
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +137,7 @@ GameObject:
   - component: {fileID: 6007468676014067300}
   - component: {fileID: 4539923038424268934}
   - component: {fileID: 691439246488562413}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +216,7 @@ GameObject:
   - component: {fileID: 5095521822449928792}
   - component: {fileID: 687039345762709094}
   - component: {fileID: 7444675058930760189}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Letter
   m_TagString: Untagged
   m_Icon: {fileID: 0}

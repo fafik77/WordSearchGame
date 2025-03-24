@@ -1,11 +1,14 @@
 using Mono.Cecil;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
 	[SerializeField] public char Letter;// { get { return GetLetter(); }  set { SetLetter(value); } }
+	[SerializeField] public LayerMask TileLayerMask;
+
 	private LetterDisplayScript letterScript;
 
 	private float lastClickTime;
@@ -54,7 +57,7 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 		{
 			WasShortClick = true; //set to check for short click
 
-			Singleton.Instance.clickAndDrag.AddClickPoint(this, eventData);
+			Singleton.clickAndDrag.AddClickPoint(this, eventData);
 			Debug.Log($"OnPointerDown {this.transform.name}");
 		}
 	}
@@ -66,12 +69,33 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 			if (WasShortClick)
 			{
 				Debug.Log($"OnPointerUp-click {this.transform.name}");
+				Singleton.clickAndDrag.AddClickPoint(this, eventData);
 			}
 			else
 			{
-				Debug.Log($"OnPointerUp-drag {this.transform.name}");
+				//Vector3 screenPos;
+				//Vector3 posCam;
+
+				//screenPos = Input.mousePosition;
+				//screenPos.z = Camera.main.nearClipPlane + 1;
+				//posCam = Camera.main.ScreenToWorldPoint(screenPos);
+				//Debug.DrawRay(transform.position, posCam - transform.position, Color.blue);
+
+				RaycastHit hit = new RaycastHit();
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(ray, out hit, 100, TileLayerMask))
+				{
+					var asLetterTile = hit.transform.GetComponent<LetterTileScript>();
+					if (asLetterTile)
+					{
+						Debug.Log("OnPointerUp-drag: " + hit.transform.name); // ensure you picked right object
+						Singleton.clickAndDrag.AddClickPoint(asLetterTile, eventData);
+						return;
+					}
+				}
+				Singleton.clickAndDrag.CancelClickPoints(this);
 			}
-			Singleton.Instance.clickAndDrag.AddClickPoint(this, eventData);
+			//Singleton.clickAndDrag.AddClickPoint(this, eventData);
 		}
 	}
 }
