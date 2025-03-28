@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
-	[SerializeField] public char Letter;// { get { return GetLetter(); }  set { SetLetter(value); } }
+	//[SerializeField] public char Letter;// { get { return GetLetter(); }  set { SetLetter(value); } }
 	[SerializeField] public LayerMask TileLayerMask;
 
 	private LetterDisplayScript letterScript;
@@ -20,8 +20,8 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 		letterScript = this.gameObject.transform.GetComponentInChildren<LetterDisplayScript>();
 		//var LetterObj = this.gameObject.transform.GetComponentInChildren<UnityEngine.UI.Text>();
 		//LetterObj.text = Letter.ToString();
-		if (Letter != 0x00 && Letter != ' ')
-			SetLetter(Letter);
+		//if (Letter != 0x00 && Letter != ' ')
+		//	SetLetter(Letter);
 		lastClickTime = 0;
 	}
 
@@ -57,8 +57,8 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 		{
 			WasShortClick = true; //set to check for short click
 
-			Singleton.clickAndDrag.AddClickPoint(this, eventData);
-			Debug.Log($"OnPointerDown {this.transform.name}");
+            Debug.Log($"OnPointerDown {this.transform.name}");
+            Singleton.clickAndDrag.AddClickPoint(this, eventData);
 		}
 	}
 
@@ -95,7 +95,6 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 				}
 				Singleton.clickAndDrag.CancelClickPoints(this);
 			}
-			//Singleton.clickAndDrag.AddClickPoint(this, eventData);
 		}
 	}
 }

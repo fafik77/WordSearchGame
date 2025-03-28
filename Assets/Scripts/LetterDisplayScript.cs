@@ -4,26 +4,33 @@ using UnityEngine.EventSystems;
 
 public class LetterDisplayScript : MonoBehaviour
 {
-	private TextMeshProUGUI _textPro;
-	private TextMeshProUGUI textPro {
-		get {  return _textPro? _textPro : _textPro= GettextPro(); }
+	private TextMeshPro _textPro;
+	private TextMeshPro textPro {
+		get { return _textPro ? _textPro : _textPro = GettextPro(); }
 		set { if(!textPro) _textPro = GettextPro(); _textPro = value; }
 	}
-	private TextMeshProUGUI GettextPro() { return this.gameObject.GetComponent<TextMeshProUGUI>(); }
+	private TextMeshPro GettextPro() => this.gameObject.GetComponent<TextMeshPro>();
 
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
-	void Awake()
+	private char letter;
+	public char Letter
+    {
+        get => letter;
+        set
+        {
+            letter = value;
+            textPro.text = value.ToString();
+        }
+    }
+
+    void Awake()
 	{
 		textPro = GettextPro();
+		letter = textPro.text[0];
 	}
 
-	public void SetLetter(char Letter)
-	{
-		textPro.text= Letter.ToString();
-	}
-	public char GetLetter()
-	{
-		return textPro.text[0];
-	}
+	public void SetLetter(char Letter) => this.Letter = Letter;
+	
+
+	public char GetLetter() => Letter;
 
 }

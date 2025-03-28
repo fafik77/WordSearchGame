@@ -1,3 +1,4 @@
+using BoardContent;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,25 +8,20 @@ using UnityEngine.EventSystems;
 public class Singleton
 {
 	public static Singleton Instance { get; private set; }
-	public struct ClickAndDrag
+	public struct ClickAndDragStruct
 	{
 		private float lastClickTime;
 		public event EventHandler<LetterTileScript> StartDrawingLine;
 		public static float ClickFromDragRegisterSeconds = 0.2f;
 		public static float ReClickRegisterDelaySeconds = 0.3f;
-
 		/**
-			the event args are more of a hint and not the actuall position
+			the event args should be the actual positions
 		*/
-		public event EventHandler<LetterTileScript> FinishDrawingLine;
-		//for when there was an
+		public event EventHandler<LetterTileScript[]> FinishDrawingLine;
+		//for when there was a cancel
 		public event EventHandler<LetterTileScript> CancelDrawingLine;
-
-		//public Vector3 posStart;
-		//public Vector3 posEnd;
 		private LetterTileScript tileStart;
 		public LetterTileScript tileEnd;
-
 		public LetterTileScript TileStart
 		{
 			get => tileStart;
@@ -35,6 +31,7 @@ public class Singleton
 					tileStart = value;
 			}
 		}
+
 
 		static private async void _FinishLineDelayed()
 		{
@@ -62,8 +59,8 @@ public class Singleton
 		/// track letter tiles selected by clicking/draging
 		/// </summary>
 		/// <param name="letterTileTouched">Tile to register as Start/End</param>
-		/// <param name="endpointOnly">Set only the End tile</param>
-		public void AddClickPoint(LetterTileScript letterTileTouched, PointerEventData eventData, bool endpointOnly = false)
+		/// <param name="finishPointOnly">Set only the End tile</param>
+		public void AddClickPoint(LetterTileScript letterTileTouched, PointerEventData eventData, bool finishPointOnly = false)
 		{
 			if (clickLocked) return;
 
@@ -73,21 +70,21 @@ public class Singleton
 				{
 					tileEnd = letterTileTouched;
 					clickLocked = true;
-					FinishDrawingLine?.Invoke(this, tileEnd);
+					FinishDrawingLine?.Invoke(this, new LetterTileScript[] { tileStart, tileEnd });
 					Thread thread = new Thread(new ThreadStart(_FinishLineDelayed));
 					thread.Start();
 				}
 			}
-			else if (endpointOnly == false && (!tileStart || WasShortClick)) 
-            {
-                tileStart = letterTileTouched;
-                WasShortClick = true;
-                tileEnd = null;
+			else if (finishPointOnly == false && (!tileStart || WasShortClick)) 
+			{
+				tileStart = letterTileTouched;
+				WasShortClick = true;
+				tileEnd = null;
 
-                //Thread thread = new Thread(new ThreadStart(_StartDrawingLineAsync));
-                //thread.Start();
-                StartDrawingLine?.Invoke(this, tileStart);
-            }
+				//Thread thread = new Thread(new ThreadStart(_StartDrawingLineAsync));
+				//thread.Start();
+				StartDrawingLine?.Invoke(this, tileStart);
+			}
 
 		}
 		public void CancelClickPoints(LetterTileScript requester)
@@ -100,17 +97,10 @@ public class Singleton
 		}
 
 	}
-	public static ClickAndDrag clickAndDrag;
+	public static ClickAndDragStruct clickAndDrag;
 
-	//private Singleton()
-	//{
-	//	if (Instance==null)
-	//	{
-	//		Instance = this;
-	//		DontDestroyOnLoad(Instance);
-	//	}
-	//	else if (Instance && Instance != this)
-	//		Destroy(this);
-	//}
+
+	
+	public static WordList wordList;
 
 }

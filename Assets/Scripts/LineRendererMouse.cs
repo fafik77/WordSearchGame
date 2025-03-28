@@ -23,12 +23,19 @@ public class LineRendererMouse : MonoBehaviour
 		Singleton.clickAndDrag.CancelDrawingLine += ClickAndDrag_CancelDrawingLine;
 	}
 
-	private void ClickAndDrag_CancelDrawingLine(object sender, LetterTileScript e)
-    {
-        lineRenderer.enabled = false;
-    }
+	private void OnDisable()
+	{
+		Singleton.clickAndDrag.StartDrawingLine -= ClickAndDrag_StartDrawingLine;
+		Singleton.clickAndDrag.FinishDrawingLine -= ClickAndDrag_FinishDrawingLine;
+		Singleton.clickAndDrag.CancelDrawingLine -= ClickAndDrag_CancelDrawingLine;
+	}
 
-	private void ClickAndDrag_FinishDrawingLine(object sender, LetterTileScript e)
+	private void ClickAndDrag_CancelDrawingLine(object sender, LetterTileScript e)
+	{
+		lineRenderer.enabled = false;
+	}
+
+	private void ClickAndDrag_FinishDrawingLine(object sender, LetterTileScript[] e)
 	{
 		lineRenderer.enabled = false;
 	}
@@ -47,7 +54,7 @@ public class LineRendererMouse : MonoBehaviour
 		{
 			if (Input.GetMouseButtonDown(1))
 			{
-                Singleton.clickAndDrag.CancelClickPoints(null);
+				Singleton.clickAndDrag.CancelClickPoints(null);
 				return;
 			}
 

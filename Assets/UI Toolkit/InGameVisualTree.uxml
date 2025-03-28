@@ -1,0 +1,15 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <engine:VisualElement class="align_right text_white" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+        <engine:GroupBox name="Time" class="text_white" style="display: flex; visibility: visible; overflow: visible; position: relative; left: auto; right: auto; align-self: flex-end;">
+            <engine:Label text="Time" name="Time" class="header" />
+            <engine:Label text="1:20:10" name="TimeCounter" />
+        </engine:GroupBox>
+        <engine:VisualElement name="Lists" style="flex-grow: 1;">
+            <engine:GroupBox name="WordsLeft">
+                <engine:Label text="Words Left" class="header" style="align-self: flex-end;" />
+                <engine:ListView name="WordsLeftList" />
+            </engine:GroupBox>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>
