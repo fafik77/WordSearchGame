@@ -4,24 +4,17 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-	//[SerializeField] public char Letter;// { get { return GetLetter(); }  set { SetLetter(value); } }
 	[SerializeField] public LayerMask TileLayerMask;
 
 	private LetterDisplayScript letterScript;
 
 	private float lastClickTime;
 
-
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
 	void Awake()
 	{
 		letterScript = this.gameObject.transform.GetComponentInChildren<LetterDisplayScript>();
-		//var LetterObj = this.gameObject.transform.GetComponentInChildren<UnityEngine.UI.Text>();
-		//LetterObj.text = Letter.ToString();
-		//if (Letter != 0x00 && Letter != ' ')
-		//	SetLetter(Letter);
 		lastClickTime = 0;
 	}
 
@@ -34,10 +27,6 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 		return letterScript.GetLetter();
 	}
 
-	public void OnDrag(PointerEventData eventData)
-	{
-		//Debug.Log($"OnDrag {eventData.ToString()}");
-	}
 	private bool WasShortClick
 	{
 		get
@@ -57,8 +46,8 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 		{
 			WasShortClick = true; //set to check for short click
 
-            Debug.Log($"OnPointerDown {this.transform.name}");
-            Singleton.clickAndDrag.AddClickPoint(this, eventData);
+			Debug.Log($"OnPointerDown {this.transform.name}");
+			Singleton.clickAndDrag.AddClickPoint(this, eventData);
 		}
 	}
 
@@ -73,14 +62,6 @@ public class LetterTileScript : MonoBehaviour, IDragHandler, IPointerDownHandler
 			}
 			else
 			{
-				//Vector3 screenPos;
-				//Vector3 posCam;
-
-				//screenPos = Input.mousePosition;
-				//screenPos.z = Camera.main.nearClipPlane + 1;
-				//posCam = Camera.main.ScreenToWorldPoint(screenPos);
-				//Debug.DrawRay(transform.position, posCam - transform.position, Color.blue);
-
 				RaycastHit hit = new RaycastHit();
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				if (Physics.Raycast(ray, out hit, 100, TileLayerMask))

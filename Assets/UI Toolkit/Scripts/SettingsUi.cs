@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -64,7 +64,7 @@ public class SettingsUi : MonoBehaviour
 		char letter = previewDisplayScripts[0].Letter;
 		previewDisplayScripts[0].Letter = previewDisplayScripts[idx].Letter;
 		previewDisplayScripts[idx].Letter = letter;
-    }
+	}
 
 	private void OnDisable()
 	{
@@ -98,23 +98,23 @@ public class SettingsUi : MonoBehaviour
 		if (isUpperCase)
 		{
 			letterCaseButton.text = "B";
-			letterCaseLabel.text = "Uppercase";
-			UpdatePreview();
+			//letterCaseLabel.text = "Uppercase";
 		}
 		else
 		{
 			letterCaseButton.text = "b";
-			letterCaseLabel.text = "Lowercase";
-			UpdatePreview();
+			//letterCaseLabel.text = "Lowercase";
 		}
-	}
-
-	private void UpdatePreview()
-	{
-		//if (previewDisplayScripts == null || previewDisplayScripts.Count == 0) return;
 		foreach (var tile in previewDisplayScripts)
 		{
 			tile.Letter = letterCaseUpper ? char.ToUpper(tile.Letter) : char.ToLower(tile.Letter);
 		}
+	}
+
+	public void UpdatePreview()
+	{
+		LetterCaseSet(letterCaseUpper);
+		DiagonalWordsSet(diagonalWords);
+		BackwardWordsSet(backwardWords);
 	}
 }

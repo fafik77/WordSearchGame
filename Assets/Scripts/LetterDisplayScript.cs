@@ -13,16 +13,16 @@ public class LetterDisplayScript : MonoBehaviour
 
 	private char letter;
 	public char Letter
-    {
-        get => letter;
-        set
-        {
-            letter = value;
-            textPro.text = value.ToString();
-        }
-    }
+	{
+		get => letter;
+		set
+		{
+			letter = value;
+			textPro.text = value.ToString();
+		}
+	}
 
-    void Awake()
+	void Awake()
 	{
 		textPro = GettextPro();
 		letter = textPro.text[0];
