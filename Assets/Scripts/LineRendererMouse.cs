@@ -17,14 +17,16 @@ public class LineRendererMouse : MonoBehaviour
 		lineRenderer.useWorldSpace = true;
 		lineRenderer.widthCurve.keys[0].value = (float)Math.Sqrt(2)/2;
 
-		//subscribe to "click" events
+	}
+	private void OnEnable()
+	{   //subscribe to "click" events
 		Singleton.clickAndDrag.StartDrawingLine += ClickAndDrag_StartDrawingLine;
 		Singleton.clickAndDrag.FinishDrawingLine += ClickAndDrag_FinishDrawingLine;
 		Singleton.clickAndDrag.CancelDrawingLine += ClickAndDrag_CancelDrawingLine;
 	}
 
 	private void OnDisable()
-	{
+	{   //unsubscribe from "click" events
 		Singleton.clickAndDrag.StartDrawingLine -= ClickAndDrag_StartDrawingLine;
 		Singleton.clickAndDrag.FinishDrawingLine -= ClickAndDrag_FinishDrawingLine;
 		Singleton.clickAndDrag.CancelDrawingLine -= ClickAndDrag_CancelDrawingLine;
@@ -50,23 +52,22 @@ public class LineRendererMouse : MonoBehaviour
 
 	void Update()
 	{
-		if (lineRenderer.enabled)
+		if (!lineRenderer.enabled) return;
+
+		if (Input.GetMouseButtonDown(1))	//cancel button
 		{
-			if (Input.GetMouseButtonDown(1))
-			{
-				Singleton.clickAndDrag.CancelClickPoints(null);
-				return;
-			}
-
-			Vector3 screenPos;
-			Vector3 posCam;
-
-			screenPos = Input.mousePosition;
-			screenPos.z = Camera.main.nearClipPlane + 1;
-			posCam = Camera.main.ScreenToWorldPoint(screenPos);
-
-			lineRenderer.SetPosition(1, (Vector2)posCam);
+			Singleton.clickAndDrag.CancelClickPoints(null);
+			return;
 		}
+
+		Vector3 screenPos;
+		Vector3 posCam;
+
+		screenPos = Input.mousePosition;
+		screenPos.z = Camera.main.nearClipPlane + 1;
+		posCam = Camera.main.ScreenToWorldPoint(screenPos);
+
+		lineRenderer.SetPosition(1, (Vector2)posCam);
 	}
 
 }

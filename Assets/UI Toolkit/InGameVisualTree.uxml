@@ -1,14 +1,30 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
     <engine:VisualElement class="align_right text_white" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-        <engine:GroupBox name="Time" class="text_white" style="display: flex; visibility: visible; overflow: visible; position: relative; left: auto; right: auto; align-self: flex-end;">
-            <engine:Label text="Time" name="Time" class="header" />
-            <engine:Label text="1:20:10" name="TimeCounter" />
+        <engine:GroupBox name="Time" class="text_white" style="display: flex; visibility: visible; overflow: visible; position: relative; left: auto; right: auto; align-self: flex-end; width: 100px; height: auto; padding-bottom: 0;">
+            <engine:Label text="Time" name="Time" class="header" style="align-self: flex-start;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(45528428068864)" />
+                </Bindings>
+            </engine:Label>
+            <engine:Label text="1:20:10" name="TimeCounter" style="align-self: flex-start;" />
         </engine:GroupBox>
         <engine:VisualElement name="Lists" style="flex-grow: 1;">
-            <engine:GroupBox name="WordsLeft">
-                <engine:Label text="Words Left" class="header" style="align-self: flex-end;" />
-                <engine:ListView name="WordsLeftList" />
+            <engine:GroupBox name="WordsList" style="margin-bottom: 0; padding-bottom: 0; margin-top: 0; padding-top: 0;">
+                <engine:Label text="Words Left" class="header" style="align-self: flex-end; max-width: 180px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(45769407610880)" />
+                    </Bindings>
+                </engine:Label>
+                <engine:ListView name="WordsLeft" style="height: 60%; max-height: 60%;" />
+            </engine:GroupBox>
+            <engine:GroupBox name="WordsList" style="margin-top: 0; padding-top: 0;">
+                <engine:Label text="ttttt" class="header" style="align-self: flex-end; max-width: 180px;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(71674100203520)" />
+                    </Bindings>
+                </engine:Label>
+                <engine:ListView name="WordsFound" style="max-height: 50%;" />
             </engine:GroupBox>
         </engine:VisualElement>
     </engine:VisualElement>

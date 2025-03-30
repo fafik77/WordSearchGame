@@ -46,7 +46,7 @@ public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 		{
 			WasShortClick = true; //set to check for short click
 
-			Debug.Log($"OnPointerDown {this.transform.name}");
+			//Debug.Log($"OnPointerDown {this.transform.name}");
 			Singleton.clickAndDrag.AddClickPoint(this, eventData);
 		}
 	}
@@ -57,7 +57,7 @@ public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 		{
 			if (WasShortClick)
 			{
-				Debug.Log($"OnPointerUp-click {this.transform.name}");
+				//Debug.Log($"OnPointerUp-click {this.transform.name}");
 				Singleton.clickAndDrag.AddClickPoint(this, eventData, true);
 			}
 			else
@@ -69,7 +69,7 @@ public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 					var asLetterTile = hit.transform.GetComponent<LetterTileScript>();
 					if (asLetterTile)
 					{
-						Debug.Log("OnPointerUp-drag: " + hit.transform.name); // ensure you picked right object
+						//Debug.Log("OnPointerUp-drag: " + hit.transform.name); // ensure you picked right object
 						Singleton.clickAndDrag.AddClickPoint(asLetterTile, eventData, true); //only the endpoint
 						return;
 					}

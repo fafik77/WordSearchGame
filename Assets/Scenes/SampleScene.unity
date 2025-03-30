@@ -207,14 +207,14 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.49056625
+        time: 0.49169436
+        value: 0.4923077
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -281,6 +281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 195750974}
   - component: {fileID: 195750973}
+  - component: {fileID: 195750975}
   m_Layer: 5
   m_Name: In Game UI
   m_TagString: Untagged
@@ -322,6 +323,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &195750975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195750972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1fd286ddf816745b5fd469bbad0149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,10 +744,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7529835552196791118, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
 --- !u!4 &503803924 stripped
 Transform:
@@ -891,6 +901,7 @@ GameObject:
   - component: {fileID: 616540133}
   - component: {fileID: 616540132}
   - component: {fileID: 616540135}
+  - component: {fileID: 616540136}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -973,6 +984,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 330585545}
   settingsCamera: {fileID: 874031988}
+--- !u!114 &616540136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616540131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99cee0d6a9051e24da4a6f649ab3d638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,10 +1185,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7529835552196791118, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
 --- !u!4 &846449040 stripped
 Transform:
@@ -1400,10 +1420,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7529835552196791118, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
 --- !u!4 &881727729 stripped
 Transform:
@@ -1487,7 +1504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08328b07e6554294a813d3726a085053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  with: 50
+  with: 40
   height: 28
   tile: {fileID: 2658041876050628025, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
 --- !u!1 &1157552033
@@ -1808,10 +1825,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7529835552196791118, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef473c79eb7d528449e030efc72e9729, type: 3}
 --- !u!4 &1932147151 stripped
 Transform:

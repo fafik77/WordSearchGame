@@ -20,3 +20,7 @@
 .darkbg {
     background-color: rgb(41, 40, 40);
 }
+
+.unity-list-view__empty-label {
+    display: none;
+}

@@ -32,12 +32,6 @@ public class BoardTiles : MonoBehaviour
 		CreateTiles(with, height);
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		
-	}
-
 	async void CreateTiles(int with, int height)
 	{
 		var random = new System.Random();
@@ -51,6 +45,7 @@ public class BoardTiles : MonoBehaviour
 
 		var tileEnum = results.Result.GetEnumerator();
 		
+		//TODO: change this into tiles pool
 		for (int i = 0; i != with; i++) {
 			for (int j = 0; j != height; j++)
 			{

@@ -39,6 +39,18 @@ MonoBehaviour:
     m_Key: No
     m_Metadata:
       m_Items: []
+  - m_Id: 45528428068864
+    m_Key: ingame.time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45769407610880
+    m_Key: ingame.wordsToFind
+    m_Metadata:
+      m_Items: []
+  - m_Id: 71674100203520
+    m_Key: ingame.wordsFound
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

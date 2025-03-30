@@ -25,8 +25,10 @@ namespace BoardContent
 	public struct WordList
 	{
 		public List<WordListEntry> list;
+		public List<string> wordsToFind;
+		public List<string> wordsFound;
 		// that wont work when two words share the same Letter Tile
-		public Dictionary<Vector2, WordListEntry> tilesTaken;
+		//public Dictionary<Vector2, WordListEntry> tilesTaken;
 		// this could be an option for the player to entice Words to share Letter Tile
 		bool PrefferWordsShareLetters;
 
@@ -34,7 +36,7 @@ namespace BoardContent
 		public void Reset()
 		{
 			list.Clear();
-			tilesTaken.Clear();
+			//tilesTaken.Clear();
 		}
 	}
 

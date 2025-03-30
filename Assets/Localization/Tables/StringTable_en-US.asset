@@ -42,6 +42,18 @@ MonoBehaviour:
     m_Localized: No
     m_Metadata:
       m_Items: []
+  - m_Id: 45528428068864
+    m_Localized: Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45769407610880
+    m_Localized: Words Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 71674100203520
+    m_Localized: Words Found
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

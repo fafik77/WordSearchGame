@@ -20,6 +20,7 @@ public class SettingsUi : MonoBehaviour
 
 	private Button backwardWordsButton;
 	private bool backwardWords = false;
+	private string local_Yes, local_No;
 
 
 	private void OnEnable()
@@ -36,16 +37,27 @@ public class SettingsUi : MonoBehaviour
 		backwardWordsButton = ui.rootVisualElement.Q<Button>("BackwardsButton");
 		backwardWordsButton.clicked += BackwardWordsToggle;
 
+		try
+		{
+			local_Yes = LocalizationCache.GetTrasnaltion("Yes");
+			local_No = LocalizationCache.GetTrasnaltion("No");
+		}
+		catch (NotFoundException e) { Debug.LogWarning(e); }
+
 		if (PreviewTiles)
 		{
-			if (previewDisplayScripts == null) previewDisplayScripts = new List<LetterDisplayScript>();
-			foreach (var tileScript in PreviewTiles.GetComponentsInChildren<LetterDisplayScript>()) {
-				previewDisplayScripts.Add(tileScript);
+			if (previewDisplayScripts == null || previewDisplayScripts.Count == 0)
+			{
+				previewDisplayScripts = new List<LetterDisplayScript>();
+				foreach (var tileScript in PreviewTiles.GetComponentsInChildren<LetterDisplayScript>())
+				{
+					previewDisplayScripts.Add(tileScript);
+				}
+				previewDisplayScripts[0].Letter = 'A';
+				previewDisplayScripts[1].Letter = 'B';
+				previewDisplayScripts[2].Letter = ' ';
+				previewDisplayScripts[3].Letter = ' ';
 			}
-			previewDisplayScripts[0].Letter = 'A';
-			previewDisplayScripts[1].Letter = 'B';
-			previewDisplayScripts[2].Letter = ' ';
-			previewDisplayScripts[3].Letter = ' ';
 			UpdatePreview();
 		}
 	}
@@ -55,7 +67,7 @@ public class SettingsUi : MonoBehaviour
 	private void BackwardWordsSet(bool backward)
 	{
 		backwardWords = backward;
-		backwardWordsButton.text = backwardWords ? "Yes" : "No";
+		backwardWordsButton.text = backwardWords ? local_Yes : local_No;
 		if (!backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) == 'A') return; //ok
 		if (backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) != 'A') return; //ok
 		//switch needed
@@ -71,15 +83,13 @@ public class SettingsUi : MonoBehaviour
 		letterCaseButton.clicked -= LetterCaseToggle;
 		diagonalWordsButton.clicked -= DiagonalWordsToggle;
 		backwardWordsButton.clicked -= BackwardWordsToggle;
-
-		previewDisplayScripts.Clear();
 	}
 
 	private void DiagonalWordsToggle() => DiagonalWordsSet(!diagonalWords);
 	private void DiagonalWordsSet(bool diagonal)
 	{
 		diagonalWords = diagonal;
-		diagonalWordsButton.text = diagonalWords ? "Yes" : "No";
+		diagonalWordsButton.text = diagonalWords ? local_Yes : local_No;
 		if (diagonal && previewDisplayScripts[3].Letter != ' ') return; //ok
 		if (!diagonal && previewDisplayScripts[3].Letter == ' ') return; //ok
 		//switch needed
