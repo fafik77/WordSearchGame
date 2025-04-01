@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,8 +35,9 @@ namespace BoardContent
 
 
 		public void Reset()
-		{
-			list.Clear();
+        {
+			if(list==null) list = new List<WordListEntry>();
+            list.Clear();
 			//tilesTaken.Clear();
 		}
 	}

@@ -1,0 +1,127 @@
+.align_right {
+    align-self: flex-end;
+}
+
+.text_aliceblue {
+    color: rgb(214, 243, 237);
+    text-shadow: 10px 2px 0 rgb(0, 0, 0);
+    font-size: 18px;
+}
+
+.text_white {
+    color: rgb(244, 244, 244);
+    text-shadow: 10px 2px 0 rgb(0, 0, 0);
+    font-size: 18px;
+}
+
+.header {
+    font-size: 24px;
+    -unity-font-style: normal;
+}
+
+.flex {
+    left: 0;
+}
+
+.darkbg {
+    background-color: rgb(41, 40, 40);
+}
+
+.unity-list-view__empty-label {
+    display: none;
+}
+
+.title {
+    font-size: 32px;
+}
+
+.darkbg {
+    background-color: rgb(41, 40, 40);
+}
+
+.button {
+    background-color: rgb(89, 80, 80);
+    margin-top: 20px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.button:hover {
+    background-color: rgb(104, 152, 143);
+    transition-property: background-color;
+    transition-duration: 0.3s;
+}
+
+.button:focus {
+    background-color: rgb(104, 152, 143);
+}
+
+.horizontal {
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: auto;
+}
+
+.menuItem {
+    background-color: rgb(89, 80, 80);
+    margin-top: 20px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    margin-left: 1px;
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    display: flex;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(153, 153, 153);
+    border-right-color: rgb(153, 153, 153);
+    border-top-color: rgb(153, 153, 153);
+    border-bottom-color: rgb(153, 153, 153);
+}
+
+.buttonBeside {
+    background-color: rgb(89, 80, 80);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.buttonBeside:hover {
+    background-color: rgb(104, 152, 143);
+    transition-property: background-color;
+    transition-duration: 0.3s;
+}
+
+.buttonBeside:focus {
+    background-color: rgb(104, 152, 143);
+}
+
+.text_black {
+    color: rgb(13, 13, 13);
+    text-shadow: 10px 2px 0 rgb(244, 250, 255);
+}
+
+.darkUI .unity-base-field__label {
+    color: rgb(244, 244, 244);
+}
+
+.darkUI {
+}

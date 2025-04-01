@@ -1,13 +1,13 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI%20Toolkit/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
-    <engine:VisualElement name="VisualElement" data-source="project://database/Assets/Localization/Localization%20Settings.asset?fileID=11400000&amp;guid=af6e06d58800a7449a78eb0be15ec3ae&amp;type=2#Localization Settings" class="text_white header" style="flex-grow: 1; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px;">
-        <engine:Label text="Settings" class="header" style="font-size: 32px; -unity-font-style: normal;">
-            <Bindings>
-                <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(125779329024)" />
-            </Bindings>
-        </engine:Label>
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <engine:VisualElement class="text_white header" style="flex-grow: 1; align-self: center; margin-top: 10%; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;">
         <engine:VisualElement style="flex-grow: 1;">
-            <engine:GroupBox name="GroupBox">
+            <engine:Label text="Settings" class="title" style="align-self: center; margin-bottom: 20px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(125779329024)" />
+                </Bindings>
+            </engine:Label>
+            <engine:VisualElement style="flex-grow: 1;">
                 <engine:VisualElement name="Case">
                     <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
                         <engine:Label text="Uppercase" name="CaseLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
@@ -15,7 +15,7 @@
                                 <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(2956015976448)" />
                             </Bindings>
                         </engine:Label>
-                        <engine:Button text="B" name="CaseButton" class="darkbg" style="align-self: auto; align-items: auto;" />
+                        <engine:Button text="B" name="CaseButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
                 <engine:VisualElement name="Diagonal">
@@ -25,7 +25,7 @@
                                 <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3085863239680)" />
                             </Bindings>
                         </engine:Label>
-                        <engine:Button text="Yes" name="DiagonalButton" class="darkbg" style="align-self: auto; align-items: auto;" />
+                        <engine:Button text="Yes" name="DiagonalButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
                 <engine:VisualElement name="Backwards">
@@ -35,10 +35,10 @@
                                 <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3131807645696)" />
                             </Bindings>
                         </engine:Label>
-                        <engine:Button text="Yes" name="BackwardsButton" class="darkbg" style="align-self: auto; align-items: auto;" />
+                        <engine:Button text="Yes" name="BackwardsButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
-            </engine:GroupBox>
+            </engine:VisualElement>
         </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

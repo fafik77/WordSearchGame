@@ -1,0 +1,29 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
+    <engine:VisualElement style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.4);">
+        <engine:VisualElement class="header text_white" style="top: 2%;">
+            <engine:VisualElement>
+                <engine:VisualElement class="horizontal" style="margin-top: 10px; margin-right: 10%; margin-left: 10%;">
+                    <engine:VisualElement class="horizontal" style="flex-grow: 1;">
+                        <engine:Button text="Load File" name="LoadFile" class="button" style="padding-top: 8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; margin-top: 2px; margin-right: 20px; margin-bottom: 2px; margin-left: 4px;" />
+                        <engine:Button text="Create Random" name="CreateRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 20px; margin-bottom: 2px; margin-left: 4px;" />
+                        <engine:VisualElement>
+                            <engine:DropdownField label="Language" choices="English,Polski,Espanol" index="0" name="Language" class="buttonBeside darkUI" style="min-width: 300px; min-height: 50px;" />
+                        </engine:VisualElement>
+                    </engine:VisualElement>
+                    <engine:VisualElement style="flex-grow: 1; flex-direction: column;">
+                        <engine:TextField placeholder-text="Search" max-length="255" hide-placeholder-on-focus="true" name="Search" class="text_black" style="max-width: 200px; min-width: 200px; flex-direction: column; align-self: flex-end;" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement style="flex-grow: 1; margin-top: 20px; margin-left: 10%; margin-right: 10%; background-color: rgba(27, 27, 27, 0.5); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
+                    <engine:VisualElement style="flex-grow: 1; flex-direction: row;">
+                        <engine:Label text="Categories" style="margin-bottom: 2px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-right: 20px;" />
+                        <engine:Button text="Random" name="PickRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 4px;" />
+                    </engine:VisualElement>
+                    <engine:TreeView name="TreeView" show-alternating-row-backgrounds="ContentOnly" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

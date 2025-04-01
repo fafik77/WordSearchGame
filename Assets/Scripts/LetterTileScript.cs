@@ -18,6 +18,11 @@ public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 		lastClickTime = 0;
 	}
 
+	public char Letter
+	{
+		get => GetLetter();
+		set => SetLetter(value);
+	}
 	public void SetLetter(char letter)
 	{
 		letterScript.SetLetter(letter);

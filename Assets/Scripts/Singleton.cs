@@ -21,7 +21,7 @@ public class Singleton
 		//for when there was a cancel
 		public event EventHandler<LetterTileScript> CancelDrawingLine;
 		private LetterTileScript tileStart;
-		public LetterTileScript tileEnd;
+		private LetterTileScript tileEnd;
 		public LetterTileScript TileStart
 		{
 			get => tileStart;
@@ -87,6 +87,10 @@ public class Singleton
 			}
 
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="requester">only if present</param>
 		public void CancelClickPoints(LetterTileScript requester)
 		{
 			CancelDrawingLine?.Invoke(this, requester);
