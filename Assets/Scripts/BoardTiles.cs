@@ -18,7 +18,7 @@ public class BoardTiles : MonoBehaviour
 	private Transform tilesParent, overlayParent;
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
-	private Mutex mutexReservingTiles = new Mutex();
+	private Mutex mutexTilesPool = new Mutex();
 
 	//sizes for camera Projection.Size	(to take up the entire screen)
 	//Size: width, height
@@ -42,27 +42,40 @@ public class BoardTiles : MonoBehaviour
 		ReserveAmountAsync(width * height);
 		//CreateBoard(5,5);
 	}
-    private void Start()
-    {
-        CreateBoard(5, 5);
+	private void Start()
+	{
+		CreateBoard(10, 10);
+		PlaceWords placeWords = new PlaceWords(tilesSript2D);
+		placeWords.PlaceWordsOnBoard();
     }
 
-    public int ReserveAmountSync(int amount) => ReserveAmount(amount).Result;
-    public async void ReserveAmountAsync(int amount) => await ReserveAmount(amount);
-    public async Task<int> ReserveAmount(int amount)
+	public int ReserveAmountSync(int amount) => ReserveAmount(amount).Result;
+	public async void ReserveAmountAsync(int amount) => await ReserveAmount(amount);
+	/// <summary>
+	/// makes sure there is at least given amount of tiles available
+	/// </summary>
+	/// <param name="amount">the amount of tiles</param>
+	/// <returns>amount added to tiles pool</returns>
+	/// <exception cref="ResourceAcquisitionException">thrown when mutex cant be acquired</exception>
+	public async Task<int> ReserveAmount(int amount)
 	{
+		bool ourMutex = mutexTilesPool.WaitOne(100); //make sure we have something to work with, and dont invalidate the list
+		if(!ourMutex) throw new ResourceAcquisitionException(reservingTilesAmount, $"Already Reserving {reservingTilesAmount} Tiles");
 		var amountToCreate = amount - tilesPool.Count;
-		if (amountToCreate <= 0) return 0; //no need to make more
-
-		mutexReservingTiles.WaitOne(); //make sure we have something to work with, and dont invalidate the list
-			reservingTilesAmount = amount;
-			tile.SetActive(false);  //set all new tiles to not render
-			var results = InstantiateAsync(tile, amountToCreate, tilesParent); //now using async
-			await results;
-			tilesPool.AddRange(results.Result);
-			reservingTilesAmount = 0;
-		mutexReservingTiles.ReleaseMutex();
-		return amount;
+		if (amountToCreate <= 0)
+		{
+			mutexTilesPool.ReleaseMutex();
+			return 0; //no need to make more
+		}
+		tilesPool.Capacity = amount + 1; //reserve us some space
+		reservingTilesAmount = amount;
+		tile.SetActive(false);  //set all new tiles to not render
+		var results = InstantiateAsync(tile, amountToCreate, tilesParent); //now using async
+		await results;
+		tilesPool.AddRange(results.Result);
+		reservingTilesAmount = 0;
+		mutexTilesPool.ReleaseMutex();
+		return amountToCreate;
 	}
 
 	public void CreateBoard(int width, int height)
@@ -75,12 +88,25 @@ public class BoardTiles : MonoBehaviour
 		widthPrev = width;
 		heightPrev = height;
 		tilesSript2D = new LetterTileScript[width, height];
-		var eachTile = tilesPool.Skip(width * height);
-		foreach (var tile in eachTile)
-			tile.SetActive(false); //hide the rest
+		List<GameObject> tilesPoolLocal;
+		mutexTilesPool.WaitOne(100);
+		try
+		{
+			tilesPoolLocal = tilesPool.ToList();
+		}
+		finally
+		{
+			mutexTilesPool.ReleaseMutex();
+		}
+		var eachTileToHide = tilesPoolLocal.Skip(width * height);
 		var tilesStartingPos = tilesParent.position;
-		var tileEnum = tilesPool.GetEnumerator();
-		//TODO: change this into tiles pool
+		foreach (var tile in eachTileToHide)
+		{
+			tile.SetActive(false); //hide the rest
+			tile.transform.position = tilesStartingPos;
+		}
+		var tileEnum = tilesPoolLocal.GetEnumerator();
+
 		for (int i = 0; i != width; i++)
 		{
 			for (int j = 0; j != height; j++)
