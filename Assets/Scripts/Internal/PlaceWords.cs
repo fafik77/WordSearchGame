@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BoardContent;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace BoardContent
 {
@@ -25,45 +26,76 @@ namespace BoardContent
 	}
 	class PlaceWords
 	{
+		int maxRetries = 100;
 		int width, height;
 		LetterTileScript[,] tilesSript2D;
-		char[,] tilesSript2DDummy;
+		char[,] tiles2DDummy;
 		public PlaceWords(LetterTileScript[,] tilesSript2D)
 		{
 			this.tilesSript2D = tilesSript2D;
 			width = tilesSript2D.GetLength(0);
 			height = tilesSript2D.GetLength(1);
-			tilesSript2DDummy = new char[width, height];
+			tiles2DDummy = new char[width, height];
 		}
 
 		public void PlaceWordsOnBoard()
 		{
 			List<string> words = new List<string>() { "barbara", "ania", "olaf", "kamil" };
+			List<string> wordsContained;
+			int removedWords = SepareteContainedDuplicateWords(ref words, out wordsContained);
+			//before applying that list to board, make sure to sort it from longest to shortest..
+			// remove the short words contained in longer ones (only add their positions)
+			// one letter words are not accepted
+			words.Sort((x, y) => x.Length.CompareTo(y.Length)); //sort in order
 
 			Singleton.wordList.Reset();
-			Random random = new Random();
+			System.Random random = new System.Random();
 			int x, y;
 			WordOrientationEnum orientEnum;
 			WordPlaceOk wordPlaceOk;
 
 			foreach (var word in words)
 			{
-				do
+				int tries = 0;
+				try
 				{
-					x = random.Next(0, width - 1);
-					y = random.Next(0, height - 1);
-					orientEnum = (WordOrientationEnum)random.Next(0, 5);
+					do
+					{
+						++tries;
+						if (tries > maxRetries) throw new Exception($"To Many ReTries placing the word: \"{word}\"");
+						x = random.Next(0, width - 1);
+						y = random.Next(0, height - 1);
+						orientEnum = (WordOrientationEnum)random.Next(0, 5);
+					}
+					while (!(wordPlaceOk = CanPlaceWordHere(x, y, orientEnum, word)).ok);
 				}
-				while (!(wordPlaceOk=CanPlaceWordHere(x, y, orientEnum, word)).ok);
-
-				//Singleton.wordList.list.Add(new WordListEntry{ })
-				for (int i = 0; i < word.Length; i++)
+				catch (Exception e)
 				{
-					tilesSript2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
-					tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
+					Debug.LogWarning(e);
+					continue;
+				}
+
+				Singleton.wordList.list.Add(new WordListEntry()
+				{
+					word = word,
+					posFrom = { x = x, y = y },
+					posTo = { x = x + wordPlaceOk.xmod * word.Length, y = y + wordPlaceOk.ymod * word.Length }
+				});
+				for (int i = 0; i != word.Length; i++)
+				{
+					tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
+					//tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
 				}
 			}
+			//write onto the screen
+			var iterSrc = tiles2DDummy.GetEnumerator();
+			var iterDst = tilesSript2D.GetEnumerator();
+			while (iterSrc.MoveNext() && iterDst.MoveNext())
+			{
+				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
+			}
 		}
+
 		WordPlaceOk CanPlaceWordHere(int x, int y, WordOrientationEnum orientEnum, string word)
 		{
 			int xmod = 0, ymod = 0;
@@ -111,7 +143,7 @@ namespace BoardContent
 
 			for (int i = 0; i < word.Length; i++)
 			{
-				var tmp = tilesSript2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)];
+				var tmp = tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)];
 				if (tmp != 0x00)
 					if (tmp != word[i])
 					{
@@ -120,6 +152,34 @@ namespace BoardContent
 					}
 			}
 			return wordPlaceOk;
+		}
+
+		/// <summary>
+		/// this function takes in a list of words to separate out ones that are contained in other ones
+		/// </summary>
+		/// <param name="words">in-out list of words</param>
+		/// <param name="outContainedDuplicates">out list of cuplicates</param>
+		/// <returns>amount of 1 letter words removed</returns>
+		static int SepareteContainedDuplicateWords(ref List<string> words, out List<string> outContainedDuplicates)
+		{
+			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
+			outContainedDuplicates = new List<string>();
+
+			words.Sort((x, y) => x.Length.CompareTo(y.Length)); // sort it from longest to shortest
+			
+			var wordsMinToMax = words.ToList();
+			wordsMinToMax.Reverse();
+			int indexWord = 0;
+			foreach (var word in wordsMinToMax)
+			{
+				++indexWord;
+
+
+			}
+
+
+
+			return amountRemoved;
 		}
 	}
 }
