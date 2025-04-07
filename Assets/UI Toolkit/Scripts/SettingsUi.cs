@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Assets.Scripts.Internal;
+using System;
 using System.Collections.Generic;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SettingsUi : MonoBehaviour
+public class SettingsUi : MonoBehaviour, ICameraView
 {
 	[SerializeField] private GameObject PreviewTiles;
 	private List<LetterDisplayScript> previewDisplayScripts;
@@ -22,6 +23,11 @@ public class SettingsUi : MonoBehaviour
 	private bool backwardWords = false;
 	private string local_Yes, local_No;
 
+	private void Awake()
+	{
+		ui = GetComponent<UIDocument>();
+		ui.enabled = false;
+	}
 
 	private void OnEnable()
 	{
@@ -80,9 +86,12 @@ public class SettingsUi : MonoBehaviour
 
 	private void OnDisable()
 	{
-		letterCaseButton.clicked -= LetterCaseToggle;
-		diagonalWordsButton.clicked -= DiagonalWordsToggle;
-		backwardWordsButton.clicked -= BackwardWordsToggle;
+		if (letterCaseButton != null)
+		{
+			letterCaseButton.clicked -= LetterCaseToggle;
+			diagonalWordsButton.clicked -= DiagonalWordsToggle;
+			backwardWordsButton.clicked -= BackwardWordsToggle;
+		}
 	}
 
 	private void DiagonalWordsToggle() => DiagonalWordsSet(!diagonalWords);
@@ -126,5 +135,15 @@ public class SettingsUi : MonoBehaviour
 		LetterCaseSet(letterCaseUpper);
 		DiagonalWordsSet(diagonalWords);
 		BackwardWordsSet(backwardWords);
+	}
+
+	public void Hide()
+	{
+		ui.enabled = false;
+	}
+
+	public void Show()
+	{
+		ui.enabled = true;
 	}
 }

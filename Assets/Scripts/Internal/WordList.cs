@@ -35,10 +35,13 @@ namespace BoardContent
 
 
 		public void Reset()
-        {
-			if(list==null) list = new List<WordListEntry>();
-            list.Clear();
-			//tilesTaken.Clear();
+		{
+			if (list == null) list = new List<WordListEntry>();
+			list.Clear();
+			if (wordsToFind == null) wordsToFind = new List<string>();
+			wordsToFind.Clear();
+			if (wordsFound == null) wordsFound = new List<string>();
+			wordsFound.Clear();
 		}
 	}
 

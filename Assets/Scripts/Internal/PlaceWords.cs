@@ -52,11 +52,11 @@ namespace BoardContent
 		public void PlaceWordsOnBoard()
 		{
 			List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
-			SortedDictionary<string, List<WordContainedFrom>> wordsContained;
+			//SortedDictionary<string, List<WordContainedFrom>> wordsContained;
 			//before applying that list to board, make sure to sort it from longest to shortest..
 			// remove the short words contained in longer ones (only add their positions)..
 			// one letter words are not accepted, (2 letters words should not exist)
-			int removedWords = SepareteContainedDuplicateWords(ref words, out wordsContained, wordsInReverse:true);
+			int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, true);
 			Vector2 vector2 = CalculateMinBoardDims(ref words);
 
 			Singleton.wordList.Reset();
@@ -207,10 +207,12 @@ namespace BoardContent
 		/// <summary>
 		/// this function takes in a list of words to separate out ones that are contained in other ones
 		/// </summary>
-		/// <param name="words">in-out list of words</param>
-		/// <param name="outSeparetedWords">out a map of longer words that contain shorter words and their relative offset</param>
+		/// <param name="words">in-out: list of words to put on board</param>
+		/// <param name="outSeparetedWords">out: a map of longer words that contain shorter words and their relative offset</param>
+		/// <param name="wordsToFind">out: the full list of words to find (should contain words.Len() - return)</param>
+		/// <param name="wordsInReverse">checks the input words list for palindroms and their partial matches</param>
 		/// <returns>amount of 1 letter words or exact duplicates removed</returns>
-		static int SepareteContainedDuplicateWords(ref List<string> words, out SortedDictionary<string, List<WordContainedFrom>> outSeparetedWords, bool wordsInReverse)
+		static int SepareteContainedDuplicateWords(ref List<string> words, out SortedDictionary<string, List<WordContainedFrom>> outSeparetedWords, out List<string> wordsToFind, bool wordsInReverse)
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
 			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
@@ -223,12 +225,12 @@ namespace BoardContent
 			wordsMinToMax.Reverse();
 			int wordCount = wordsMinToMax.Count;
 			List<string> wordsNotRemoved = new List<string>();
+			wordsToFind = new List<string>();
 
-
-			bool removeWord;
+			bool removeWord, removeWordExactDup;
 			for (int idx = 0; idx < wordsMinToMax.Count-1; ++idx)
 			{
-				removeWord = false;
+				removeWord = removeWordExactDup = false;
 				string shorterWord = wordsMinToMax[idx];
 				Regex regexContains = new Regex(shorterWord, RegexOptions.IgnoreCase);
 
@@ -238,7 +240,7 @@ namespace BoardContent
 					if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
 					{
 						++amountRemoved;
-						removeWord = true;
+						removeWord = removeWordExactDup = true;
 						break;
 					}
 
@@ -268,10 +270,11 @@ namespace BoardContent
 						.Add(new() { wordContaied = shorterWord, startOffset = -(match.Groups[0].Index+1) });
 					}
 				}
+
 				if (!removeWord)
-				{
 					wordsNotRemoved.Add(shorterWord);
-				}
+				if (!removeWordExactDup)
+					wordsToFind.Add(shorterWord);
 			}
 			wordsNotRemoved.Add(wordsLower[0]);
 			wordsNotRemoved.Reverse();

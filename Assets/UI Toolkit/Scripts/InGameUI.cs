@@ -1,3 +1,4 @@
+using Assets.Scripts.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class InGameUI : MonoBehaviour
+public class InGameUI : MonoBehaviour, ICameraView
 {
 	private UIDocument ui;
 	private ListView listViewWordsLeft;
@@ -63,7 +64,8 @@ public class InGameUI : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		timeCounter += Time.fixedDeltaTime;
+		if (ui.enabled)
+			timeCounter += Time.fixedDeltaTime;
 	}
 
 	private void Start()
@@ -90,5 +92,17 @@ public class InGameUI : MonoBehaviour
 	{
 		TimeSpan timeSpan = new TimeSpan(0,0,seconds: (int)(timeCounter));
 		TimeCounterLabel.text = $"{timeSpan.Hours:0}:{timeSpan.Minutes:00}:{timeSpan.Seconds:00}";
+	}
+
+	public void Hide()
+	{
+		ui.enabled = false;
+		OnDisable();
+	}
+
+	public void Show()
+	{
+		ui.enabled = true;
+		OnEnable();
 	}
 }
