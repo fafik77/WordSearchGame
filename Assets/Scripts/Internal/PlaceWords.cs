@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BoardContent;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -28,6 +30,15 @@ namespace BoardContent
 	{
 		int maxRetries = 100;
 		int width, height;
+		/// <summary>
+		/// keep board aspect ratio (def. 14 x 9 reserving 2 x 9 for UI)
+		/// </summary>
+		public Vector2 AspectRatio = new Vector2(14, 9);
+		/// <summary>
+		/// board will not get any smaller than this
+		/// </summary>
+		public Vector2 MinimumBoardSize;
+
 		LetterTileScript[,] tilesSript2D;
 		char[,] tiles2DDummy;
 		public PlaceWords(LetterTileScript[,] tilesSript2D)
@@ -40,13 +51,13 @@ namespace BoardContent
 
 		public void PlaceWordsOnBoard()
 		{
-			List<string> words = new List<string>() { "barbara", "ania", "olaf", "kamil" };
-			List<string> wordsContained;
-			int removedWords = SepareteContainedDuplicateWords(ref words, out wordsContained);
+			List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
+			SortedDictionary<string, List<WordContainedFrom>> wordsContained;
 			//before applying that list to board, make sure to sort it from longest to shortest..
-			// remove the short words contained in longer ones (only add their positions)
-			// one letter words are not accepted
-			words.Sort((x, y) => x.Length.CompareTo(y.Length)); //sort in order
+			// remove the short words contained in longer ones (only add their positions)..
+			// one letter words are not accepted, (2 letters words should not exist)
+			int removedWords = SepareteContainedDuplicateWords(ref words, out wordsContained, wordsInReverse:true);
+			Vector2 vector2 = CalculateMinBoardDims(ref words);
 
 			Singleton.wordList.Reset();
 			System.Random random = new System.Random();
@@ -60,7 +71,7 @@ namespace BoardContent
 				try
 				{
 					do
-					{
+					{   //try to place the word up to maxRetries times
 						++tries;
 						if (tries > maxRetries) throw new Exception($"To Many ReTries placing the word: \"{word}\"");
 						x = random.Next(0, width - 1);
@@ -94,6 +105,39 @@ namespace BoardContent
 			{
 				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
 			}
+		}
+
+		/// <summary>
+		/// Based on total count of Letters in words, returns a bare minimum board size in AspectRacio
+		/// </summary>
+		/// <param name="words"></param>
+		/// <returns></returns>
+		private Vector2 CalculateMinBoardDims(ref List<string> words)
+		{
+			//double targetAspectRatio = 14d / 9d;
+			double targetAspectRatio = AspectRatio.x / AspectRatio.y;
+			var minDim = words[0].Length;
+			int letters = 0;
+			foreach (var word in words)
+			{
+				letters += word.Length;
+			}
+			var guessY = (letters / minDim) + 1;
+
+			int sqrtLett = (int)Math.Ceiling(Math.Sqrt(letters));
+
+			int prefDimX = (int)Math.Ceiling((double)sqrtLett * targetAspectRatio);
+			int prefDimY = (int)Math.Ceiling((double)sqrtLett / targetAspectRatio);
+
+			if (minDim > prefDimX) prefDimX = minDim;
+
+			return new Vector2(prefDimX, prefDimY);
+		}
+		Vector2 GetBoardDimsNoLessThanMin(Vector2 minimum)
+		{
+			return new Vector2(minimum.x < MinimumBoardSize.x ? MinimumBoardSize.x : minimum.x,
+				minimum.y < MinimumBoardSize.y ? MinimumBoardSize.y : minimum.y
+				);
 		}
 
 		WordPlaceOk CanPlaceWordHere(int x, int y, WordOrientationEnum orientEnum, string word)
@@ -154,31 +198,84 @@ namespace BoardContent
 			return wordPlaceOk;
 		}
 
+		struct WordContainedFrom
+		{
+			public string wordContaied;
+			public int startOffset;
+		}
+
 		/// <summary>
 		/// this function takes in a list of words to separate out ones that are contained in other ones
 		/// </summary>
 		/// <param name="words">in-out list of words</param>
-		/// <param name="outContainedDuplicates">out list of cuplicates</param>
-		/// <returns>amount of 1 letter words removed</returns>
-		static int SepareteContainedDuplicateWords(ref List<string> words, out List<string> outContainedDuplicates)
+		/// <param name="outSeparetedWords">out a map of longer words that contain shorter words and their relative offset</param>
+		/// <returns>amount of 1 letter words or exact duplicates removed</returns>
+		static int SepareteContainedDuplicateWords(ref List<string> words, out SortedDictionary<string, List<WordContainedFrom>> outSeparetedWords, bool wordsInReverse)
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
-			outContainedDuplicates = new List<string>();
+			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
+			var wordsLower = words.ConvertAll(x => new string(x.ToLower()));
 
-			words.Sort((x, y) => x.Length.CompareTo(y.Length)); // sort it from longest to shortest
+			wordsLower.Sort(); // sort alpabetical
+			wordsLower.Sort((x, y) => -x.Length.CompareTo(y.Length)); // sort it from longest to shortest (keep previous alpabetical)
 			
-			var wordsMinToMax = words.ToList();
+			var wordsMinToMax = wordsLower.ToList(); //makes a copy
 			wordsMinToMax.Reverse();
-			int indexWord = 0;
-			foreach (var word in wordsMinToMax)
+			int wordCount = wordsMinToMax.Count;
+			List<string> wordsNotRemoved = new List<string>();
+
+
+			bool removeWord;
+			for (int idx = 0; idx < wordsMinToMax.Count-1; ++idx)
 			{
-				++indexWord;
+				removeWord = false;
+				string shorterWord = wordsMinToMax[idx];
+				Regex regexContains = new Regex(shorterWord, RegexOptions.IgnoreCase);
 
+				for (int idx2 = idx+1; idx2 < wordsMinToMax.Count; ++idx2)
+				{
+					string longerWord = wordsMinToMax[idx2];
+					if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
+					{
+						++amountRemoved;
+						removeWord = true;
+						break;
+					}
 
+					var matches = regexContains.Matches(longerWord);
+
+					if (matches.Count!=0)	//we have a contained duplicate
+						removeWord = true;
+					foreach (Match match in matches)
+					{
+						outSeparetedWords.GetOrCreate(longerWord)
+						.Add(new() { wordContaied = shorterWord, startOffset = match.Groups[0].Index });
+					}
+
+					if (!wordsInReverse) continue; //only when words can be backwards on the board
+
+					string longerWordRev;
+					char[] charArray = longerWord.ToCharArray();
+					Array.Reverse(charArray);
+					longerWordRev = new string(charArray);
+					var matchesRev = regexContains.Matches(longerWordRev);
+
+					if (matchesRev.Count != 0) //we have a contained Reverse duplicate
+						removeWord = true;
+					foreach (Match match in matchesRev)
+					{
+						outSeparetedWords.GetOrCreate(longerWord)
+						.Add(new() { wordContaied = shorterWord, startOffset = -(match.Groups[0].Index+1) });
+					}
+				}
+				if (!removeWord)
+				{
+					wordsNotRemoved.Add(shorterWord);
+				}
 			}
-
-
-
+			wordsNotRemoved.Add(wordsLower[0]);
+			wordsNotRemoved.Reverse();
+			words = wordsNotRemoved;
 			return amountRemoved;
 		}
 	}

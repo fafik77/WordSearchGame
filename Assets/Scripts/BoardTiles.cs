@@ -45,9 +45,26 @@ public class BoardTiles : MonoBehaviour
 	private void Start()
 	{
 		CreateBoard(10, 10);
+		CreateBoard(14, 9);	//camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 		PlaceWords placeWords = new PlaceWords(tilesSript2D);
 		placeWords.PlaceWordsOnBoard();
-    }
+	}
+
+
+	/// <summary>
+	/// Creates the board only if provided dimensions are greater than current dimensions of the board
+	/// </summary>
+	/// <param name="width">width</param>
+	/// <param name="height">height</param>
+	/// <returns>false if nothing changed, true if board was resized</returns>
+	public bool CreateBoardAtLeast(int width, int height)
+	{
+		if (!(width > widthPrev || height > heightPrev))
+			return false;
+		CreateBoard(width, height);
+		return true;
+	}
+
 
 	public int ReserveAmountSync(int amount) => ReserveAmount(amount).Result;
 	public async void ReserveAmountAsync(int amount) => await ReserveAmount(amount);
@@ -78,6 +95,11 @@ public class BoardTiles : MonoBehaviour
 		return amountToCreate;
 	}
 
+	/// <summary>
+	/// Creates the board with provided dimensions, assigns Tiles
+	/// </summary>
+	/// <param name="width">width</param>
+	/// <param name="height">height</param>
 	public void CreateBoard(int width, int height)
 	{
 		ReserveAmountSync(width * height);
