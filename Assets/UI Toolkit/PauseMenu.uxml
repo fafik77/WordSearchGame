@@ -6,11 +6,11 @@
             <engine:Label text="Menu" name="Label" class="title" style="align-items: auto; align-self: center; margin-bottom: 10px;" />
             <engine:VisualElement class="header">
                 <engine:VisualElement class="horizontal" style="justify-content: space-around;">
-                    <engine:Button text="Continue" name="Button" class="button" style="margin-right: 10px; flex-shrink: 1; flex-grow: 1;" />
-                    <engine:Button text="New Game" class="button" style="text-overflow: ellipsis; margin-left: 10px; flex-shrink: 1; flex-grow: 1;" />
+                    <engine:Button text="Continue" name="Continue" class="button" style="margin-right: 10px; flex-shrink: 1; flex-grow: 1;" />
+                    <engine:Button text="New Game" name="NewGame" class="button" style="text-overflow: ellipsis; margin-left: 10px; flex-shrink: 1; flex-grow: 1;" />
                 </engine:VisualElement>
                 <engine:VisualElement style="justify-content: center; align-self: flex-start; align-items: stretch; min-width: 200px;">
-                    <engine:Button text="Settings" class="button" style="align-self: stretch;" />
+                    <engine:Button text="Settings" name="Settings" class="button" style="align-self: stretch;" />
                 </engine:VisualElement>
                 <engine:VisualElement name="ShiftCameraHorizontally" class="horizontal menuItem" style="margin-top: 30px;">
                     <engine:Label text="Camera Zoom" style="margin-top: 0;" />

@@ -1,10 +1,12 @@
 using Assets.Scripts.Internal;
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
 	private UIDocument ui;
+	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 
 	private void Awake()
 	{
@@ -21,4 +23,8 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		ui.enabled = true;
 	}
 
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
+	{
+		navigateAction = action;
+	}
 }

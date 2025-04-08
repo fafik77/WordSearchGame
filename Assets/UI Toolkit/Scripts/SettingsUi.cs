@@ -9,6 +9,7 @@ public class SettingsUi : MonoBehaviour, ICameraView
 {
 	[SerializeField] private GameObject PreviewTiles;
 	private List<LetterDisplayScript> previewDisplayScripts;
+	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 
 	private UIDocument ui;
 
@@ -145,5 +146,10 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	public void Show()
 	{
 		ui.enabled = true;
+	}
+
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
+	{
+		navigateAction = action;
 	}
 }

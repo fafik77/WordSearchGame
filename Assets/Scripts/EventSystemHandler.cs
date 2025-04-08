@@ -16,12 +16,6 @@ public class EventSystemHandler : MonoBehaviour
 		if (Keyboard.current.escapeKey.wasReleasedThisFrame)
 		{
 			menuMgr.MenuEscKey();
-
-			//Singleton.clickAndDrag.CancelClickPoints(null);
-			//bool mainVisible = mainCamera.gameObject.activeSelf;
-			//mainCamera.gameObject.SetActive(!mainVisible);
-			////Time.timeScale = mainVisible ? 0 : 1;
-			//settingsCamera.gameObject.SetActive(mainVisible);
 		}
 	}
 }

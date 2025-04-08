@@ -15,6 +15,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private Label TimeCounterLabel;
 	private List<string> listWords;
 	private float timeCounter;
+	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 	public float TimeCounter
 	{
 		get { return timeCounter; }
@@ -96,13 +97,19 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 	public void Hide()
 	{
+		this.enabled = false;
 		ui.enabled = false;
 		OnDisable();
 	}
 
 	public void Show()
 	{
+		this.enabled = true;
 		ui.enabled = true;
 		OnEnable();
+	}
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
+	{
+		navigateAction = action;
 	}
 }

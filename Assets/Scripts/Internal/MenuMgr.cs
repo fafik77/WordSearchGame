@@ -1,5 +1,6 @@
 using Assets.Scripts.Internal;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -14,16 +15,33 @@ public class MenuMgr : MonoBehaviour
 
 	Stack<MonoBehaviour> menusStack = new Stack<MonoBehaviour>();
 
+	public enum MenuNavigationEnum
+	{
+		None,
+		Back,
+		Settings,
+		PauseMenu,
+		NewGame,
+	}
+
 	private void Start()
 	{
-		if (ingameUI)
+		if (ingameUI){
 			ingameUI.gameObject.SetActive(true);
-		if (pauseMenuUI)
+			ingameUI.OnNavigateToSet(NavigateTo);
+		}
+		if (pauseMenuUI){
 			pauseMenuUI.gameObject.SetActive(true);
-		if (chooseBoardUI)
+			pauseMenuUI.OnNavigateToSet(NavigateTo);
+        }
+		if (chooseBoardUI){
 			chooseBoardUI.gameObject.SetActive(true);
-		if (settingsUi != null)
+			chooseBoardUI.OnNavigateToSet(NavigateTo);
+        }
+		if (settingsUi){
 			settingsUi.gameObject.SetActive(true);
+			settingsUi.OnNavigateToSet(NavigateTo);
+        }
 	}
 	public void MenuEscKey()
 	{
@@ -35,15 +53,56 @@ public class MenuMgr : MonoBehaviour
 		}
 		else
 		{
-			var last = menusStack.Pop() as ICameraView;
-			last.Hide();
-			if (menusStack.Count != 0)
-			{
-				var prev = menusStack.Peek() as ICameraView;
-				prev.Show();
-			}
-			else
-				ingameUI.Show();
+			NavigateBack();
 		}
 	}
+	public void NavigateBack()
+	{
+		if (menusStack.Count == 0)
+			return;
+		var last = menusStack.Pop() as ICameraView;
+		last.Hide();
+		if (menusStack.Count != 0)	//go back or show the in game ui back
+		{
+			var prev = menusStack.Peek() as ICameraView;
+			prev.Show();
+		}
+		else
+			ingameUI.Show();
+	}
+	public void NavigateForwardTo(MonoBehaviour menu)
+	{
+		var prev = menusStack.Peek();
+		(prev as ICameraView).Hide();
+		menusStack.Push(menu);
+		(menu as ICameraView).Show();
+	}
+
+	public void NavigateTo(MenuNavigationEnum navigationEnum)
+	{
+		switch (navigationEnum)
+		{
+			case MenuNavigationEnum.Back:
+				{
+					NavigateBack();
+					break;
+				}
+			case MenuNavigationEnum.PauseMenu:
+				{
+					NavigateForwardTo(pauseMenuUI);
+					break;
+				}
+			case MenuNavigationEnum.NewGame:
+				{
+					NavigateForwardTo(chooseBoardUI);
+					break;
+				}
+			case MenuNavigationEnum.Settings:
+				{
+					NavigateForwardTo(settingsUi);
+					break;
+				}
+		}
+	}
+
 }
