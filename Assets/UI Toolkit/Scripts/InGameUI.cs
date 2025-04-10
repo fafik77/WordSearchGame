@@ -13,7 +13,6 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private ListView listViewWordsLeft;
 	private ListView listViewWordsFound;
 	private Label TimeCounterLabel;
-	private List<string> listWords;
 	private float timeCounter;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 	public float TimeCounter
@@ -27,26 +26,25 @@ public class InGameUI : MonoBehaviour, ICameraView
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
 	{
-		listWords = new List<string>();
 	}
 
 	private void OnEnable()
 	{
 		/// As the user scrolls through the list, the ListView object will recycle elements created by the "makeItem" and invoke the "bindItem" callback to associate the element with the matching data item (specified as an index in the list)
-		Action<VisualElement, int> bindItemLeft = (e, i) => (e as Label).text = listWords[i];
-		Action<VisualElement, int> bindItemFound = (e, i) => (e as Label).text = listWords[i];
+		Action<VisualElement, int> bindItemLeft = (e, i) => (e as Label).text = Singleton.wordList.wordsToFind[i];
+		Action<VisualElement, int> bindItemFound = (e, i) => (e as Label).text = Singleton.wordList.wordsFound[i];
 
 		ui = GetComponent<UIDocument>();
 		TimeCounterLabel = ui.rootVisualElement.Q<Label>("TimeCounter");
 		listViewWordsLeft = ui.rootVisualElement.Q<ListView>("WordsLeft");
 		listViewWordsLeft.makeItem = makeItem;
 		listViewWordsLeft.bindItem = bindItemLeft;
-		listViewWordsLeft.itemsSource = listWords;
+		listViewWordsLeft.itemsSource = Singleton.wordList.wordsToFind;
 		listViewWordsLeft.selectionType = SelectionType.Single;
 		listViewWordsFound = ui.rootVisualElement.Q<ListView>("WordsFound");
 		listViewWordsFound.makeItem = makeItem;
 		listViewWordsFound.bindItem = bindItemFound;
-		listViewWordsFound.itemsSource = listWords;
+		listViewWordsFound.itemsSource = Singleton.wordList.wordsFound;
 		listViewWordsFound.selectionType = SelectionType.None;
 		///update the timer every 1 second
 		timeCounterCoroutine = StartCoroutine(TimeCounterSecond());
@@ -54,7 +52,12 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 		listViewWordsLeft.itemsChosen += (selectedItems) =>
 		{
-			Debug.Log("Items chosen: " + selectedItems.First());
+			string item = selectedItems.First() as string;
+			Debug.Log("Items chosen: " + item);
+			Singleton.wordList.wordsFound.Add(item);
+			Singleton.wordList.wordsToFind.Remove(item);
+			listViewWordsLeft.RefreshItems();
+			listViewWordsFound.RefreshItems();
 		};
 
 	}
@@ -67,12 +70,6 @@ public class InGameUI : MonoBehaviour, ICameraView
 	{
 		if (ui.enabled)
 			timeCounter += Time.fixedDeltaTime;
-	}
-
-	private void Start()
-	{
-		listWords.Add("Test 1");
-		listWords.Add("Test 2");
 	}
 
 
@@ -97,19 +94,19 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 	public void Hide()
 	{
-		this.enabled = false;
-		ui.enabled = false;
-		OnDisable();
+		Singleton.clickAndDrag.CancelClickPoints(null);
+		this.gameObject.SetActive(false);
+  //      this.enabled = false;
+		//ui.enabled = false;
+		//OnDisable();
 	}
 
 	public void Show()
 	{
-		this.enabled = true;
-		ui.enabled = true;
-		OnEnable();
+		this.gameObject.SetActive(true);
+  //      this.enabled = true;
+		//ui.enabled = true;
+		//OnEnable();
 	}
-	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
-	{
-		navigateAction = action;
-	}
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

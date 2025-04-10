@@ -51,15 +51,19 @@ namespace BoardContent
 
 		public void PlaceWordsOnBoard()
 		{
+			Singleton.wordList.Reset();
 			List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
 			//SortedDictionary<string, List<WordContainedFrom>> wordsContained;
 			//before applying that list to board, make sure to sort it from longest to shortest..
 			// remove the short words contained in longer ones (only add their positions)..
 			// one letter words are not accepted, (2 letters words should not exist)
-			int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, true);
+			int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, wordsInReverse: true);
 			Vector2 vector2 = CalculateMinBoardDims(ref words);
+			
+			//not so somple, if we fail to put the word on board it can not be included here then
+			Singleton.wordList.wordsToFind = WordsLeft;
 
-			Singleton.wordList.Reset();
+
 			System.Random random = new System.Random();
 			int x, y;
 			WordOrientationEnum orientEnum;

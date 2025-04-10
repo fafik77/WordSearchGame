@@ -48,6 +48,7 @@ public class BoardTiles : MonoBehaviour
 		CreateBoard(14, 9);	//camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 		PlaceWords placeWords = new PlaceWords(tilesSript2D);
 		placeWords.PlaceWordsOnBoard();
+
 	}
 
 

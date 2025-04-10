@@ -17,10 +17,10 @@ namespace Assets.Scripts.Internal
 		/// shows this camera menu view
 		/// </summary>
 		void Show();
-        /// <summary>
-        /// MenuMgr will call this to hook up all menus to main system
-        /// </summary>
-        /// <param name="action">When menu navigation is needed</param>
-        void OnNavigateToSet(Action<MenuNavigationEnum> action);
+		/// <summary>
+		/// MenuMgr will call this to hook up all menus to main system
+		/// </summary>
+		/// <param name="action">When menu navigation is needed</param>
+		void OnNavigateToSet(Action<MenuNavigationEnum> action);
 	}
 }

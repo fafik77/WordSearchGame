@@ -11,20 +11,25 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void Awake()
 	{
 		ui = GetComponent<UIDocument>();
-		ui.enabled = false;
+		ui.enabled = true;
+	}
+	private void OnEnable()
+	{
+		ui = GetComponent<UIDocument>();
+	}
+	private void OnDisable()
+	{
+		
 	}
 	public void Hide()
 	{
-		ui.enabled = false;
+		this.gameObject.SetActive(false);
 	}
 
 	public void Show()
 	{
-		ui.enabled = true;
+		this.gameObject.SetActive(true);
 	}
 
-	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
-	{
-		navigateAction = action;
-	}
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

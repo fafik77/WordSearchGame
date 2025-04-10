@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MenuMgr : MonoBehaviour
@@ -24,6 +25,18 @@ public class MenuMgr : MonoBehaviour
 		NewGame,
 	}
 
+	private void Awake()
+	{
+		if (!ingameUI)
+			ingameUI = this.gameObject.GetComponentInChildren<InGameUI>(true);
+		if (!pauseMenuUI)
+			pauseMenuUI = this.gameObject.GetComponentInChildren<PauseMenuUI>(true);
+		if (!chooseBoardUI)
+			chooseBoardUI = this.gameObject.GetComponentInChildren<ChooseBoardUI>(true);
+		if (!settingsUi)
+			settingsUi = this.gameObject.GetComponentInChildren<SettingsUi>(true);
+	}
+
 	private void Start()
 	{
 		if (ingameUI){
@@ -31,17 +44,17 @@ public class MenuMgr : MonoBehaviour
 			ingameUI.OnNavigateToSet(NavigateTo);
 		}
 		if (pauseMenuUI){
-			pauseMenuUI.gameObject.SetActive(true);
+			pauseMenuUI.gameObject.SetActive(false);
 			pauseMenuUI.OnNavigateToSet(NavigateTo);
-        }
+		}
 		if (chooseBoardUI){
-			chooseBoardUI.gameObject.SetActive(true);
+			chooseBoardUI.gameObject.SetActive(false);
 			chooseBoardUI.OnNavigateToSet(NavigateTo);
-        }
+		}
 		if (settingsUi){
-			settingsUi.gameObject.SetActive(true);
+			settingsUi.gameObject.SetActive(false);
 			settingsUi.OnNavigateToSet(NavigateTo);
-        }
+		}
 	}
 	public void MenuEscKey()
 	{

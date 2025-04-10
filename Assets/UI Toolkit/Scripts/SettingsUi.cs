@@ -27,12 +27,14 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	private void Awake()
 	{
 		ui = GetComponent<UIDocument>();
-		ui.enabled = false;
+		ui.enabled = true;
 	}
 
 	private void OnEnable()
 	{
 		ui = GetComponent<UIDocument>();
+
+		if (ui == null || ui.rootVisualElement == null) return;
 
 		letterCaseButton = ui.rootVisualElement.Q<Button>("CaseButton");
 		letterCaseLabel = ui.rootVisualElement.Q<Label>("CaseLabel");
@@ -46,8 +48,8 @@ public class SettingsUi : MonoBehaviour, ICameraView
 
 		try
 		{
-			local_Yes = LocalizationCache.GetTrasnaltion("Yes");
-			local_No = LocalizationCache.GetTrasnaltion("No");
+			local_Yes = LocalizationHelper.GetTranslation("Yes");
+			local_No = LocalizationHelper.GetTranslation("No");
 		}
 		catch (NotFoundException e) { Debug.LogWarning(e); }
 
@@ -140,16 +142,13 @@ public class SettingsUi : MonoBehaviour, ICameraView
 
 	public void Hide()
 	{
-		ui.enabled = false;
+		this.gameObject.SetActive(false);
 	}
 
 	public void Show()
 	{
-		ui.enabled = true;
+		this.gameObject.SetActive(true);
 	}
 
-	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action)
-	{
-		navigateAction = action;
-	}
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

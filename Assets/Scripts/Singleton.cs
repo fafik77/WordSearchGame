@@ -103,6 +103,12 @@ public class Singleton
 	}
 	public static ClickAndDragStruct clickAndDrag;
 
+	public struct BoardUiEvents
+	{
+        public event EventHandler boardRefreshUi;
+        public event EventHandler boardWordFound;
+	}
+	public static BoardUiEvents uiMenuEvents;
 
 	
 	public static WordList wordList;

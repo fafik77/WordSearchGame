@@ -900,7 +900,6 @@ GameObject:
   - component: {fileID: 616540133}
   - component: {fileID: 616540132}
   - component: {fileID: 616540135}
-  - component: {fileID: 616540136}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -984,18 +983,6 @@ MonoBehaviour:
   mainCamera: {fileID: 330585545}
   settingsCamera: {fileID: 874031988}
   menuMgr: {fileID: 1716833827}
---- !u!114 &616540136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 616540131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cee0d6a9051e24da4a6f649ab3d638, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,7 +1096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8616111098c8a624f98fcadb0f72bb79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PreviewTiles: {fileID: 1990562391}
+  PreviewTiles: {fileID: 0}
 --- !u!1001 &846449039
 PrefabInstance:
   m_ObjectHideFlags: 0
