@@ -49,7 +49,7 @@ public class BoardTiles : MonoBehaviour
 		CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 
 		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania",
-		"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		};
 		//var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
 		//foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
@@ -75,7 +75,7 @@ public class BoardTiles : MonoBehaviour
 		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 0.3f);
 		//try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
-
+		Singleton.boardUiEvents.RefreshBoardUi();
 	}
 
 

@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.Progress;
 
 public class InGameUI : MonoBehaviour, ICameraView
 {
@@ -25,6 +26,9 @@ public class InGameUI : MonoBehaviour, ICameraView
 	/// The "makeItem" function will be called as needed when the ListView needs more items to render
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
+	{
+	}
+	private void Start()
 	{
 	}
 
@@ -54,16 +58,30 @@ public class InGameUI : MonoBehaviour, ICameraView
 		{
 			string item = selectedItems.First() as string;
 			Debug.Log("Items chosen: " + item);
-			Singleton.wordList.wordsFound.Add(item);
-			Singleton.wordList.wordsToFind.Remove(item);
-			listViewWordsLeft.RefreshItems();
-			listViewWordsFound.RefreshItems();
 		};
 
+		Singleton.boardUiEvents.FoundWordEvent += FoundWordEventHandler;
+		Singleton.boardUiEvents.BoardRefreshUiEvent += RefreshItems;
 	}
+
+	private void FoundWordEventHandler(object sender, string word)
+	{
+		Singleton.wordList.wordsFound.Insert(0, word);
+		Singleton.wordList.wordsToFind.Remove(word);
+		RefreshItems();
+	}
+	private void RefreshItems()
+	{
+		listViewWordsLeft.RefreshItems();
+		listViewWordsFound.RefreshItems();
+	}
+
+
 	private void OnDisable()
 	{
 		StopCoroutine(timeCounterCoroutine);
+		Singleton.boardUiEvents.FoundWordEvent -= FoundWordEventHandler;
+		Singleton.boardUiEvents.BoardRefreshUiEvent -= RefreshItems;
 	}
 
 	private void FixedUpdate()

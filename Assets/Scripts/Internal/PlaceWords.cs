@@ -53,6 +53,9 @@ namespace BoardContent
 		/// </summary>
 		public bool PrefferWordsShareLetters;
 
+		bool _TerminatingThreads;
+		float MaxWaitTimeForThreadsSec = 5f;
+
 
 
 		SortedDictionary<string, List<WordContainedFrom>> wordsContained;
@@ -99,25 +102,51 @@ namespace BoardContent
 			maxRetries = wordPlaceMaxRetry;
 			if (maxThreads < 1) maxThreads = 1;
 			Singleton.wordList.Reset();
-			//use the old C like thread wrappers
-			List<PlaceWordsOnBoardThrWrapper> triedBoards = new List<PlaceWordsOnBoardThrWrapper>(maxThreads);
-			List<Thread> threads = new List<Thread>(maxThreads);
+			_TerminatingThreads = false;
+
+			List<Task<PlaceWordsOnBoardReturns>> tryBoardTasks = new(maxThreads);
+			List<PlaceWordsOnBoardReturns> triedBoards = new(maxThreads);
 			for (int i = 0; i != maxThreads; i++)
 			{
-				triedBoards.Add(new PlaceWordsOnBoardThrWrapper(this));
-				Thread thread = new(new ThreadStart(triedBoards[i].Run));
-				thread.Start();
-				threads.Add(thread);
+				var task = Task<PlaceWordsOnBoardReturns>.Run(() => { return PlaceWordsOnBoard(); });
+				tryBoardTasks.Add(task);
 			}
-
-			foreach (var thread in threads)
+			Task.WaitAll(tryBoardTasks.ToArray(), (int)(MaxWaitTimeForThreadsSec * 1000));
+			_TerminatingThreads = true;
+			foreach (var task in tryBoardTasks)
 			{
-				thread.Join();
+				try
+				{
+					var res = task.Result;
+					if (res.fullyComplete) triedBoards.Add(res);
+				}
+				catch (Exception ex)
+				{
+					Debug.Log(ex);
+				}
 			}
-			triedBoards.OrderBy(x => x.boardTry.wordsTimedout);
+			//PlaceWordsOnBoardReturns res = ttt.Result;
+
+			//use the old C like thread wrappers
+			//List<PlaceWordsOnBoardThrWrapper> triedBoards = new List<PlaceWordsOnBoardThrWrapper>(maxThreads);
+			//List<Thread> threads = new List<Thread>(maxThreads);
+			//for (int i = 0; i != maxThreads; i++)
+			//{
+			//	triedBoards.Add(new PlaceWordsOnBoardThrWrapper(this));
+			//	Thread thread = new(new ThreadStart(triedBoards[i].Run));
+			//	thread.Start();
+			//	threads.Add(thread);
+			//}
+
+			//foreach (var thread in threads)
+			//{
+			//	thread.Join();
+			//}
+			triedBoards.OrderBy(x => x.wordsTimedout);
 
 
-			finalBoard = triedBoards[0].boardTry;
+			finalBoard = triedBoards[0];
+			Singleton.wordList.list = finalBoard.wordList;
 
 			//write onto the screen
 			var iterSrc = finalBoard.tiles2DDummy.GetEnumerator();
@@ -135,8 +164,10 @@ namespace BoardContent
 			public int wordsTimedout;
 			public char[,] tiles2DDummy;
 			public List<WordListEntry> wordList;
+			public bool fullyComplete;
 			public PlaceWordsOnBoardReturns(int width, int height)
 			{
+				fullyComplete = false;
 				wordsTimedout = 0;
 				tiles2DDummy = new char[width, height];
 				wordList = new List<WordListEntry>();
@@ -160,6 +191,7 @@ namespace BoardContent
 		}
 		PlaceWordsOnBoardReturns PlaceWordsOnBoard()
 		{
+			Debug.Log($"Starting {Thread.CurrentThread.ManagedThreadId}");
 			//Singleton.wordList.Reset();
 			//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
 			//SortedDictionary<string, List<WordContainedFrom>> wordsContained;
@@ -190,6 +222,7 @@ namespace BoardContent
 				{
 					do
 					{   //try to place the word up to maxRetries times
+						if (_TerminatingThreads) throw new ThreadTerminationException();
 						++tries;
 						if (tries > maxRetries) throw new RetriesTimeoutException(tries, $"To Many ReTries placing the word: \"{word}\"");
 						x = random.Next(0, width);  // nice ducumentation you have there
@@ -198,7 +231,7 @@ namespace BoardContent
 					}
 					while (!(wordPlaceOk = CanPlaceWordHere(x, y, boardTry, orientEnum, word)).ok);
 				}
-				catch (Exception e)
+				catch (RetriesTimeoutException e)
 				{
 					++boardTry.wordsTimedout;
 					Debug.LogWarning(e);
@@ -209,16 +242,17 @@ namespace BoardContent
 				{
 					word = word,
 					posFrom = { x = x, y = y },
-					posTo = { x = x + wordPlaceOk.xmod * word.Length, y = y + wordPlaceOk.ymod * word.Length }
+					posTo = { x = x + wordPlaceOk.xmod * (word.Length - 1), y = y + wordPlaceOk.ymod * (word.Length - 1) }
 				});
 				for (int i = 0; i != word.Length; i++)
 				{
+					if (_TerminatingThreads) throw new ThreadTerminationException();
 					boardTry.tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
 					//tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
 				}
 			}
 
-
+			boardTry.fullyComplete = true;
 			return boardTry;
 		}
 

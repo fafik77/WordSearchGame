@@ -22,6 +22,8 @@ namespace BoardContent
 		public WordListDirectionEnum direction;
 		public string word;
 		public Vector2 posFrom, posTo;
+		public bool found;
+		public bool Found {  get { return found; } set { found = value; }}
 		public bool CompareTo(Vector2 posFrom2, Vector2 posTo2)
 		{
 			if ((posFrom == posFrom2 && posTo == posTo2) ||

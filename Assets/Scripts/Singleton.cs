@@ -109,8 +109,12 @@ public class Singleton
 
 	public struct BoardUiEvents
 	{
-		public event EventHandler BoardRefreshUiEvent;
-		public event EventHandler BoardWordFoundEvent;
+		public event EventHandler<string> FoundWordEvent;
+		public event Action BoardRefreshUiEvent;
+
+		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
+		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
+
 	}
 	public static BoardUiEvents boardUiEvents;
 
