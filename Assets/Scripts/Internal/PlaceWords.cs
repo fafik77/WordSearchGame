@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using BoardContent;
 using Exceptions;
 using NUnit.Framework;
 using Unity.VisualScripting;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
 
 namespace BoardContent
@@ -46,7 +48,9 @@ namespace BoardContent
 		/// the formula is += letters * AdditionalCharsPercent
 		/// </summary>
 		float AdditionalCharsPercent = 0f;
-		// this could be an option for the player to entice Words to share Letter Tile
+		/// <summary>
+		/// this could be an option for the player to entice Words to share Letter Tile
+		/// </summary>
 		public bool PrefferWordsShareLetters;
 
 
@@ -57,13 +61,16 @@ namespace BoardContent
 
 
 		public LetterTileScript[,] TilesSript2D {  get; private set; }
-		char[,] tiles2DDummy;
+		//char[,] tiles2DDummy;
+		PlaceWordsOnBoardReturns finalBoard;
+
+
 		protected PlaceWords(LetterTileScript[,] tilesSript2D)
 		{
 			this.TilesSript2D = tilesSript2D;
 			width = tilesSript2D.GetLength(0);
 			height = tilesSript2D.GetLength(1);
-			tiles2DDummy = new char[width, height];
+			//tiles2DDummy = new char[width, height];
 		}
 
 		/// <summary>
@@ -84,18 +91,74 @@ namespace BoardContent
 			TilesSript2D = CreateBoardAtLeast(((int)MinimumRequiredBoardSize.x), ((int)MinimumRequiredBoardSize.y));
 			width = TilesSript2D.GetLength(0);
 			height = TilesSript2D.GetLength(1);
-			tiles2DDummy = new char[width, height];
+			//tiles2DDummy = new char[width, height];
 		}
 
 		public int PlaceWordsOnBoardThreaded(int wordPlaceMaxRetry = 100, int maxThreads = 8)
 		{
+			maxRetries = wordPlaceMaxRetry;
+			if (maxThreads < 1) maxThreads = 1;
 			Singleton.wordList.Reset();
-			PlaceWordsOnBoard();
+			//use the old C like thread wrappers
+			List<PlaceWordsOnBoardThrWrapper> triedBoards = new List<PlaceWordsOnBoardThrWrapper>(maxThreads);
+			List<Thread> threads = new List<Thread>(maxThreads);
+			for (int i = 0; i != maxThreads; i++)
+			{
+				triedBoards.Add(new PlaceWordsOnBoardThrWrapper(this));
+				Thread thread = new(new ThreadStart(triedBoards[i].Run));
+				thread.Start();
+				threads.Add(thread);
+			}
+
+			foreach (var thread in threads)
+			{
+				thread.Join();
+			}
+			triedBoards.OrderBy(x => x.boardTry.wordsTimedout);
+
+
+			finalBoard = triedBoards[0].boardTry;
+
+			//write onto the screen
+			var iterSrc = finalBoard.tiles2DDummy.GetEnumerator();
+			var iterDst = TilesSript2D.GetEnumerator();
+			while (iterSrc.MoveNext() && iterDst.MoveNext())
+			{
+				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
+			}
 
 			return 0x00;
 		}
 
-		void PlaceWordsOnBoard()
+		struct PlaceWordsOnBoardReturns
+		{
+			public int wordsTimedout;
+			public char[,] tiles2DDummy;
+			public List<WordListEntry> wordList;
+			public PlaceWordsOnBoardReturns(int width, int height)
+			{
+				wordsTimedout = 0;
+				tiles2DDummy = new char[width, height];
+				wordList = new List<WordListEntry>();
+			}
+		}
+
+		class PlaceWordsOnBoardThrWrapper
+		{
+			public PlaceWordsOnBoardThrWrapper(PlaceWords placeWords)
+			{
+				this.placeWords = placeWords;
+				boardTry = new PlaceWordsOnBoardReturns();
+			}
+			public PlaceWords placeWords;
+			public PlaceWordsOnBoardReturns boardTry;
+			public void Run()
+			{
+				Debug.Log($"Starting {Thread.CurrentThread.ManagedThreadId}");
+				boardTry = placeWords.PlaceWordsOnBoard();
+			}
+		}
+		PlaceWordsOnBoardReturns PlaceWordsOnBoard()
 		{
 			//Singleton.wordList.Reset();
 			//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
@@ -105,15 +168,20 @@ namespace BoardContent
 			// one letter words are not accepted, (2 letters words should not exist)
 			//int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, wordsInReverse: true);
 			//Vector2 vector2 = CalculateMinBoardDims(ref words);
-			
+
 			//not so simple, if we fail to put the word on board it can not be included here then
 			//Singleton.wordList.wordsToFind = WordsLeft;
 
 			///Change This to Be threaded potentially?, try on multiple threads
-			System.Random random = new System.Random(/*thread id*/);
+			System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
 			int x, y;
 			WordOrientationEnum orientEnum;
 			WordPlaceOk wordPlaceOk;
+
+
+			PlaceWordsOnBoardReturns boardTry = new PlaceWordsOnBoardReturns(width, height);
+			//var tiles2DDummyLocal = new char[width, height];
+			//List<WordListEntry> wordList = new List<WordListEntry>();
 
 			foreach (var word in words)
 			{
@@ -123,20 +191,21 @@ namespace BoardContent
 					do
 					{   //try to place the word up to maxRetries times
 						++tries;
-						if (tries > maxRetries) throw new RetriesTimeoutException(tries,$"To Many ReTries placing the word: \"{word}\"");
-						x = random.Next(0, width - 1);
-						y = random.Next(0, height - 1);
+						if (tries > maxRetries) throw new RetriesTimeoutException(tries, $"To Many ReTries placing the word: \"{word}\"");
+						x = random.Next(0, width);  // nice ducumentation you have there
+						y = random.Next(0, height); // https://stackoverflow.com/a/5063289
 						orientEnum = (WordOrientationEnum)random.Next(0, 5);
 					}
-					while (!(wordPlaceOk = CanPlaceWordHere(x, y, orientEnum, word)).ok);
+					while (!(wordPlaceOk = CanPlaceWordHere(x, y, boardTry, orientEnum, word)).ok);
 				}
 				catch (Exception e)
 				{
+					++boardTry.wordsTimedout;
 					Debug.LogWarning(e);
 					continue;
 				}
 
-				Singleton.wordList.list.Add(new WordListEntry()
+				boardTry.wordList.Add(new WordListEntry()
 				{
 					word = word,
 					posFrom = { x = x, y = y },
@@ -144,19 +213,13 @@ namespace BoardContent
 				});
 				for (int i = 0; i != word.Length; i++)
 				{
-					tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
+					boardTry.tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
 					//tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
 				}
 			}
-			
-			
-			//write onto the screen
-			var iterSrc = tiles2DDummy.GetEnumerator();
-			var iterDst = TilesSript2D.GetEnumerator();
-			while (iterSrc.MoveNext() && iterDst.MoveNext())
-			{
-				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
-			}
+
+
+			return boardTry;
 		}
 
 		/// <summary>
@@ -175,16 +238,11 @@ namespace BoardContent
 				letters += word.Length;
 			}
 			//add to the minimum board
-			if (letters > 0f)
+			if (letters > 0f && AdditionalCharsPercent > 0f)
 				letters += (int)((AdditionalCharsPercent * letters));
-            // formula: sqrt((1920*1080) *(16/9))
-            int prefDimX = (int)Math.Sqrt((double)letters * targetAspectRatio);
+			// formula: sqrt((1920*1080) *(16/9))
+			int prefDimX = (int)Math.Sqrt((double)letters * targetAspectRatio);
 			int prefDimY = (int)Math.Sqrt((double)letters / targetAspectRatio);
-
-   //         int sqrtLett = (int)Math.Ceiling(Math.Sqrt(letters));
-
-			//int prefDimX = (int)Math.Ceiling((double)sqrtLett * targetAspectRatio);
-			//int prefDimY = (int)Math.Ceiling((double)sqrtLett / targetAspectRatio);
 
 			if (minDim > prefDimX) prefDimX = minDim;
 
@@ -197,7 +255,7 @@ namespace BoardContent
 				);
 		}
 
-		WordPlaceOk CanPlaceWordHere(int x, int y, WordOrientationEnum orientEnum, string word)
+		WordPlaceOk CanPlaceWordHere(int x, int y, PlaceWordsOnBoardReturns boardTry, WordOrientationEnum orientEnum, string word)
 		{
 			int xmod = 0, ymod = 0;
 			switch (orientEnum)
@@ -244,7 +302,7 @@ namespace BoardContent
 
 			for (int i = 0; i < word.Length; i++)
 			{
-				var tmp = tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)];
+				var tmp = boardTry.tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)];
 				if (tmp != 0x00)
 					if (tmp != word[i])
 					{

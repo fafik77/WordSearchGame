@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BoardContent
@@ -21,6 +22,13 @@ namespace BoardContent
 		public WordListDirectionEnum direction;
 		public string word;
 		public Vector2 posFrom, posTo;
+		public bool CompareTo(Vector2 posFrom2, Vector2 posTo2)
+		{
+			if ((posFrom == posFrom2 && posTo == posTo2) ||
+				  (posFrom == posTo2 && posTo == posFrom2))
+				return true;
+			return false;
+		}
 	}
 
 	public struct WordList
