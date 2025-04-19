@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine.WSA;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Exceptions;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -46,7 +48,16 @@ public class BoardTiles : MonoBehaviour
 		//CreateBoard(10, 10);
 		CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 
-		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
+		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania",
+		"Ktos", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		};
+		var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
+		foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
+		{
+			words.Add(match.Value);
+		}
+
+
 		PlaceWordsOnBoard(words);
 	}
 
@@ -61,7 +72,7 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		//delegate logic to separete class
-		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true);
+		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 0.2f);
 		//try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
 

@@ -27,6 +27,7 @@ public class MenuMgr : MonoBehaviour
 
 	private void Awake()
 	{
+		Singleton.clickAndDrag.menuMgrInGame = this;
 		if (!ingameUI)
 			ingameUI = this.gameObject.GetComponentInChildren<InGameUI>(true);
 		if (!pauseMenuUI)
@@ -69,6 +70,8 @@ public class MenuMgr : MonoBehaviour
 			NavigateBack();
 		}
 	}
+	public bool IsIngame() { return menusStack.Count == 0; }
+
 	public void NavigateBack()
 	{
 		if (menusStack.Count == 0)

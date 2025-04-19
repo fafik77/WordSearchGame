@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BoardContent;
+using Exceptions;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace BoardContent
 		/// adds Additional dummy Chars to the board size to make the search for words harder
 		/// the formula is += letters * AdditionalCharsPercent
 		/// </summary>
-		public float AdditionalCharsPercent = 0f;
+		float AdditionalCharsPercent = 0f;
 		// this could be an option for the player to entice Words to share Letter Tile
 		public bool PrefferWordsShareLetters;
 
@@ -72,10 +73,11 @@ namespace BoardContent
 		/// <param name="AspectRatio">by default (14:9)</param>
 		/// <param name="CreateBoardAtLeast">Pass in the function that makes the board</param>
 		/// <param name="wordsInReverse">if true ContainedDuplicate will also match palindroms</param>
-		public PlaceWords(List<string> words, Vector2 AspectRatio, Func<int, int, LetterTileScript[,]> CreateBoardAtLeast, bool wordsInReverse = true)
+		public PlaceWords(List<string> words, Vector2 AspectRatio, Func<int, int, LetterTileScript[,]> CreateBoardAtLeast, bool wordsInReverse = true, float AdditionalCharsPercent=0f)
 		{
 			if (AspectRatio != null)
 				this.AspectRatio = AspectRatio;
+			this.AdditionalCharsPercent = AdditionalCharsPercent;
 			WordsRemoved = SepareteContainedDuplicateWords(ref words, out wordsContained, out var WordsLeft, wordsInReverse);
 			this.words = words;
 			MinimumRequiredBoardSize = CalculateMinBoardDims(ref words);
@@ -121,7 +123,7 @@ namespace BoardContent
 					do
 					{   //try to place the word up to maxRetries times
 						++tries;
-						if (tries > maxRetries) throw new Exception($"To Many ReTries placing the word: \"{word}\"");
+						if (tries > maxRetries) throw new RetriesTimeoutException(tries,$"To Many ReTries placing the word: \"{word}\"");
 						x = random.Next(0, width - 1);
 						y = random.Next(0, height - 1);
 						orientEnum = (WordOrientationEnum)random.Next(0, 5);
@@ -174,12 +176,15 @@ namespace BoardContent
 			}
 			//add to the minimum board
 			if (letters > 0f)
-				letters += ((int)(AdditionalCharsPercent * letters));
+				letters += (int)((AdditionalCharsPercent * letters));
+            // formula: sqrt((1920*1080) *(16/9))
+            int prefDimX = (int)Math.Sqrt((double)letters * targetAspectRatio);
+			int prefDimY = (int)Math.Sqrt((double)letters / targetAspectRatio);
 
-			int sqrtLett = (int)Math.Ceiling(Math.Sqrt(letters));
+   //         int sqrtLett = (int)Math.Ceiling(Math.Sqrt(letters));
 
-			int prefDimX = (int)Math.Ceiling((double)sqrtLett * targetAspectRatio);
-			int prefDimY = (int)Math.Ceiling((double)sqrtLett / targetAspectRatio);
+			//int prefDimX = (int)Math.Ceiling((double)sqrtLett * targetAspectRatio);
+			//int prefDimY = (int)Math.Ceiling((double)sqrtLett / targetAspectRatio);
 
 			if (minDim > prefDimX) prefDimX = minDim;
 

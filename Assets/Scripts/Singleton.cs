@@ -55,6 +55,7 @@ public class Singleton
 			set => lastClickTime = Time.fixedTime;
 		}
 		private bool clickLocked;
+		public MenuMgr menuMgrInGame;
 		/// <summary>
 		/// track letter tiles selected by clicking/draging
 		/// </summary>
@@ -62,6 +63,9 @@ public class Singleton
 		/// <param name="finishPointOnly">Set only the End tile</param>
 		public void AddClickPoint(LetterTileScript letterTileTouched, PointerEventData eventData, bool finishPointOnly = false)
 		{
+			if (menuMgrInGame != null && !menuMgrInGame.IsIngame())
+				return;
+			
 			if (clickLocked) return;
 
 			if (tileStart)
