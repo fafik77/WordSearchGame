@@ -38,33 +38,77 @@ namespace BoardContent
 		/// board will not get any smaller than this
 		/// </summary>
 		public Vector2 MinimumBoardSize;
+		List<string> words;
+		public Vector2 MinimumRequiredBoardSize { get; private set; }
+		/// <summary>
+		/// adds Additional dummy Chars to the board size to make the search for words harder
+		/// the formula is += letters * AdditionalCharsPercent
+		/// </summary>
+		public float AdditionalCharsPercent = 0f;
+		// this could be an option for the player to entice Words to share Letter Tile
+		public bool PrefferWordsShareLetters;
 
-		LetterTileScript[,] tilesSript2D;
+
+
+		SortedDictionary<string, List<WordContainedFrom>> wordsContained;
+		public int WordsRemoved { get; private set; }
+
+
+
+		public LetterTileScript[,] TilesSript2D {  get; private set; }
 		char[,] tiles2DDummy;
-		public PlaceWords(LetterTileScript[,] tilesSript2D)
+		protected PlaceWords(LetterTileScript[,] tilesSript2D)
 		{
-			this.tilesSript2D = tilesSript2D;
+			this.TilesSript2D = tilesSript2D;
 			width = tilesSript2D.GetLength(0);
 			height = tilesSript2D.GetLength(1);
 			tiles2DDummy = new char[width, height];
 		}
 
-		public void PlaceWordsOnBoard()
+		/// <summary>
+		/// Calculates minimum requirements & separates out the contained duplicates
+		/// </summary>
+		/// <param name="words">In: List of words</param>
+		/// <param name="AspectRatio">by default (14:9)</param>
+		/// <param name="CreateBoardAtLeast">Pass in the function that makes the board</param>
+		/// <param name="wordsInReverse">if true ContainedDuplicate will also match palindroms</param>
+		public PlaceWords(List<string> words, Vector2 AspectRatio, Func<int, int, LetterTileScript[,]> CreateBoardAtLeast, bool wordsInReverse = true)
+		{
+			if (AspectRatio != null)
+				this.AspectRatio = AspectRatio;
+			WordsRemoved = SepareteContainedDuplicateWords(ref words, out wordsContained, out var WordsLeft, wordsInReverse);
+			this.words = words;
+			MinimumRequiredBoardSize = CalculateMinBoardDims(ref words);
+			TilesSript2D = CreateBoardAtLeast(((int)MinimumRequiredBoardSize.x), ((int)MinimumRequiredBoardSize.y));
+			width = TilesSript2D.GetLength(0);
+			height = TilesSript2D.GetLength(1);
+			tiles2DDummy = new char[width, height];
+		}
+
+		public int PlaceWordsOnBoardThreaded(int wordPlaceMaxRetry = 100, int maxThreads = 8)
 		{
 			Singleton.wordList.Reset();
-			List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
+			PlaceWordsOnBoard();
+
+			return 0x00;
+		}
+
+		void PlaceWordsOnBoard()
+		{
+			//Singleton.wordList.Reset();
+			//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
 			//SortedDictionary<string, List<WordContainedFrom>> wordsContained;
 			//before applying that list to board, make sure to sort it from longest to shortest..
 			// remove the short words contained in longer ones (only add their positions)..
 			// one letter words are not accepted, (2 letters words should not exist)
-			int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, wordsInReverse: true);
-			Vector2 vector2 = CalculateMinBoardDims(ref words);
+			//int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, wordsInReverse: true);
+			//Vector2 vector2 = CalculateMinBoardDims(ref words);
 			
-			//not so somple, if we fail to put the word on board it can not be included here then
-			Singleton.wordList.wordsToFind = WordsLeft;
+			//not so simple, if we fail to put the word on board it can not be included here then
+			//Singleton.wordList.wordsToFind = WordsLeft;
 
-
-			System.Random random = new System.Random();
+			///Change This to Be threaded potentially?, try on multiple threads
+			System.Random random = new System.Random(/*thread id*/);
 			int x, y;
 			WordOrientationEnum orientEnum;
 			WordPlaceOk wordPlaceOk;
@@ -102,9 +146,11 @@ namespace BoardContent
 					//tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
 				}
 			}
+			
+			
 			//write onto the screen
 			var iterSrc = tiles2DDummy.GetEnumerator();
-			var iterDst = tilesSript2D.GetEnumerator();
+			var iterDst = TilesSript2D.GetEnumerator();
 			while (iterSrc.MoveNext() && iterDst.MoveNext())
 			{
 				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
@@ -116,7 +162,7 @@ namespace BoardContent
 		/// </summary>
 		/// <param name="words"></param>
 		/// <returns></returns>
-		private Vector2 CalculateMinBoardDims(ref List<string> words)
+		public Vector2 CalculateMinBoardDims(ref List<string> words)
 		{
 			//double targetAspectRatio = 14d / 9d;
 			double targetAspectRatio = AspectRatio.x / AspectRatio.y;
@@ -126,7 +172,9 @@ namespace BoardContent
 			{
 				letters += word.Length;
 			}
-			var guessY = (letters / minDim) + 1;
+			//add to the minimum board
+			if (letters > 0f)
+				letters += ((int)(AdditionalCharsPercent * letters));
 
 			int sqrtLett = (int)Math.Ceiling(Math.Sqrt(letters));
 

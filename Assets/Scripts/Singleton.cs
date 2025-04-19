@@ -105,10 +105,10 @@ public class Singleton
 
 	public struct BoardUiEvents
 	{
-        public event EventHandler boardRefreshUi;
-        public event EventHandler boardWordFound;
+		public event EventHandler BoardRefreshUiEvent;
+		public event EventHandler BoardWordFoundEvent;
 	}
-	public static BoardUiEvents uiMenuEvents;
+	public static BoardUiEvents boardUiEvents;
 
 	
 	public static WordList wordList;
