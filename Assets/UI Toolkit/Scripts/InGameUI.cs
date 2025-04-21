@@ -37,6 +37,11 @@ public class InGameUI : MonoBehaviour, ICameraView
 		/// As the user scrolls through the list, the ListView object will recycle elements created by the "makeItem" and invoke the "bindItem" callback to associate the element with the matching data item (specified as an index in the list)
 		Action<VisualElement, int> bindItemLeft = (e, i) => (e as Label).text = Singleton.wordList.wordsToFind[i];
 		Action<VisualElement, int> bindItemFound = (e, i) => (e as Label).text = Singleton.wordList.wordsFound[i];
+		if (Singleton.wordList.wordsToFind == null)
+			Singleton.wordList.wordsToFind = new List<string>();
+		if (Singleton.wordList.wordsFound == null)
+			Singleton.wordList.wordsFound = new List<string>();
+
 
 		ui = GetComponent<UIDocument>();
 		TimeCounterLabel = ui.rootVisualElement.Q<Label>("TimeCounter");

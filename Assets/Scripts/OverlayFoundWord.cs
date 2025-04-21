@@ -33,6 +33,7 @@ public class OverlayFoundWord : MonoBehaviour
 				if (item.found == false && item.CompareTo(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
 				{
 					item.Found = true;
+					Singleton.wordList.list[i] = item;
 					Singleton.boardUiEvents.FoundWord(item.word);
 					RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
 					break;

@@ -9,17 +9,17 @@ using UnityEngine;
 
 namespace BoardContent
 {
-	public enum WordListDirectionEnum
-	{
-		None = 0,
-		Horizontal,
-		Vertical,
-		Crossed
-	}
+	//public enum WordListDirectionEnum
+	//{
+	//	None = 0,
+	//	Horizontal,
+	//	Vertical,
+	//	Crossed
+	//}
 
 	public struct WordListEntry
 	{
-		public WordListDirectionEnum direction;
+		//public WordListDirectionEnum direction;
 		public string word;
 		public Vector2 posFrom, posTo;
 		public bool found;

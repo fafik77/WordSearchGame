@@ -44,17 +44,17 @@ namespace BoardContent
 		List<string> words;
 		public Vector2 MinimumRequiredBoardSize { get; private set; }
 		/// <summary>
-		/// adds Additional dummy Chars to the board size to make the search for words harder
-		/// the formula is += letters * AdditionalCharsPercent
+		/// adds Additional dummy Chars to the board size to make the search for words harder.
+		/// The formula is += letters * AdditionalCharsPercent
 		/// </summary>
 		float AdditionalCharsPercent = 0f;
 		/// <summary>
 		/// this could be an option for the player to entice Words to share Letter Tile
 		/// </summary>
 		public bool PrefferWordsShareLetters;
+		public float MaxWaitTimeForThreadsSec = 5f;
 
 		bool _TerminatingThreads;
-		float MaxWaitTimeForThreadsSec = 5f;
 
 
 
@@ -64,17 +64,8 @@ namespace BoardContent
 
 
 		public LetterTileScript[,] TilesSript2D {  get; private set; }
-		//char[,] tiles2DDummy;
 		PlaceWordsOnBoardReturns finalBoard;
 
-
-		protected PlaceWords(LetterTileScript[,] tilesSript2D)
-		{
-			this.TilesSript2D = tilesSript2D;
-			width = tilesSript2D.GetLength(0);
-			height = tilesSript2D.GetLength(1);
-			//tiles2DDummy = new char[width, height];
-		}
 
 		/// <summary>
 		/// Calculates minimum requirements & separates out the contained duplicates
@@ -94,7 +85,6 @@ namespace BoardContent
 			TilesSript2D = CreateBoardAtLeast(((int)MinimumRequiredBoardSize.x), ((int)MinimumRequiredBoardSize.y));
 			width = TilesSript2D.GetLength(0);
 			height = TilesSript2D.GetLength(1);
-			//tiles2DDummy = new char[width, height];
 		}
 
 		public int PlaceWordsOnBoardThreaded(int wordPlaceMaxRetry = 100, int maxThreads = 8)
@@ -122,31 +112,15 @@ namespace BoardContent
 				}
 				catch (Exception ex)
 				{
-					Debug.Log(ex);
+					Debug.LogWarning(ex);
 				}
 			}
-			//PlaceWordsOnBoardReturns res = ttt.Result;
-
-			//use the old C like thread wrappers
-			//List<PlaceWordsOnBoardThrWrapper> triedBoards = new List<PlaceWordsOnBoardThrWrapper>(maxThreads);
-			//List<Thread> threads = new List<Thread>(maxThreads);
-			//for (int i = 0; i != maxThreads; i++)
-			//{
-			//	triedBoards.Add(new PlaceWordsOnBoardThrWrapper(this));
-			//	Thread thread = new(new ThreadStart(triedBoards[i].Run));
-			//	thread.Start();
-			//	threads.Add(thread);
-			//}
-
-			//foreach (var thread in threads)
-			//{
-			//	thread.Join();
-			//}
 			triedBoards.OrderBy(x => x.wordsTimedout);
 
 
 			finalBoard = triedBoards[0];
 			Singleton.wordList.list = finalBoard.wordList;
+			Singleton.wordList.wordsToFind = finalBoard.wordsToFind.ToList();
 
 			//write onto the screen
 			var iterSrc = finalBoard.tiles2DDummy.GetEnumerator();
@@ -164,6 +138,7 @@ namespace BoardContent
 			public int wordsTimedout;
 			public char[,] tiles2DDummy;
 			public List<WordListEntry> wordList;
+			public SortedSet<string> wordsToFind;
 			public bool fullyComplete;
 			public PlaceWordsOnBoardReturns(int width, int height)
 			{
@@ -171,100 +146,106 @@ namespace BoardContent
 				wordsTimedout = 0;
 				tiles2DDummy = new char[width, height];
 				wordList = new List<WordListEntry>();
+				wordsToFind = new SortedSet<string>();
 			}
 		}
 
-		class PlaceWordsOnBoardThrWrapper
-		{
-			public PlaceWordsOnBoardThrWrapper(PlaceWords placeWords)
-			{
-				this.placeWords = placeWords;
-				boardTry = new PlaceWordsOnBoardReturns();
-			}
-			public PlaceWords placeWords;
-			public PlaceWordsOnBoardReturns boardTry;
-			public void Run()
-			{
-				Debug.Log($"Starting {Thread.CurrentThread.ManagedThreadId}");
-				boardTry = placeWords.PlaceWordsOnBoard();
-			}
-		}
+		/// <summary>
+		/// Places words on board (Thread safe, read only access)
+		/// </summary>
+		/// <returns>Board proposition</returns>
+		/// <exception cref="ThreadTerminationException">when '_TerminatingThreads==1'</exception>
 		PlaceWordsOnBoardReturns PlaceWordsOnBoard()
 		{
-			Debug.Log($"Starting {Thread.CurrentThread.ManagedThreadId}");
-			//Singleton.wordList.Reset();
-			//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "slimak", "Ania" };
-			//SortedDictionary<string, List<WordContainedFrom>> wordsContained;
-			//before applying that list to board, make sure to sort it from longest to shortest..
-			// remove the short words contained in longer ones (only add their positions)..
-			// one letter words are not accepted, (2 letters words should not exist)
-			//int removedWords = SepareteContainedDuplicateWords(ref words, out var wordsContained, out var WordsLeft, wordsInReverse: true);
-			//Vector2 vector2 = CalculateMinBoardDims(ref words);
-
 			//not so simple, if we fail to put the word on board it can not be included here then
 			//Singleton.wordList.wordsToFind = WordsLeft;
 
-			///Change This to Be threaded potentially?, try on multiple threads
 			System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
 			int x, y;
 			WordOrientationEnum orientEnum;
 			WordPlaceOk wordPlaceOk;
-
-
 			PlaceWordsOnBoardReturns boardTry = new PlaceWordsOnBoardReturns(width, height);
-			//var tiles2DDummyLocal = new char[width, height];
-			//List<WordListEntry> wordList = new List<WordListEntry>();
 
 			foreach (var word in words)
 			{
 				int tries = 0;
+				//try to place the word
 				try
-				{
+				{	
 					do
 					{   //try to place the word up to maxRetries times
 						if (_TerminatingThreads) throw new ThreadTerminationException();
 						++tries;
 						if (tries > maxRetries) throw new RetriesTimeoutException(tries, $"To Many ReTries placing the word: \"{word}\"");
-						x = random.Next(0, width);  // nice ducumentation you have there
+						x = random.Next(0, width);  // nice ducumentation you have there MS
 						y = random.Next(0, height); // https://stackoverflow.com/a/5063289
 						orientEnum = (WordOrientationEnum)random.Next(0, 5);
 					}
 					while (!(wordPlaceOk = CanPlaceWordHere(x, y, boardTry, orientEnum, word)).ok);
 				}
 				catch (RetriesTimeoutException e)
-				{
+				{	//could not place the word in n retries
 					++boardTry.wordsTimedout;
 					Debug.LogWarning(e);
 					continue;
 				}
-
-				boardTry.wordList.Add(new WordListEntry()
-				{
-					word = word,
-					posFrom = { x = x, y = y },
-					posTo = { x = x + wordPlaceOk.xmod * (word.Length - 1), y = y + wordPlaceOk.ymod * (word.Length - 1) }
-				});
+				//save the word to the board
 				for (int i = 0; i != word.Length; i++)
 				{
 					if (_TerminatingThreads) throw new ThreadTerminationException();
 					boardTry.tiles2DDummy[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)] = word[i];
-					//tilesSript2D[x + (i * wordPlaceOk.xmod), y + (i * wordPlaceOk.ymod)].SetLetter(word[i]);
 				}
-			}
+
+				//save this and all contained words to the list
+				var myWordListEntry = new WordListEntry()
+				{
+					word = word,
+					posFrom = { x = x, y = y },
+					posTo = { x = x + wordPlaceOk.xmod * (word.Length - 1), y = y + wordPlaceOk.ymod * (word.Length - 1) }
+				};
+				boardTry.wordList.Add(myWordListEntry);
+				boardTry.wordsToFind.Add(word);
+				// save all contained words to the list
+				if (wordsContained.TryGetValue(word, out var value))
+				{
+					foreach(var item in value)
+					{
+						var containedWordListEntry = new WordListEntry()
+						{
+							word = item.wordContaied
+						};
+
+						if (item.startOffset < 0) //from the end
+						{
+							var back = -item.startOffset;
+							var len = item.wordContaied.Length - 1;
+							containedWordListEntry.posFrom = new Vector2(x + wordPlaceOk.xmod * (word.Length - back), y + wordPlaceOk.ymod * (word.Length - back));
+							containedWordListEntry.posTo = new Vector2(x + wordPlaceOk.xmod * (word.Length - back - len), y + wordPlaceOk.ymod * (word.Length - back - len));
+						}
+						else
+						{
+							containedWordListEntry.posFrom = new Vector2(x, y);
+							containedWordListEntry.posTo = new Vector2(x + wordPlaceOk.xmod * (item.wordContaied.Length - 1), y + wordPlaceOk.ymod * (item.wordContaied.Length - 1));
+						}
+						boardTry.wordList.Add(containedWordListEntry);
+						boardTry.wordsToFind.Add(item.wordContaied);
+					}
+				}
+
+			} //for all words
 
 			boardTry.fullyComplete = true;
 			return boardTry;
 		}
 
 		/// <summary>
-		/// Based on total count of Letters in words, returns a bare minimum board size in AspectRacio
+		/// Based on total count of Letters in words, returns a bare (minimum + AdditionalCharsPercent) board size in AspectRacio
 		/// </summary>
-		/// <param name="words"></param>
-		/// <returns></returns>
+		/// <param name="words">Sorted by lenght desc</param>
+		/// <returns>minimum W : H</returns>
 		public Vector2 CalculateMinBoardDims(ref List<string> words)
 		{
-			//double targetAspectRatio = 14d / 9d;
-			double targetAspectRatio = AspectRatio.x / AspectRatio.y;
+			double targetAspectRatio = AspectRatio.x / AspectRatio.y;   // 14 : 9
 			var minDim = words[0].Length;
 			int letters = 0;
 			foreach (var word in words)
@@ -289,6 +270,15 @@ namespace BoardContent
 				);
 		}
 
+		/// <summary>
+		/// Checks if word from x,y in direction can be placed on board
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="boardTry">the board to check</param>
+		/// <param name="orientEnum"></param>
+		/// <param name="word"></param>
+		/// <returns></returns>
 		WordPlaceOk CanPlaceWordHere(int x, int y, PlaceWordsOnBoardReturns boardTry, WordOrientationEnum orientEnum, string word)
 		{
 			int xmod = 0, ymod = 0;
@@ -347,14 +337,18 @@ namespace BoardContent
 			return wordPlaceOk;
 		}
 
+		
 		struct WordContainedFrom
 		{
 			public string wordContaied;
+			/// <summary>
+			/// startOffset: ..-1 means backwards
+			/// </summary>
 			public int startOffset;
 		}
 
 		/// <summary>
-		/// this function takes in a list of words to separate out ones that are contained in other ones
+		/// takes in a list of words to separate out ones that are contained in other ones
 		/// </summary>
 		/// <param name="words">in-out: list of words to put on board</param>
 		/// <param name="outSeparetedWords">out: a map of longer words that contain shorter words and their relative offset</param>
