@@ -66,7 +66,12 @@ public class InGameUI : MonoBehaviour, ICameraView
 		};
 
 		Singleton.boardUiEvents.FoundWordEvent += FoundWordEventHandler;
-		Singleton.boardUiEvents.BoardRefreshUiEvent += RefreshItems;
+		Singleton.boardUiEvents.BoardRefreshUiEvent += BoardRefreshUiEvent;
+	}
+	private void BoardRefreshUiEvent()
+	{
+		Hide();
+		Show();
 	}
 
 	private void FoundWordEventHandler(object sender, string word)
