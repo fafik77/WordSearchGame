@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine.WSA;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Exceptions;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -39,15 +41,41 @@ public class BoardTiles : MonoBehaviour
 		tilesParent = this.gameObject.transform.Find("tilesParent");
 		overlayParent = this.gameObject.transform.Find("overlayParent");
 
-		ReserveAmountAsync(width * height);
-		//CreateBoard(5,5);
+		ReserveAmountAsync(1200);   //width * height
 	}
 	private void Start()
 	{
-		CreateBoard(10, 10);
-		CreateBoard(14, 9);	//camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
-		PlaceWords placeWords = new PlaceWords(tilesSript2D);
-		placeWords.PlaceWordsOnBoard();
+		//CreateBoard(10, 10);
+		CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
+
+		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
+		//"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		};
+		//var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
+		//foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
+		//{
+		//	words.Add(match.Value);
+		//}
+
+
+		PlaceWordsOnBoard(words);
+	}
+
+
+	public void PlaceContentOnBoard(char[,] content, List<string> wordsToFind)
+	{
+		///search through provided content to find wordsToFind
+		var width = content.GetLength(0);
+		var height = content.GetLength(1);
+		CreateBoard(width, height);
+	}
+	public void PlaceWordsOnBoard(List<string> words)
+	{
+		//delegate logic to separete class
+		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 0.3f);
+		//try to place words on board
+		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
+		Singleton.boardUiEvents.RefreshBoardUi();
 	}
 
 
@@ -57,12 +85,11 @@ public class BoardTiles : MonoBehaviour
 	/// <param name="width">width</param>
 	/// <param name="height">height</param>
 	/// <returns>false if nothing changed, true if board was resized</returns>
-	public bool CreateBoardAtLeast(int width, int height)
+	public LetterTileScript[,] CreateBoardAtLeast(int width, int height)
 	{
 		if (!(width > widthPrev || height > heightPrev))
-			return false;
-		CreateBoard(width, height);
-		return true;
+			return tilesSript2D;	//double negative
+		return CreateBoard(width, height);
 	}
 
 
@@ -100,12 +127,12 @@ public class BoardTiles : MonoBehaviour
 	/// </summary>
 	/// <param name="width">width</param>
 	/// <param name="height">height</param>
-	public void CreateBoard(int width, int height)
+	public LetterTileScript[,] CreateBoard(int width, int height)
 	{
 		ReserveAmountSync(width * height);
 
 		if (width == widthPrev && height == heightPrev)
-			return; //no change
+			return tilesSript2D; //no change
 
 		widthPrev = width;
 		heightPrev = height;
@@ -143,5 +170,6 @@ public class BoardTiles : MonoBehaviour
 				tilesSript2D[i, j].SetLetter('-');
 			}
 		}
+		return tilesSript2D;
 	}
 }

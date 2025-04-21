@@ -10,7 +10,12 @@ public class EventSystemHandler : MonoBehaviour
 	[SerializeField] private Camera settingsCamera;
 	[SerializeField] private MenuMgr menuMgr;
 
-	private void Update()
+    private void Awake()
+    {
+        QualitySettings.vSyncCount = 1;
+    }
+
+    private void Update()
 	{
 		//settings
 		if (Keyboard.current.escapeKey.wasReleasedThisFrame)

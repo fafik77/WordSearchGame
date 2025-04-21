@@ -1,3 +1,6 @@
+using BoardContent;
+using System;
+using System.Linq;
 using UnityEngine;
 
 public class OverlayFoundWord : MonoBehaviour
@@ -21,9 +24,39 @@ public class OverlayFoundWord : MonoBehaviour
 	private void ClickAndDrag_FinishDrawingLine(object sender, LetterTileScript[] bothPoints)
 	{
 		Vector2[] bothPointsPosition = { bothPoints[0].transform.position, bothPoints[1].transform.position };
-		if (ValidateLineCoords(bothPointsPosition[0], bothPointsPosition[1]))
+		Vector2[] bothPointsPositionAbs = { (bothPoints[0].transform.position - myTransform.position).Abs(), (bothPoints[1].transform.position - myTransform.position).Abs() };
+		if (ValidateLineCoords(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
 		{
-			RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
+			for (int i = 0; i != Singleton.wordList.list.Count; ++i)
+			{
+				var item = Singleton.wordList.list[i];
+				if (item.found == false && item.CompareTo(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
+				{
+					item.Found = true;
+					Singleton.wordList.list[i] = item;
+					Singleton.boardUiEvents.FoundWord(item.word);
+					RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
+					break;
+				}
+			}
+
+			//var found = Singleton.wordList.list.Where(x => { return x.found == false && x.CompareTo(bothPointsPositionAbs[0], bothPointsPositionAbs[1]); });
+			//foreach(WordListEntry item in found)
+			//{
+			//	item.Found = true;
+			//		RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
+			//	break;
+			//}
+			//         foreach (var item in Singleton.wordList.list)
+			//{
+			//	if(item.found==false && item.CompareTo(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
+			//	{
+			//		item.Found = true;
+
+			//                 RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
+			//		break;
+			//	}
+			//}
 		}
 		else
 		{

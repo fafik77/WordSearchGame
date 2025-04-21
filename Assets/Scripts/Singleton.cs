@@ -55,6 +55,7 @@ public class Singleton
 			set => lastClickTime = Time.fixedTime;
 		}
 		private bool clickLocked;
+		public MenuMgr menuMgrInGame;
 		/// <summary>
 		/// track letter tiles selected by clicking/draging
 		/// </summary>
@@ -62,6 +63,9 @@ public class Singleton
 		/// <param name="finishPointOnly">Set only the End tile</param>
 		public void AddClickPoint(LetterTileScript letterTileTouched, PointerEventData eventData, bool finishPointOnly = false)
 		{
+			if (menuMgrInGame != null && !menuMgrInGame.IsIngame())
+				return;
+			
 			if (clickLocked) return;
 
 			if (tileStart)
@@ -103,6 +107,16 @@ public class Singleton
 	}
 	public static ClickAndDragStruct clickAndDrag;
 
+	public struct BoardUiEvents
+	{
+		public event EventHandler<string> FoundWordEvent;
+		public event Action BoardRefreshUiEvent;
+
+		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
+		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
+
+	}
+	public static BoardUiEvents boardUiEvents;
 
 	
 	public static WordList wordList;
