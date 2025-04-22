@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class Singleton
 {
@@ -120,5 +121,37 @@ public class Singleton
 
 	
 	public static WordList wordList;
+	public struct ScenesStruct
+	{
+		public Scene GameScene;
+		public Scene MainMenuScene;
+		public void SwitchToScene(string sceneName)
+		{
+			var currScene = SceneManager.GetActiveScene();
+			if (currScene.path == sceneName || currScene.name == sceneName)
+				return;
+			//var newScene = SceneManager.GetSceneByPath(sceneName);
+			SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+			//SceneManager.SetActiveScene(newScene);
+
+			//foreach(var item in currScene.GetRootGameObjects())
+			//{
+			//	item.gameObject.SetActive(false);
+			//}
+			//foreach(var item in newScene.GetRootGameObjects())
+			//{
+			//	item.gameObject.SetActive(true);
+			//}
+		}
+	}
+	public static ScenesStruct scenesStruct;
+
+	public struct ChooseBoardSStruct
+	{
+		public string Lang;
+		public string file;
+		public string board;
+	}
+	public static ChooseBoardSStruct chooseBoardSStruct;
 
 }

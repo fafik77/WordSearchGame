@@ -21,6 +21,7 @@ public class BoardTiles : MonoBehaviour
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
 	private Mutex mutexTilesPool = new Mutex();
+	Vector3 cameraOrigPos;
 
 	//sizes for camera Projection.Size	(to take up the entire screen)
 	//Size: width, height
@@ -40,14 +41,38 @@ public class BoardTiles : MonoBehaviour
 	{
 		tilesParent = this.gameObject.transform.Find("tilesParent");
 		overlayParent = this.gameObject.transform.Find("overlayParent");
+		cameraOrigPos = Camera.main.transform.position;
 
-		ReserveAmountAsync(1200);   //width * height
+
+		StartCoroutine(ReserveAmountAsyncEnum());
 	}
 	private void Start()
 	{
-		//CreateBoard(10, 10);
-		CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
+		//ReserveAmountAsync(1200);   //width * height
 
+		//CreateBoard(10, 10);
+		//CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
+
+		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
+		////"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//};
+		////var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
+		////foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
+		////{
+		////	words.Add(match.Value);
+		////}
+		//PlaceWordsOnBoard(words);
+		StartCoroutine(PlaceWordsOnBoardEnum());
+	}
+
+	IEnumerator ReserveAmountAsyncEnum()
+	{
+		yield return null;	//delay by one tick?
+		ReserveAmountAsync(1200);   //width * height
+		yield return null;
+	}
+	IEnumerator PlaceWordsOnBoardEnum()
+	{
 		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
 		//"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		};
@@ -56,10 +81,11 @@ public class BoardTiles : MonoBehaviour
 		//{
 		//	words.Add(match.Value);
 		//}
-
-
+		yield return new WaitForSeconds(0.1f);
 		PlaceWordsOnBoard(words);
+		yield return null;
 	}
+
 
 
 	public void PlaceContentOnBoard(char[,] content, List<string> wordsToFind)
@@ -72,10 +98,24 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		//delegate logic to separete class
-		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 0.3f);
+		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 1.2f);
 		//try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
 		Singleton.boardUiEvents.RefreshBoardUi();
+
+		ZoomCameraOnBoard();
+
+	}
+
+	public void ZoomCameraOnBoard()
+	{
+		//var camera = Camera.main;
+		//var newPos = tilesParent.position;
+		//newPos.x += 5;
+		//newPos.y -= 2;
+		//newPos.z = cameraOrigPos.z;
+		//camera.transform.position = newPos;
+		//camera.orthographicSize = widthPrev/2;
 	}
 
 

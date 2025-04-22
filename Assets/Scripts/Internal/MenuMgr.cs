@@ -13,6 +13,7 @@ public class MenuMgr : MonoBehaviour
 	[SerializeField] private PauseMenuUI pauseMenuUI;
 	[SerializeField] private ChooseBoardUI chooseBoardUI;
 	[SerializeField] private SettingsUi settingsUi;
+	[SerializeField] private MainMenuUI mainMenuUI;
 
 	Stack<MonoBehaviour> menusStack = new Stack<MonoBehaviour>();
 
@@ -36,6 +37,8 @@ public class MenuMgr : MonoBehaviour
 			chooseBoardUI = this.gameObject.GetComponentInChildren<ChooseBoardUI>(true);
 		if (!settingsUi)
 			settingsUi = this.gameObject.GetComponentInChildren<SettingsUi>(true);
+		if (!mainMenuUI)
+			mainMenuUI = this.gameObject.GetComponentInChildren<MainMenuUI>(true);
 	}
 
 	private void Start()
@@ -56,14 +59,25 @@ public class MenuMgr : MonoBehaviour
 			settingsUi.gameObject.SetActive(false);
 			settingsUi.OnNavigateToSet(NavigateTo);
 		}
+		if (mainMenuUI)
+		{
+			mainMenuUI.OnNavigateToSet(NavigateTo);
+		}
 	}
 	public void MenuEscKey()
 	{
 		if (menusStack.Count == 0)
 		{
-			ingameUI.Hide();
-			menusStack.Push(pauseMenuUI);
-			pauseMenuUI.Show();
+			if (mainMenuUI == null)
+			{
+				ingameUI.Hide();
+				menusStack.Push(pauseMenuUI);
+				pauseMenuUI.Show();
+			}
+			else
+			{
+				mainMenuUI.Show();
+			}
 		}
 		else
 		{
@@ -78,16 +92,25 @@ public class MenuMgr : MonoBehaviour
 			return;
 		var last = menusStack.Pop() as ICameraView;
 		last.Hide();
-		if (menusStack.Count != 0)	//go back or show the in game ui back
+		if (menusStack.Count != 0)  //go back or show the in game ui back
 		{
 			var prev = menusStack.Peek() as ICameraView;
 			prev.Show();
 		}
 		else
-			ingameUI.Show();
+		{
+			if (mainMenuUI != null)
+				mainMenuUI.Show();
+			else
+				ingameUI.Show();
+		}
 	}
 	public void NavigateForwardTo(MonoBehaviour menu)
 	{
+		if (menusStack.Count == 0)
+		{
+			if (mainMenuUI != null) menusStack.Push(mainMenuUI);
+		}
 		var prev = menusStack.Peek();
 		(prev as ICameraView).Hide();
 		menusStack.Push(menu);

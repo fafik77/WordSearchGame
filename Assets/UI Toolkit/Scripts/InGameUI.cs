@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEditor.Progress;
 
@@ -22,11 +24,17 @@ public class InGameUI : MonoBehaviour, ICameraView
 		set { timeCounter = value; }
 	}
 	private Coroutine timeCounterCoroutine;
+	Camera mainCamera;
 
 	/// The "makeItem" function will be called as needed when the ListView needs more items to render
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
 	{
+		if (Singleton.scenesStruct.GameScene.path == null)
+			Singleton.scenesStruct.GameScene = SceneManager.GetSceneByName("GameScene");
+		if (Singleton.scenesStruct.MainMenuScene.path == null)
+			Singleton.scenesStruct.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
+		mainCamera = Camera.main;
 	}
 	private void Start()
 	{
@@ -99,13 +107,19 @@ public class InGameUI : MonoBehaviour, ICameraView
 		if (ui.enabled)
 			timeCounter += Time.fixedDeltaTime;
 	}
+	private void Update()
+	{
+		if (!ui.enabled)
+			return;
+	}
 
 
-	/// <summary>
-	/// this updates the Time display
-	/// </summary>
-	/// <param name="seconds"></param>
-	IEnumerator TimeCounterSecond(int seconds = 1)
+
+/// <summary>
+/// this updates the Time display
+/// </summary>
+/// <param name="seconds"></param>
+IEnumerator TimeCounterSecond(int seconds = 1)
 	{
 		while (this.gameObject.activeInHierarchy)
 		{
@@ -124,17 +138,11 @@ public class InGameUI : MonoBehaviour, ICameraView
 	{
 		Singleton.clickAndDrag.CancelClickPoints(null);
 		this.gameObject.SetActive(false);
-  //      this.enabled = false;
-		//ui.enabled = false;
-		//OnDisable();
 	}
 
 	public void Show()
 	{
 		this.gameObject.SetActive(true);
-  //      this.enabled = true;
-		//ui.enabled = true;
-		//OnEnable();
 	}
 	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }
