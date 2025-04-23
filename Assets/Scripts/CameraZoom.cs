@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,20 +12,20 @@ public class CameraZoom : MonoBehaviour
 	[SerializeField] private bool reverseCamera_x = false;
 	[SerializeField] private bool reverseCamera_y = false;
 
-
-
 	Camera mainCamera;
 	Vector3 mainCameraOrigPos;
 	float mainCameraOrigZoom;
-	// Start is called once before the first execution of Update after the MonoBehaviour is created
+	Vector2 boardSize;
+
+
 	void Start()
 	{
+		boardSize = new(50, 14);
 		mainCamera = Camera.main;
 		mainCameraOrigPos = mainCamera.transform.position;
 		mainCameraOrigZoom = mainCamera.orthographicSize;
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
 		if (!menuMgr.IsIngame()) return;
@@ -35,11 +36,12 @@ public class CameraZoom : MonoBehaviour
 		{
 			PerformZoom(scrollInput);
 		}
+
 		if (Input.GetMouseButtonDown(2))
 		{
-			mainCamera.transform.position = mainCameraOrigPos;
-			mainCamera.orthographicSize = mainCameraOrigZoom;
+			ResetCamera();
 		}
+
 		if (Input.GetMouseButton(1))
 		{
 			var off = Input.mousePositionDelta;
@@ -48,9 +50,39 @@ public class CameraZoom : MonoBehaviour
 			if (reverseCamera_y)
 				off.y = -off.y;
 			var newPos = transform.position - off.normalized * (moveSpeed * mainCamera.orthographicSize / 4);
-			newPos.z = transform.position.z;
-			transform.position = newPos;
+			SetCameraPos(newPos);
 		}
+	}
+	public void ResetCamera()
+	{
+		mainCamera.transform.position = mainCameraOrigPos;
+		mainCamera.orthographicSize = mainCameraOrigZoom;
+	}
+	public void SetCameraPos(Vector3 pos)
+	{
+		pos.z = transform.position.z;
+		pos.x = Mathf.Clamp(pos.x, -1, boardSize.x + 1);
+		pos.y = Mathf.Clamp(pos.y, -(boardSize.y + 1), 1);
+		transform.position = pos;
+	}
+	public void SetCameraZoom(float zoom)
+	{
+		zoom = Mathf.Round(zoom += 0.5f) - 0.5f;
+
+		float clampedDistance = Mathf.Clamp(zoom, minZoom, maxZoom);
+		mainCamera.orthographicSize = clampedDistance;
+	}
+	public void SetCamera(Vector3 pos, float zoom)
+	{
+		SetCameraPos(pos);
+		SetCameraZoom(zoom);
+	}
+	public void SetCameraDefaults(Vector3 pos, float zoom, Vector2 boardSize)
+	{
+		this.boardSize = boardSize;
+		SetCamera(pos, zoom);
+		mainCameraOrigPos = mainCamera.transform.position;
+		mainCameraOrigZoom = mainCamera.orthographicSize;
 	}
 
 
@@ -75,10 +107,8 @@ public class CameraZoom : MonoBehaviour
 			float clampedDistance = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 			mainCamera.orthographicSize = clampedDistance;
 			if (mainCamera.orthographicSize >= maxZoom || mainCamera.orthographicSize <= minZoom) return;
-			//float clampedDistance = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 			var newPos = transform.position + (scrollInput > 0f ? zoomDirection : -zoomDirection) * (moveSpeed * clampedDistance);
-			newPos.z = transform.position.z;
-			transform.position = newPos;
+			SetCameraPos(newPos);
 		}
 		else
 		{

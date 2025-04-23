@@ -10,6 +10,7 @@ using UnityEngine.WSA;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Exceptions;
+using UnityEngine.Rendering;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class BoardTiles : MonoBehaviour
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
 	private Mutex mutexTilesPool = new Mutex();
-	Vector3 cameraOrigPos;
+	Camera mainCamera;
+	CameraZoom mainCameraZoom;
 
 	//sizes for camera Projection.Size	(to take up the entire screen)
 	//Size: width, height
@@ -34,6 +36,8 @@ public class BoardTiles : MonoBehaviour
 	//n = 3.5 * n - 2 * n
 
 	private int widthPrev, heightPrev;
+	//private int boardMinW = 14, boardMinH = 9;
+
 
 
 	protected LetterTileScript[,] tilesSript2D;
@@ -41,8 +45,8 @@ public class BoardTiles : MonoBehaviour
 	{
 		tilesParent = this.gameObject.transform.Find("tilesParent");
 		overlayParent = this.gameObject.transform.Find("overlayParent");
-		cameraOrigPos = Camera.main.transform.position;
-
+		mainCamera = Camera.main;
+		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
 
 		StartCoroutine(ReserveAmountAsyncEnum());
 	}
@@ -98,7 +102,7 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		//delegate logic to separete class
-		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 1.2f);
+		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, AdditionalCharsPercent: 1.2f);
 		//try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
 		Singleton.boardUiEvents.RefreshBoardUi();
@@ -109,6 +113,10 @@ public class BoardTiles : MonoBehaviour
 
 	public void ZoomCameraOnBoard()
 	{
+		///14:9 -> 7.5,-4,-10 size = 5
+		///8:5 ->  4,-2,-10 size = 2.5
+		float ratio = 14f / 9f;
+		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2, -(heightPrev / 2)), ((float)widthPrev) / (ratio * 2), new(widthPrev, heightPrev));
 		//var camera = Camera.main;
 		//var newPos = tilesParent.position;
 		//newPos.x += 5;
@@ -122,15 +130,28 @@ public class BoardTiles : MonoBehaviour
 	/// <summary>
 	/// Creates the board only if provided dimensions are greater than current dimensions of the board
 	/// </summary>
-	/// <param name="width">width</param>
-	/// <param name="height">height</param>
-	/// <returns>false if nothing changed, true if board was resized</returns>
+	/// <param name="width">new width</param>
+	/// <param name="height">new height</param>
+	/// <returns>board</returns>
 	public LetterTileScript[,] CreateBoardAtLeast(int width, int height)
 	{
 		if (!(width > widthPrev || height > heightPrev))
 			return tilesSript2D;	//double negative
 		return CreateBoard(width, height);
 	}
+
+	///// <summary>
+	///// Creates the board only if provided dimensions are greater than min dimensions for the board
+	///// </summary>
+	///// <param name="width">new width</param>
+	///// <param name="height">new height</param>
+	///// <returns>board</returns>
+	//public LetterTileScript[,] CreateBoardNoSmallerThanMin(int width, int height)
+	//{
+	//	if (!(width > boardMinW || height > boardMinH))
+	//		return tilesSript2D;	//double negative
+	//	return CreateBoard(width, height);
+	//}
 
 
 	public int ReserveAmountSync(int amount) => ReserveAmount(amount).Result;
@@ -170,7 +191,6 @@ public class BoardTiles : MonoBehaviour
 	public LetterTileScript[,] CreateBoard(int width, int height)
 	{
 		ReserveAmountSync(width * height);
-
 		if (width == widthPrev && height == heightPrev)
 			return tilesSript2D; //no change
 
@@ -210,6 +230,7 @@ public class BoardTiles : MonoBehaviour
 				tilesSript2D[i, j].SetLetter('-');
 			}
 		}
+		Singleton.TilesSript2D = tilesSript2D;
 		return tilesSript2D;
 	}
 }

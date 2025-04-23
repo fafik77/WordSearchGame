@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BoardContent
 {
@@ -59,6 +60,8 @@ namespace BoardContent
 
 
 		SortedDictionary<string, List<WordContainedFrom>> wordsContained;
+		Dictionary<char, int> uniqueLettersFrequency;
+
 		public int WordsRemoved { get; private set; }
 
 
@@ -78,10 +81,12 @@ namespace BoardContent
 		{
 			if (AspectRatio != null)
 				this.AspectRatio = AspectRatio;
+			MinimumBoardSize = this.AspectRatio;
 			this.AdditionalCharsPercent = AdditionalCharsPercent;
-			WordsRemoved = SepareteContainedDuplicateWords(ref words, out wordsContained, out var WordsLeft, wordsInReverse);
+			WordsRemoved = SepareteContainedDuplicateWords(ref words, out wordsContained, out uniqueLettersFrequency, wordsInReverse);
 			this.words = words;
 			MinimumRequiredBoardSize = CalculateMinBoardDims(ref words);
+			MinimumRequiredBoardSize = GetBoardDimsNoLessThanMin(MinimumRequiredBoardSize);
 			TilesSript2D = CreateBoardAtLeast(((int)MinimumRequiredBoardSize.x), ((int)MinimumRequiredBoardSize.y));
 			width = TilesSript2D.GetLength(0);
 			height = TilesSript2D.GetLength(1);
@@ -233,9 +238,26 @@ namespace BoardContent
 				}
 
 			} //for all words
+			FillinBoardWithRandomLetters(ref boardTry);
 
 			boardTry.fullyComplete = true;
 			return boardTry;
+		}
+
+		void FillinBoardWithRandomLetters(ref PlaceWordsOnBoardReturns boardTry)
+		{
+			var keys = uniqueLettersFrequency.Keys.ToList();
+			int keysLen = keys.Count;
+			System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+
+			for (int row = 0; row < boardTry.tiles2DDummy.GetLength(0); ++row)
+			{
+				for (int col = 0; col < boardTry.tiles2DDummy.GetLength(1); ++col)
+				{
+					if (boardTry.tiles2DDummy[row, col] == 0x00)
+						boardTry.tiles2DDummy[row, col] = keys[random.Next(0, keysLen)];
+				}
+			}
 		}
 
 		/// <summary>
@@ -355,7 +377,7 @@ namespace BoardContent
 		/// <param name="wordsToFind">out: the full list of words to find (should contain words.Len() - return)</param>
 		/// <param name="wordsInReverse">checks the input words list for palindroms and their partial matches</param>
 		/// <returns>amount of 1 letter words or exact duplicates removed</returns>
-		static int SepareteContainedDuplicateWords(ref List<string> words, out SortedDictionary<string, List<WordContainedFrom>> outSeparetedWords, out List<string> wordsToFind, bool wordsInReverse)
+		static int SepareteContainedDuplicateWords(ref List<string> words, out SortedDictionary<string, List<WordContainedFrom>> outSeparetedWords, out Dictionary<char,int> uniqueLettersFrequency, bool wordsInReverse)
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
 			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
@@ -363,17 +385,18 @@ namespace BoardContent
 
 			wordsLower.Sort(); // sort alpabetical
 			wordsLower.Sort((x, y) => -x.Length.CompareTo(y.Length)); // sort it from longest to shortest (keep previous alpabetical)
-			
+
 			var wordsMinToMax = wordsLower.ToList(); //makes a copy
 			wordsMinToMax.Reverse();
 			int wordCount = wordsMinToMax.Count;
 			List<string> wordsNotRemoved = new List<string>();
-			wordsToFind = new List<string>();
+			uniqueLettersFrequency = new Dictionary<char, int>();
 
-			bool removeWord, removeWordExactDup;
+
+			bool removeWord;
 			for (int idx = 0; idx < wordsMinToMax.Count-1; ++idx)
 			{
-				removeWord = removeWordExactDup = false;
+				removeWord = false;
 				string shorterWord = wordsMinToMax[idx];
 				Regex regexContains = new Regex(shorterWord, RegexOptions.IgnoreCase);
 
@@ -383,7 +406,7 @@ namespace BoardContent
 					if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
 					{
 						++amountRemoved;
-						removeWord = removeWordExactDup = true;
+						removeWord = true;
 						break;
 					}
 
@@ -416,12 +439,18 @@ namespace BoardContent
 
 				if (!removeWord)
 					wordsNotRemoved.Add(shorterWord);
-				if (!removeWordExactDup)
-					wordsToFind.Add(shorterWord);
 			}
 			wordsNotRemoved.Add(wordsLower[0]);
 			wordsNotRemoved.Reverse();
 			words = wordsNotRemoved;
+			foreach(var word in words)
+			{
+				foreach (char letter in word)
+				{
+					uniqueLettersFrequency.TryAdd(char.ToLower(letter),0);
+					uniqueLettersFrequency[char.ToLower(letter)]++;
+				}
+			}
 			return amountRemoved;
 		}
 	}

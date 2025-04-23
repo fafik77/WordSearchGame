@@ -71,6 +71,17 @@ public class InGameUI : MonoBehaviour, ICameraView
 		{
 			string item = selectedItems.First() as string;
 			Debug.Log("Items chosen: " + item);
+			///TODO make Help prettier
+			var help = Singleton.wordList.list.Where(i => { return i.word == item; }).Take(1);
+			foreach ( var i in help)
+			{
+				var pos = i.posFrom;
+				Debug.Log($"Item chosen: {item}, pos: {pos}");
+				var tile = Singleton.TilesSript2D[(int)pos.x, (int)pos.y];
+
+				Singleton.clickAndDrag.AddClickPoint(tile, null, false);
+				tile.Highlight();
+			}
 		};
 
 		Singleton.boardUiEvents.FoundWordEvent += FoundWordEventHandler;

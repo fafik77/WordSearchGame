@@ -504,10 +504,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomSpeed: 5
-  minZoom: 2
+  minZoom: 3
   maxZoom: 20
   moveSpeed: 0.1
   menuMgr: {fileID: 1716833827}
+  reverseCamera_x: 0
+  reverseCamera_y: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
