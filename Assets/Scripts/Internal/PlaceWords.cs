@@ -121,9 +121,15 @@ namespace BoardContent
 				}
 			}
 			triedBoards.OrderBy(x => x.wordsTimedout);
-
-
-			finalBoard = triedBoards[0];
+			if (triedBoards.Count == 0)
+			{
+				Debug.LogWarning($"failed to complete any of {maxThreads} threads. Retrying single.");
+				finalBoard = PlaceWordsOnBoard();
+			}
+			else
+			{
+				finalBoard = triedBoards[0];
+			}
 			Singleton.wordList.list = finalBoard.wordList;
 			Singleton.wordList.wordsToFind = finalBoard.wordsToFind.ToList();
 

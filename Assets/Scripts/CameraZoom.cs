@@ -11,6 +11,8 @@ public class CameraZoom : MonoBehaviour
 	[SerializeField] private MenuMgr menuMgr;
 	[SerializeField] private bool reverseCamera_x = false;
 	[SerializeField] private bool reverseCamera_y = false;
+	[SerializeField] private Vector2 sizesCenterNoMoveOnZoom = new(64, 64);
+
 
 	Camera mainCamera;
 	Vector3 mainCameraOrigPos;
@@ -107,13 +109,38 @@ public class CameraZoom : MonoBehaviour
 			float clampedDistance = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 			mainCamera.orthographicSize = clampedDistance;
 			if (mainCamera.orthographicSize >= maxZoom || mainCamera.orthographicSize <= minZoom) return;
-			var newPos = transform.position + (scrollInput > 0f ? zoomDirection : -zoomDirection) * (moveSpeed * clampedDistance);
-			SetCameraPos(newPos);
+			if (!IsInDeadCenter(sizesCenterNoMoveOnZoom, Input.mousePosition)) //do not move the camera if in the dead zone
+			{
+				var newPos = transform.position + (scrollInput > 0f ? zoomDirection : -zoomDirection) * (moveSpeed * clampedDistance);
+				SetCameraPos(newPos);
+			}
 		}
 		else
 		{
 			float clampedDistance = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 			transform.position = mouseWorldPosition - zoomDirection * clampedDistance;
 		}
+	}
+	
+	/// <param name="sizes">size of the middle region</param>
+	/// <returns>A pair of positions: (From, To)</returns>
+	(Vector2, Vector2) GetScreenCenter(Vector2 sizes)
+	{
+		Vector2 screen = new(Screen.width, Screen.height);
+		screen /= 2; //get in the middle
+		sizes /= 2; //get in the middle
+		var posFrom = screen - sizes;
+		var posTo = screen + sizes;
+		return (posFrom, posTo);
+	}
+	bool IsInDeadCenter(Vector2 sizes, Vector2 pointToCheck)
+	{
+		var poss = GetScreenCenter(sizes);
+		if (pointToCheck.x >= poss.Item1.x &&
+			pointToCheck.x <= poss.Item2.x &&
+			pointToCheck.y >= poss.Item1.y &&
+			pointToCheck.y <= poss.Item2.y
+			) return true;
+		return false;
 	}
 }
