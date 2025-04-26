@@ -89,8 +89,11 @@ public class InGameUI : MonoBehaviour, ICameraView
 	}
 	private void BoardRefreshUiEvent()
 	{
-		Hide();
-		Show();
+		if (this && this.gameObject)
+		{
+			Hide();
+			Show();
+		}
 	}
 
 	private void FoundWordEventHandler(object sender, string word)
@@ -126,16 +129,17 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 
 
-/// <summary>
-/// this updates the Time display
-/// </summary>
-/// <param name="seconds"></param>
-IEnumerator TimeCounterSecond(int seconds = 1)
+	/// <summary>
+	/// this updates the Time display
+	/// </summary>
+	/// <param name="seconds"></param>
+	IEnumerator TimeCounterSecond(int seconds = 1)
 	{
+		var waitFor = new WaitForSeconds(seconds);
 		while (this.gameObject.activeInHierarchy)
 		{
 			UpdateTimeLabel();
-			yield return new WaitForSeconds(seconds);
+			yield return waitFor;
 		}
 	}
 
@@ -148,12 +152,14 @@ IEnumerator TimeCounterSecond(int seconds = 1)
 	public void Hide()
 	{
 		Singleton.clickAndDrag.CancelClickPoints(null);
-		this.gameObject.SetActive(false);
+		if (this && this.gameObject)
+			this.gameObject.SetActive(false);
 	}
 
 	public void Show()
 	{
-		this.gameObject.SetActive(true);
+		if (this && this.gameObject)
+			this.gameObject.SetActive(true);
 	}
 	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

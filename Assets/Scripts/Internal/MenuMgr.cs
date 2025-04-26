@@ -70,9 +70,13 @@ public class MenuMgr : MonoBehaviour
 		{
 			if (mainMenuUI == null)
 			{
-				ingameUI.Hide();
-				menusStack.Push(pauseMenuUI);
-				pauseMenuUI.Show();
+				if (ingameUI)
+					ingameUI.Hide();
+				if (pauseMenuUI)
+				{
+					menusStack.Push(pauseMenuUI);
+					pauseMenuUI.Show();
+				}
 			}
 			else
 			{

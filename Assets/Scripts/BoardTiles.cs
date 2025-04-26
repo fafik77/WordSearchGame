@@ -50,6 +50,15 @@ public class BoardTiles : MonoBehaviour
 
 		StartCoroutine(ReserveAmountAsyncEnum());
 	}
+	private void OnEnable()
+	{
+		Singleton.boardUiEvents.BoardSetCaseEvent += BoardUiEvents_BoardSetCaseEventHandler;
+	}
+
+	private void OnDisable()
+	{
+		Singleton.boardUiEvents.BoardSetCaseEvent -= BoardUiEvents_BoardSetCaseEventHandler;
+	}
 	private void Start()
 	{
 		//ReserveAmountAsync(1200);   //width * height
@@ -67,6 +76,20 @@ public class BoardTiles : MonoBehaviour
 		////}
 		//PlaceWordsOnBoard(words);
 		StartCoroutine(PlaceWordsOnBoardEnum());
+	}
+
+	private void BoardUiEvents_BoardSetCaseEventHandler(Singleton.CaseEnum Case)
+	{
+		if (Case == Singleton.CaseEnum.UpperCase)
+		{
+			foreach(var tile in tilesSript2D)
+				tile.Letter = char.ToUpper(tile.Letter);
+		}
+		else if (Case == Singleton.CaseEnum.LowerCase)
+		{
+			foreach(var tile in tilesSript2D)
+				tile.Letter = char.ToLower(tile.Letter);
+		}
 	}
 
 	IEnumerator ReserveAmountAsyncEnum()
@@ -108,7 +131,6 @@ public class BoardTiles : MonoBehaviour
 		Singleton.boardUiEvents.RefreshBoardUi();
 
 		ZoomCameraOnBoard();
-
 	}
 
 	public void ZoomCameraOnBoard()
@@ -117,13 +139,6 @@ public class BoardTiles : MonoBehaviour
 		///8:5 ->  4,-2,-10 size = 2.5
 		float ratio = 14f / 9f;
 		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2, -(heightPrev / 2)), ((float)widthPrev) / (ratio * 2), new(widthPrev, heightPrev));
-		//var camera = Camera.main;
-		//var newPos = tilesParent.position;
-		//newPos.x += 5;
-		//newPos.y -= 2;
-		//newPos.z = cameraOrigPos.z;
-		//camera.transform.position = newPos;
-		//camera.orthographicSize = widthPrev/2;
 	}
 
 

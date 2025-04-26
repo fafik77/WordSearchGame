@@ -1,0 +1,6 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="ShiftCameraHorizontally" enabled="false" class="horizontal menuItem" style="margin-top: 30px;">
+        <engine:Label text="Camera Zoom" style="margin-top: 0;" />
+        <engine:SliderInt value="50" high-value="100" fill="true" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
+    </engine:VisualElement>
+</engine:UXML>

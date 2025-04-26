@@ -107,15 +107,19 @@ public class Singleton
 
 	}
 	public static ClickAndDragStruct clickAndDrag;
-
+	public enum CaseEnum
+	{
+		UpperCase, LowerCase
+	}
 	public struct BoardUiEvents
 	{
 		public event EventHandler<string> FoundWordEvent;
 		public event Action BoardRefreshUiEvent;
+		public event Action<CaseEnum> BoardSetCaseEvent;
 
 		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
-
+		public void BoardSetCase(CaseEnum Case) => BoardSetCaseEvent?.Invoke(Case);
 	}
 	public static BoardUiEvents boardUiEvents;
 
@@ -123,7 +127,7 @@ public class Singleton
 	public static WordList wordList;
 	public static LetterTileScript[,] TilesSript2D { get; set; }
 
-    public struct ScenesStruct
+	public struct ScenesStruct
 	{
 		public Scene GameScene;
 		public Scene MainMenuScene;
@@ -145,4 +149,10 @@ public class Singleton
 	}
 	public static ChooseBoardSStruct chooseBoardSStruct;
 
+	public struct SettingsPersistent
+	{
+		public bool upperCase;
+		public int ZoomDeadZoneSize;
+
+	}
 }

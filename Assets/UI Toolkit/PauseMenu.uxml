@@ -1,4 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Template name="SliderWithText" src="project://database/Assets/UI%20Toolkit/Templates/SliderWithText.uxml?fileID=9197481963319205126&amp;guid=f0b7a8f7dac8fc043bcd73f0fe46b0fc&amp;type=3#SliderWithText" />
     <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
     <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
     <engine:VisualElement name="Screen" style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.4);">
@@ -13,10 +14,7 @@
                     <engine:Button text="Settings" name="Settings" class="button" style="align-self: stretch;" />
                     <engine:Button text="Center Camera" name="CCamera" class="button" style="align-self: stretch;" />
                 </engine:VisualElement>
-                <engine:VisualElement name="ShiftCameraHorizontally" enabled="false" class="horizontal menuItem" style="margin-top: 30px;">
-                    <engine:Label text="Camera Zoom" style="margin-top: 0;" />
-                    <engine:SliderInt value="50" high-value="100" fill="true" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
-                </engine:VisualElement>
+                <engine:Instance template="SliderWithText" name="SliderWithText" />
                 <engine:VisualElement style="justify-content: center; align-self: flex-start; align-items: stretch; min-width: 200px;">
                     <engine:Button text="Quit To Main Menu" name="Quit" class="button" style="align-self: stretch;" />
                 </engine:VisualElement>
