@@ -121,6 +121,10 @@ public class MenuMgr : MonoBehaviour
 		(menu as ICameraView).Show();
 	}
 
+	/// <summary>
+	/// Goes into provided menu, pushing previous menu onto stack
+	/// </summary>
+	/// <param name="navigationEnum"></param>
 	public void NavigateTo(MenuNavigationEnum navigationEnum)
 	{
 		switch (navigationEnum)

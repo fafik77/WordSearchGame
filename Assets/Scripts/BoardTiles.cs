@@ -1,16 +1,11 @@
-using System;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
 using System.Threading;
 using BoardContent;
 using System.Collections.Generic;
-using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 using Exceptions;
-using UnityEngine.Rendering;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -66,8 +61,8 @@ public class BoardTiles : MonoBehaviour
 		//CreateBoard(10, 10);
 		//CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 
-		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
-		////"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "ï¿½limak", "Ania", "ara", "abra"
+		////"Ktoï¿½", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		//};
 		////var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
 		////foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
@@ -100,8 +95,8 @@ public class BoardTiles : MonoBehaviour
 	}
 	IEnumerator PlaceWordsOnBoardEnum()
 	{
-		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
-		//"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "Å›limak", "Ania", "ara", "abra"
+		//"KtoÅ›", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		};
 		//var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
 		//foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))

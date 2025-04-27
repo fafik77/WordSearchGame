@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class Singleton
+public static class Singleton
 {
-	public static Singleton Instance { get; private set; }
+	// public static Singleton Instance { get; private set; }
 	public struct ClickAndDragStruct
 	{
 		private float lastClickTime;

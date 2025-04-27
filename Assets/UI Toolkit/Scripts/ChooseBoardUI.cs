@@ -7,6 +7,11 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
 	private UIDocument ui;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
+	Button buttonLoadFile;
+	Button buttonCreateRandom;
+	Button buttonPickRandom;
+	DropdownField dropdownLang;
+	TextField SearchField;
 
 	private void Awake()
 	{
@@ -15,21 +20,28 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	}
 	private void OnEnable()
 	{
-		ui = GetComponent<UIDocument>();
-	}
-	private void OnDisable()
-	{
-		
-	}
-	public void Hide()
-	{
-		this.gameObject.SetActive(false);
+		var root = ui.rootVisualElement;
+		buttonLoadFile = root.Q<Button>("LoadFile");
+		buttonCreateRandom = root.Q<Button>("CreateRandom");
+		buttonPickRandom = root.Q<Button>("PickRandom");
+		dropdownLang = root.Q<DropdownField>("Language");
+		SearchField = root.Q<TextField>("Search");
+
+		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
 	}
 
-	public void Show()
+	private void ButtonCreateRandom_clicked()
 	{
-		this.gameObject.SetActive(true);
+
 	}
+
+	private void OnDisable()
+	{
+		buttonCreateRandom.clicked -= ButtonCreateRandom_clicked;
+	}
+	public void Hide() => this.gameObject.SetActive(false);
+
+	public void Show() => this.gameObject.SetActive(true);
 
 	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }
