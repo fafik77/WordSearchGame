@@ -1,5 +1,7 @@
 using Assets.Scripts.Internal;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -32,7 +34,29 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 	private void ButtonCreateRandom_clicked()
 	{
+		if (Singleton.EngWordsList == null)
+			Singleton.EngWordsList = new();
+		if (Singleton.EngWordsList.Count == 0)
+		{
+			///wrong: this is cwd: should be executionPath/Data...
+			foreach (var line in File.ReadLines(@"Data\words_alpha english.txt"))
+			{
+				if (line.Length > 2)
+					Singleton.EngWordsList.Add(line);
+			}
+		}
 
+		System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+		var amount = random.Next(10, 16);
+		var totalWords = Singleton.EngWordsList.Count;
+		List<string> wordsChosen = new List<string>();
+		for(int i=0; i < amount; ++i)
+		{
+			wordsChosen.Add(Singleton.EngWordsList[random.Next(0, totalWords)]);
+		}
+		Singleton.choosenBoard.wordsOnBoard = wordsChosen;
+		Singleton.boardUiEvents.CreateBoard(predefined: false);
+		navigateAction(MenuMgr.MenuNavigationEnum.Home);
 	}
 
 	private void OnDisable()

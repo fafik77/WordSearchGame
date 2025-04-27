@@ -30,7 +30,8 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 
 		if (ui == null || ui.rootVisualElement == null) return;
 		buttonContinue = ui.rootVisualElement.Q<Button>("Continue");
-		buttonNewGame= ui.rootVisualElement.Q<Button>("NewGame");
+		buttonContinue.Focus();
+		buttonNewGame = ui.rootVisualElement.Q<Button>("NewGame");
 		buttonSettings = ui.rootVisualElement.Q<Button>("Settings");
 		buttonQuit = ui.rootVisualElement.Q<Button>("Quit");
 		buttonCCamera = ui.rootVisualElement.Q<Button>("CCamera");

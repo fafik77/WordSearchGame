@@ -20,6 +20,7 @@ public class MenuMgr : MonoBehaviour
 	public enum MenuNavigationEnum
 	{
 		None,
+		Home,
 		Back,
 		Settings,
 		PauseMenu,
@@ -90,6 +91,18 @@ public class MenuMgr : MonoBehaviour
 	}
 	public bool IsIngame() { return menusStack.Count == 0; }
 
+	private void NavigateHome()
+	{
+		while (menusStack.Count != 0)
+		{
+			var last = menusStack.Pop() as ICameraView;
+			last.Hide();
+		}
+		if (mainMenuUI != null)
+			mainMenuUI.Show();
+		else
+			ingameUI.Show();
+	}
 	public void NavigateBack()
 	{
 		if (menusStack.Count == 0)
@@ -129,6 +142,11 @@ public class MenuMgr : MonoBehaviour
 	{
 		switch (navigationEnum)
 		{
+			case MenuNavigationEnum.Home:
+				{
+					NavigateHome();
+					break;
+				}
 			case MenuNavigationEnum.Back:
 				{
 					NavigateBack();
@@ -152,4 +170,5 @@ public class MenuMgr : MonoBehaviour
 		}
 	}
 
+   
 }

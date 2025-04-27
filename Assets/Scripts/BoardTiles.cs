@@ -48,11 +48,18 @@ public class BoardTiles : MonoBehaviour
 	private void OnEnable()
 	{
 		Singleton.boardUiEvents.BoardSetCaseEvent += BoardUiEvents_BoardSetCaseEventHandler;
+		Singleton.boardUiEvents.CreateBoardEvent += BoardUiEvents_CreateBoardEvent;
+	}
+
+	private void BoardUiEvents_CreateBoardEvent(bool predef)
+	{
+		PlaceWordsOnBoard(Singleton.choosenBoard.wordsOnBoard);
 	}
 
 	private void OnDisable()
 	{
 		Singleton.boardUiEvents.BoardSetCaseEvent -= BoardUiEvents_BoardSetCaseEventHandler;
+		Singleton.boardUiEvents.CreateBoardEvent -= BoardUiEvents_CreateBoardEvent;
 	}
 	private void Start()
 	{
@@ -61,8 +68,8 @@ public class BoardTiles : MonoBehaviour
 		//CreateBoard(10, 10);
 		//CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
 
-		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "�limak", "Ania", "ara", "abra"
-		////"Kto�", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "ślimak", "Ania", "ara", "abra"
+		////"Ktoś", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		//};
 		////var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
 		////foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))

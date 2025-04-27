@@ -1,5 +1,6 @@
 using BoardContent;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -116,10 +117,15 @@ public static class Singleton
 		/// Set to bool UpperCase
 		/// </summary>
 		public event Action<bool> BoardSetCaseEvent;
+		/// <summary>
+		/// predefined Board?
+		/// </summary>
+		public event Action<bool> CreateBoardEvent;
 
 		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
 		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
+		public void CreateBoard(bool predefined) { CreateBoardEvent?.Invoke(predefined); }
 	}
 	public static BoardUiEvents boardUiEvents;
 
@@ -144,10 +150,12 @@ public static class Singleton
 	public struct ChooseBoardSStruct
 	{
 		public string Lang;
-		public string file;
-		public string board;
+		//public string file;
+		//public string board;
+		public List<string> wordsOnBoard;
+		public char[,] predefinedBoard2D;
 	}
-	public static ChooseBoardSStruct chooseBoardSStruct;
+	public static ChooseBoardSStruct choosenBoard;
 
 	public struct SettingsPersistent
 	{
@@ -156,4 +164,6 @@ public static class Singleton
 
 	}
 	public static SettingsPersistent settingsPersistent;
+
+	public static List<string> EngWordsList;
 }

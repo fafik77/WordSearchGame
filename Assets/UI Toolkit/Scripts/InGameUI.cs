@@ -35,9 +35,8 @@ public class InGameUI : MonoBehaviour, ICameraView
 		if (Singleton.scenesStruct.MainMenuScene.path == null)
 			Singleton.scenesStruct.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
 		mainCamera = Camera.main;
-	}
-	private void Start()
-	{
+
+		Singleton.boardUiEvents.CreateBoardEvent += BoardUiEvents_CreateBoardEvent;
 	}
 
 	private void OnEnable()
@@ -87,6 +86,22 @@ public class InGameUI : MonoBehaviour, ICameraView
 		Singleton.boardUiEvents.FoundWordEvent += FoundWordEventHandler;
 		Singleton.boardUiEvents.BoardRefreshUiEvent += BoardRefreshUiEvent;
 	}
+	private void OnDisable()
+	{
+		StopCoroutine(timeCounterCoroutine);
+		Singleton.boardUiEvents.FoundWordEvent -= FoundWordEventHandler;
+		Singleton.boardUiEvents.BoardRefreshUiEvent -= RefreshItems;
+	}
+	private void OnDestroy()
+	{
+		Singleton.boardUiEvents.CreateBoardEvent -= BoardUiEvents_CreateBoardEvent;
+	}
+
+	private void BoardUiEvents_CreateBoardEvent(bool predef)
+	{
+		timeCounter = 0;
+	}
+
 	private void BoardRefreshUiEvent()
 	{
 		if (this && this.gameObject)
@@ -108,13 +123,6 @@ public class InGameUI : MonoBehaviour, ICameraView
 		listViewWordsFound.RefreshItems();
 	}
 
-
-	private void OnDisable()
-	{
-		StopCoroutine(timeCounterCoroutine);
-		Singleton.boardUiEvents.FoundWordEvent -= FoundWordEventHandler;
-		Singleton.boardUiEvents.BoardRefreshUiEvent -= RefreshItems;
-	}
 
 	private void FixedUpdate()
 	{
