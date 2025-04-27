@@ -136,9 +136,19 @@ namespace BoardContent
 			//write onto the screen
 			var iterSrc = finalBoard.tiles2DDummy.GetEnumerator();
 			var iterDst = TilesSript2D.GetEnumerator();
-			while (iterSrc.MoveNext() && iterDst.MoveNext())
+			if (Singleton.settingsPersistent.upperCase)
 			{
-				(iterDst.Current as LetterTileScript).Letter = (char)iterSrc.Current;
+				while (iterSrc.MoveNext() && iterDst.MoveNext())
+				{
+					(iterDst.Current as LetterTileScript).Letter = char.ToUpper((char)iterSrc.Current);
+				}
+			}
+			else
+			{
+				while (iterSrc.MoveNext() && iterDst.MoveNext())
+				{
+					(iterDst.Current as LetterTileScript).Letter = char.ToLower((char)iterSrc.Current);
+				}
 			}
 
 			return 0x00;

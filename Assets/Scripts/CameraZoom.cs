@@ -11,7 +11,11 @@ public class CameraZoom : MonoBehaviour
 	[SerializeField] private MenuMgr menuMgr;
 	[SerializeField] private bool reverseCamera_x = false;
 	[SerializeField] private bool reverseCamera_y = false;
-	[SerializeField] private Vector2 sizesCenterNoMoveOnZoom = new(64, 64);
+
+	/// <summary>
+	/// Auto Updated from Singleton.settingsPersistent.ZoomDeadZoneSize
+	/// </summary>
+	private Vector2 sizesCenterNoMoveOnZoom = new(64, 64);
 
 
 	Camera mainCamera;
@@ -106,6 +110,10 @@ public class CameraZoom : MonoBehaviour
 		// Clamp the zoom level
 		if (mainCamera.orthographic)
 		{
+			var am = Singleton.settingsPersistent.ZoomDeadZoneSize;
+			sizesCenterNoMoveOnZoom.x = am;
+			sizesCenterNoMoveOnZoom.y = am;
+
 			float clampedDistance = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 			mainCamera.orthographicSize = clampedDistance;
 			if (mainCamera.orthographicSize >= maxZoom || mainCamera.orthographicSize <= minZoom) return;

@@ -107,19 +107,19 @@ public class Singleton
 
 	}
 	public static ClickAndDragStruct clickAndDrag;
-	public enum CaseEnum
-	{
-		UpperCase, LowerCase
-	}
+
 	public struct BoardUiEvents
 	{
 		public event EventHandler<string> FoundWordEvent;
 		public event Action BoardRefreshUiEvent;
-		public event Action<CaseEnum> BoardSetCaseEvent;
+		/// <summary>
+		/// Set to bool UpperCase
+		/// </summary>
+		public event Action<bool> BoardSetCaseEvent;
 
 		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
-		public void BoardSetCase(CaseEnum Case) => BoardSetCaseEvent?.Invoke(Case);
+		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
 	}
 	public static BoardUiEvents boardUiEvents;
 
@@ -155,4 +155,5 @@ public class Singleton
 		public int ZoomDeadZoneSize;
 
 	}
+	public static SettingsPersistent settingsPersistent;
 }

@@ -78,14 +78,14 @@ public class BoardTiles : MonoBehaviour
 		StartCoroutine(PlaceWordsOnBoardEnum());
 	}
 
-	private void BoardUiEvents_BoardSetCaseEventHandler(Singleton.CaseEnum Case)
+	private void BoardUiEvents_BoardSetCaseEventHandler(bool UpperCase)
 	{
-		if (Case == Singleton.CaseEnum.UpperCase)
+		if (UpperCase)
 		{
 			foreach(var tile in tilesSript2D)
 				tile.Letter = char.ToUpper(tile.Letter);
 		}
-		else if (Case == Singleton.CaseEnum.LowerCase)
+		else
 		{
 			foreach(var tile in tilesSript2D)
 				tile.Letter = char.ToLower(tile.Letter);

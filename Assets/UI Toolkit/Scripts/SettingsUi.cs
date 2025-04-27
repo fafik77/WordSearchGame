@@ -18,10 +18,9 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	private UIDocument ui;
 
 	private Button letterCaseButton;
-	private bool letterCaseUpper = true;
+	//private bool letterCaseUpper = true;
 
 	private SliderInt zoomDeadZoneSlider;
-	private int zoomDeadZoneSliderValue;
 
 	//private Button diagonalWordsButton;
 	//private bool diagonalWords = false;
@@ -47,12 +46,16 @@ public class SettingsUi : MonoBehaviour, ICameraView
 
 		zoomDeadZoneSlider = ui.rootVisualElement.Q<SliderInt>("ZoomDeadZoneSlider");
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
+		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
+		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
 
 		//diagonalWordsButton = ui.rootVisualElement.Q<Button>("DiagonalButton");
 		//diagonalWordsButton.clicked += DiagonalWordsToggle;
 
 		//backwardWordsButton = ui.rootVisualElement.Q<Button>("BackwardsButton");
 		//backwardWordsButton.clicked += BackwardWordsToggle;
+
+		LetterCaseLoad(Singleton.settingsPersistent.upperCase);
 	}
 	void OnZoomDeadZoneSliderChange(ChangeEvent<int> change)
 	{
@@ -101,21 +104,20 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	//}
 
 
-	private void LetterCaseToggle() => LetterCaseSet(!letterCaseUpper);
+	private void LetterCaseToggle() => LetterCaseSet(!Singleton.settingsPersistent.upperCase);
 
 	private void LetterCaseSet(bool isUpperCase)
 	{
-		letterCaseUpper = isUpperCase;
+		Singleton.settingsPersistent.upperCase = isUpperCase;
+		LetterCaseLoad(isUpperCase);
+		Singleton.boardUiEvents.BoardSetCase(isUpperCase);
+	}
+	private void LetterCaseLoad(bool isUpperCase)
+	{
 		if (isUpperCase)
-		{
 			letterCaseButton.text = "B";
-			Singleton.boardUiEvents.BoardSetCase(Singleton.CaseEnum.UpperCase);
-		}
 		else
-		{
 			letterCaseButton.text = "b";
-			Singleton.boardUiEvents.BoardSetCase(Singleton.CaseEnum.LowerCase);
-		}
 	}
 
 

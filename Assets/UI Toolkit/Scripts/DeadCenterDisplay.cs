@@ -56,6 +56,7 @@ public class DeadCenterDisplay : MonoBehaviour, ICameraView
 
 	public void SetCenterSize(int size)
 	{
+		Singleton.settingsPersistent.ZoomDeadZoneSize = size;
 		DeadCenterVisual.style.width = size;
 		DeadCenterVisual.style.height = size;
 	}

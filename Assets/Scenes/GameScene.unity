@@ -510,7 +510,6 @@ MonoBehaviour:
   menuMgr: {fileID: 1716833827}
   reverseCamera_x: 0
   reverseCamera_y: 0
-  sizesCenterNoMoveOnZoom: {x: 64, y: 64}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,7 +2279,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: e966e29de132f9749bee8eb8202ce16a, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 1dbdefeb2be53e94d8fff4569d39639c, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
