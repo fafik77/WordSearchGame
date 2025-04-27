@@ -1,35 +1,38 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
     <engine:VisualElement class="text_white header" style="flex-grow: 1; align-self: center; margin-top: 10%; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;">
         <engine:VisualElement style="flex-grow: 1;">
             <engine:Label text="Settings" class="title" style="align-self: center; margin-bottom: 20px;">
-                <Bindings>
-                </Bindings>
+                <Bindings />
             </engine:Label>
             <engine:VisualElement style="flex-grow: 1;">
                 <engine:VisualElement name="Case">
                     <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
                         <engine:Label text="Uppercase" name="CaseLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
-                            <Bindings>
-                            </Bindings>
+                            <Bindings />
                         </engine:Label>
                         <engine:Button text="B" name="CaseButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement name="Diagonal">
+                <engine:VisualElement template="SliderWithText">
+                    <engine:VisualElement name="ZoomDeadZone" enabled="true" class="horizontal menuItem" style="margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px;">
+                        <engine:Label text="Zoom Dead Zone" style="margin-top: 0;" />
+                        <engine:SliderInt value="64" high-value="200" fill="true" low-value="1" name="ZoomDeadZoneSlider" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
+                    </engine:VisualElement>
+                </engine:VisualElement>
+                <engine:VisualElement name="Diagonal" enabled="false">
                     <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
                         <engine:Label text="Diagonal Words" name="DiagonalLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
-                            <Bindings>
-                            </Bindings>
+                            <Bindings />
                         </engine:Label>
                         <engine:Button text="Yes" name="DiagonalButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement name="Backwards">
+                <engine:VisualElement name="Backwards" enabled="false">
                     <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
                         <engine:Label text="Backwards Words" name="BackwardsLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
-                            <Bindings>
-                            </Bindings>
+                            <Bindings />
                         </engine:Label>
                         <engine:Button text="Yes" name="BackwardsButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                     </engine:VisualElement>

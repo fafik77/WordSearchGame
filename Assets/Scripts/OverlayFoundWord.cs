@@ -12,7 +12,7 @@ public class OverlayFoundWord : MonoBehaviour
 	{
 		myTransform = this.gameObject.transform;
 	}
-	private void Start()
+	private void OnEnable()
 	{
 		Singleton.clickAndDrag.FinishDrawingLine += ClickAndDrag_FinishDrawingLine;
 	}

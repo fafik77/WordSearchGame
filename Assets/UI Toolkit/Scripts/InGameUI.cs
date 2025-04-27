@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEditor.Progress;
 
@@ -22,11 +24,17 @@ public class InGameUI : MonoBehaviour, ICameraView
 		set { timeCounter = value; }
 	}
 	private Coroutine timeCounterCoroutine;
+	Camera mainCamera;
 
 	/// The "makeItem" function will be called as needed when the ListView needs more items to render
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
 	{
+		if (Singleton.scenesStruct.GameScene.path == null)
+			Singleton.scenesStruct.GameScene = SceneManager.GetSceneByName("GameScene");
+		if (Singleton.scenesStruct.MainMenuScene.path == null)
+			Singleton.scenesStruct.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
+		mainCamera = Camera.main;
 	}
 	private void Start()
 	{
@@ -63,6 +71,17 @@ public class InGameUI : MonoBehaviour, ICameraView
 		{
 			string item = selectedItems.First() as string;
 			Debug.Log("Items chosen: " + item);
+			///TODO make Help prettier
+			var help = Singleton.wordList.list.Where(i => { return i.word == item; }).Take(1);
+			foreach ( var i in help)
+			{
+				var pos = i.posFrom;
+				Debug.Log($"Item chosen: {item}, pos: {pos}");
+				var tile = Singleton.TilesSript2D[(int)pos.x, (int)pos.y];
+
+				Singleton.clickAndDrag.AddClickPoint(tile, null, false);
+				tile.Highlight();
+			}
 		};
 
 		Singleton.boardUiEvents.FoundWordEvent += FoundWordEventHandler;
@@ -70,8 +89,11 @@ public class InGameUI : MonoBehaviour, ICameraView
 	}
 	private void BoardRefreshUiEvent()
 	{
-		Hide();
-		Show();
+		if (this && this.gameObject)
+		{
+			Hide();
+			Show();
+		}
 	}
 
 	private void FoundWordEventHandler(object sender, string word)
@@ -99,6 +121,12 @@ public class InGameUI : MonoBehaviour, ICameraView
 		if (ui.enabled)
 			timeCounter += Time.fixedDeltaTime;
 	}
+	private void Update()
+	{
+		if (!ui.enabled)
+			return;
+	}
+
 
 
 	/// <summary>
@@ -107,10 +135,11 @@ public class InGameUI : MonoBehaviour, ICameraView
 	/// <param name="seconds"></param>
 	IEnumerator TimeCounterSecond(int seconds = 1)
 	{
+		var waitFor = new WaitForSeconds(seconds);
 		while (this.gameObject.activeInHierarchy)
 		{
 			UpdateTimeLabel();
-			yield return new WaitForSeconds(seconds);
+			yield return waitFor;
 		}
 	}
 
@@ -123,18 +152,14 @@ public class InGameUI : MonoBehaviour, ICameraView
 	public void Hide()
 	{
 		Singleton.clickAndDrag.CancelClickPoints(null);
-		this.gameObject.SetActive(false);
-  //      this.enabled = false;
-		//ui.enabled = false;
-		//OnDisable();
+		if (this && this.gameObject)
+			this.gameObject.SetActive(false);
 	}
 
 	public void Show()
 	{
-		this.gameObject.SetActive(true);
-  //      this.enabled = true;
-		//ui.enabled = true;
-		//OnEnable();
+		if (this && this.gameObject)
+			this.gameObject.SetActive(true);
 	}
 	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

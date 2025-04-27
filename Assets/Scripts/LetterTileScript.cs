@@ -32,6 +32,12 @@ public class LetterTileScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 		return letterScript.GetLetter();
 	}
 
+    ///TODO add some highlight
+    public void Highlight()
+	{
+		
+	}
+
 	private bool WasShortClick
 	{
 		get

@@ -4,10 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-public class Singleton
+public static class Singleton
 {
-	public static Singleton Instance { get; private set; }
+	// public static Singleton Instance { get; private set; }
 	public struct ClickAndDragStruct
 	{
 		private float lastClickTime;
@@ -111,14 +112,48 @@ public class Singleton
 	{
 		public event EventHandler<string> FoundWordEvent;
 		public event Action BoardRefreshUiEvent;
+		/// <summary>
+		/// Set to bool UpperCase
+		/// </summary>
+		public event Action<bool> BoardSetCaseEvent;
 
 		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
-
+		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
 	}
 	public static BoardUiEvents boardUiEvents;
 
 	
 	public static WordList wordList;
+	public static LetterTileScript[,] TilesSript2D { get; set; }
 
+	public struct ScenesStruct
+	{
+		public Scene GameScene;
+		public Scene MainMenuScene;
+		public void SwitchToScene(string sceneName)
+		{
+			var currScene = SceneManager.GetActiveScene();
+			if (currScene.path == sceneName || currScene.name == sceneName)
+				return;
+			SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+		}
+	}
+	public static ScenesStruct scenesStruct;
+
+	public struct ChooseBoardSStruct
+	{
+		public string Lang;
+		public string file;
+		public string board;
+	}
+	public static ChooseBoardSStruct chooseBoardSStruct;
+
+	public struct SettingsPersistent
+	{
+		public bool upperCase;
+		public int ZoomDeadZoneSize;
+
+	}
+	public static SettingsPersistent settingsPersistent;
 }

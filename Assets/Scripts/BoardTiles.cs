@@ -1,14 +1,10 @@
-using System;
 using UnityEngine;
 using System.Linq;
 using System.Collections;
 using System.Threading;
 using BoardContent;
 using System.Collections.Generic;
-using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 using Exceptions;
 
 public class BoardTiles : MonoBehaviour
@@ -21,6 +17,8 @@ public class BoardTiles : MonoBehaviour
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
 	private Mutex mutexTilesPool = new Mutex();
+	Camera mainCamera;
+	CameraZoom mainCameraZoom;
 
 	//sizes for camera Projection.Size	(to take up the entire screen)
 	//Size: width, height
@@ -33,6 +31,8 @@ public class BoardTiles : MonoBehaviour
 	//n = 3.5 * n - 2 * n
 
 	private int widthPrev, heightPrev;
+	//private int boardMinW = 14, boardMinH = 9;
+
 
 
 	protected LetterTileScript[,] tilesSript2D;
@@ -40,26 +40,74 @@ public class BoardTiles : MonoBehaviour
 	{
 		tilesParent = this.gameObject.transform.Find("tilesParent");
 		overlayParent = this.gameObject.transform.Find("overlayParent");
+		mainCamera = Camera.main;
+		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
 
-		ReserveAmountAsync(1200);   //width * height
+		StartCoroutine(ReserveAmountAsyncEnum());
+	}
+	private void OnEnable()
+	{
+		Singleton.boardUiEvents.BoardSetCaseEvent += BoardUiEvents_BoardSetCaseEventHandler;
+	}
+
+	private void OnDisable()
+	{
+		Singleton.boardUiEvents.BoardSetCaseEvent -= BoardUiEvents_BoardSetCaseEventHandler;
 	}
 	private void Start()
 	{
-		//CreateBoard(10, 10);
-		CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
+		//ReserveAmountAsync(1200);   //width * height
 
-		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "œlimak", "Ania", "ara", "abra"
-		//"Ktoœ", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//CreateBoard(10, 10);
+		//CreateBoard(14, 9); //camera zoom = int(height/2)+1	(16 x 9 - 2x0 for UI)
+
+		//List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "ï¿½limak", "Ania", "ara", "abra"
+		////"Ktoï¿½", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
+		//};
+		////var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
+		////foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
+		////{
+		////	words.Add(match.Value);
+		////}
+		//PlaceWordsOnBoard(words);
+		StartCoroutine(PlaceWordsOnBoardEnum());
+	}
+
+	private void BoardUiEvents_BoardSetCaseEventHandler(bool UpperCase)
+	{
+		if (UpperCase)
+		{
+			foreach(var tile in tilesSript2D)
+				tile.Letter = char.ToUpper(tile.Letter);
+		}
+		else
+		{
+			foreach(var tile in tilesSript2D)
+				tile.Letter = char.ToLower(tile.Letter);
+		}
+	}
+
+	IEnumerator ReserveAmountAsyncEnum()
+	{
+		yield return null;	//delay by one tick?
+		ReserveAmountAsync(1200);   //width * height
+		yield return null;
+	}
+	IEnumerator PlaceWordsOnBoardEnum()
+	{
+		List<string> words = new List<string>() { "barbara", "ania", "Olaf", "kamil", "ola", "Å›limak", "Ania", "ara", "abra"
+		//"KtoÅ›", "Silikon", "Cadmium", "Kura", "kurczak", "kaczka", "kasia", "asia", "klaudia"
 		};
 		//var ss = "loach\r\nloaches\r\nload\r\nloadable\r\nloadage\r\nloaded\r\nloadedness\r\nloaden\r\nloader\r\nloaders\r\nloadinfo\r\nloading\r\nloadings\r\nloadless\r\nloadpenny\r\nloads\r\nloadsome\r\nloadspecs\r\nloadstar\r\nloadstars\r\nloadstone\r\nloadstones\r\nloadum\r\nloaf\r\n";
 		//foreach( Match match in Regex.Matches(ss, "\\w+", RegexOptions.IgnoreCase))
 		//{
 		//	words.Add(match.Value);
 		//}
-
-
+		yield return new WaitForSeconds(0.1f);
 		PlaceWordsOnBoard(words);
+		yield return null;
 	}
+
 
 
 	public void PlaceContentOnBoard(char[,] content, List<string> wordsToFind)
@@ -72,25 +120,48 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		//delegate logic to separete class
-		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, 0.3f);
+		PlaceWords placeWords = new PlaceWords(words, new(14, 9), CreateBoardAtLeast, wordsInReverse: true, AdditionalCharsPercent: 1.2f);
 		//try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
 		Singleton.boardUiEvents.RefreshBoardUi();
+
+		ZoomCameraOnBoard();
+	}
+
+	public void ZoomCameraOnBoard()
+	{
+		///14:9 -> 7.5,-4,-10 size = 5
+		///8:5 ->  4,-2,-10 size = 2.5
+		float ratio = 14f / 9f;
+		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2, -(heightPrev / 2)), ((float)widthPrev) / (ratio * 2), new(widthPrev, heightPrev));
 	}
 
 
 	/// <summary>
 	/// Creates the board only if provided dimensions are greater than current dimensions of the board
 	/// </summary>
-	/// <param name="width">width</param>
-	/// <param name="height">height</param>
-	/// <returns>false if nothing changed, true if board was resized</returns>
+	/// <param name="width">new width</param>
+	/// <param name="height">new height</param>
+	/// <returns>board</returns>
 	public LetterTileScript[,] CreateBoardAtLeast(int width, int height)
 	{
 		if (!(width > widthPrev || height > heightPrev))
 			return tilesSript2D;	//double negative
 		return CreateBoard(width, height);
 	}
+
+	///// <summary>
+	///// Creates the board only if provided dimensions are greater than min dimensions for the board
+	///// </summary>
+	///// <param name="width">new width</param>
+	///// <param name="height">new height</param>
+	///// <returns>board</returns>
+	//public LetterTileScript[,] CreateBoardNoSmallerThanMin(int width, int height)
+	//{
+	//	if (!(width > boardMinW || height > boardMinH))
+	//		return tilesSript2D;	//double negative
+	//	return CreateBoard(width, height);
+	//}
 
 
 	public int ReserveAmountSync(int amount) => ReserveAmount(amount).Result;
@@ -130,7 +201,6 @@ public class BoardTiles : MonoBehaviour
 	public LetterTileScript[,] CreateBoard(int width, int height)
 	{
 		ReserveAmountSync(width * height);
-
 		if (width == widthPrev && height == heightPrev)
 			return tilesSript2D; //no change
 
@@ -170,6 +240,7 @@ public class BoardTiles : MonoBehaviour
 				tilesSript2D[i, j].SetLetter('-');
 			}
 		}
+		Singleton.TilesSript2D = tilesSript2D;
 		return tilesSript2D;
 	}
 }
