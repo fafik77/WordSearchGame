@@ -15,13 +15,11 @@ public class OverlayFoundWord : MonoBehaviour
 	private void OnEnable()
 	{
 		Singleton.clickAndDrag.FinishDrawingLine += ClickAndDrag_FinishDrawingLine;
-		Singleton.boardUiEvents.CreateBoardEvent += BoardUiEvents_CreateBoardEvent;
 	}
 
-	private void BoardUiEvents_CreateBoardEvent(bool predef)
-	{
-		Clear();
-	}
+	/// <summary>
+	/// Or RemoveAllHighlights
+	/// </summary>
 	public void Clear()
 	{
 		int i = 0;
@@ -39,11 +37,11 @@ public class OverlayFoundWord : MonoBehaviour
 			DestroyImmediate(child.gameObject);
 		}
 	}
+	public void RemoveAllHighlights() { Clear(); }
 
 	private void OnDisable()
 	{
 		Singleton.clickAndDrag.FinishDrawingLine -= ClickAndDrag_FinishDrawingLine;
-		Singleton.boardUiEvents.CreateBoardEvent -= BoardUiEvents_CreateBoardEvent;
 	}
 
 	private void ClickAndDrag_FinishDrawingLine(object sender, LetterTileScript[] bothPoints)

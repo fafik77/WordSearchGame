@@ -3,12 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-using static UnityEditor.Progress;
 
 public class InGameUI : MonoBehaviour, ICameraView
 {
@@ -30,10 +27,10 @@ public class InGameUI : MonoBehaviour, ICameraView
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
 	{
-		if (Singleton.scenesStruct.GameScene.path == null)
-			Singleton.scenesStruct.GameScene = SceneManager.GetSceneByName("GameScene");
-		if (Singleton.scenesStruct.MainMenuScene.path == null)
-			Singleton.scenesStruct.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
+		if (Singleton.SceneMgr.GameScene.path == null)
+			Singleton.SceneMgr.GameScene = SceneManager.GetSceneByName("GameScene");
+		if (Singleton.SceneMgr.MainMenuScene.path == null)
+			Singleton.SceneMgr.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
 		mainCamera = Camera.main;
 
 		Singleton.boardUiEvents.CreateBoardEvent += BoardUiEvents_CreateBoardEvent;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 public class ChooseBoardUI : MonoBehaviour, ICameraView
@@ -14,6 +15,9 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	Button buttonPickRandom;
 	DropdownField dropdownLang;
 	TextField SearchField;
+	SliderInt sliderIntWordLength;
+	Label LabelWordLength;
+
 
 	private void Awake()
 	{
@@ -28,40 +32,65 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		buttonPickRandom = root.Q<Button>("PickRandom");
 		dropdownLang = root.Q<DropdownField>("Language");
 		SearchField = root.Q<TextField>("Search");
+		var WordLengthElement = root.Q<VisualElement>("WordLength");
+
+		sliderIntWordLength = WordLengthElement.Q<SliderInt>();
+		LabelWordLength = WordLengthElement.Q<Label>("Amount");
+
+		dropdownLang.RegisterValueChangedCallback(OnLanguageSelectionChange);
 
 		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
+		sliderIntWordLength.RegisterValueChangedCallback(OnWordLengthSliderChange);
+		if (Singleton.settingsPersistent.wordsMaxLenght > 2)
+		{
+			sliderIntWordLength.value = Singleton.settingsPersistent.wordsMaxLenght;
+		}
+		else
+		{
+			Singleton.settingsPersistent.wordsMaxLenght = sliderIntWordLength.value;
+		}
+		if (Singleton.settingsPersistent.LanguageWords != null)
+		{
+			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
+		}
+		else
+		{
+			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
+		}
 	}
 
 	private void ButtonCreateRandom_clicked()
 	{
-		if (Singleton.EngWordsList == null)
-			Singleton.EngWordsList = new();
-		if (Singleton.EngWordsList.Count == 0)
-		{
-			///wrong: this is cwd: should be executionPath/Data...
-			foreach (var line in File.ReadLines(@"Data\words_alpha english.txt"))
-			{
-				if (line.Length > 2)
-					Singleton.EngWordsList.Add(line);
-			}
-		}
+		var locale = LocalizationSettings.SelectedLocale; //by default pl-PL
 
-		System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
-		var amount = random.Next(10, 16);
-		var totalWords = Singleton.EngWordsList.Count;
-		List<string> wordsChosen = new List<string>();
-		for(int i=0; i < amount; ++i)
+		try
 		{
-			wordsChosen.Add(Singleton.EngWordsList[random.Next(0, totalWords)]);
+			Singleton.choosenBoard.CreateRandom(Singleton.settingsPersistent.LanguageWords, Singleton.settingsPersistent.wordsMaxLenght);
 		}
-		Singleton.choosenBoard.wordsOnBoard = wordsChosen;
-		Singleton.boardUiEvents.CreateBoard(predefined: false);
+		catch (Exception e)
+		{
+			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e);
+			return;
+		}
 		navigateAction(MenuMgr.MenuNavigationEnum.Home);
+	}
+	private void OnWordLengthSliderChange(ChangeEvent<int> change)
+	{
+		Singleton.settingsPersistent.wordsMaxLenght = change.newValue;
+		LabelWordLength.text = change.newValue.ToString();
+	}
+
+	private void OnLanguageSelectionChange(ChangeEvent<string> change)
+	{
+		Singleton.settingsPersistent.LanguageWords = change.newValue;
 	}
 
 	private void OnDisable()
 	{
 		buttonCreateRandom.clicked -= ButtonCreateRandom_clicked;
+
+		dropdownLang.UnregisterValueChangedCallback(OnLanguageSelectionChange);
+		sliderIntWordLength.UnregisterValueChangedCallback(OnWordLengthSliderChange);
 	}
 	public void Hide() => this.gameObject.SetActive(false);
 

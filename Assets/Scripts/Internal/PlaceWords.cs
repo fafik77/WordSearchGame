@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using BoardContent;
 using Exceptions;
-using NUnit.Framework;
-using Unity.VisualScripting;
-using UnityEditor.Localization.Plugins.XLIFF.V20;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace BoardContent
 {
-	enum WordOrientationEnum
+    enum WordOrientationEnum
 	{
 		horizontal = 0,
 		vertical = 1,

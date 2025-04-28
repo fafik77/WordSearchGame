@@ -29,19 +29,20 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		ui = GetComponent<UIDocument>();
 
 		if (ui == null || ui.rootVisualElement == null) return;
-		buttonContinue = ui.rootVisualElement.Q<Button>("Continue");
+		var root = ui.rootVisualElement;
+		buttonContinue = root.Q<Button>("Continue");
 		buttonContinue.Focus();
-		buttonNewGame = ui.rootVisualElement.Q<Button>("NewGame");
-		buttonSettings = ui.rootVisualElement.Q<Button>("Settings");
-		buttonQuit = ui.rootVisualElement.Q<Button>("Quit");
-		buttonCCamera = ui.rootVisualElement.Q<Button>("CCamera");
+		buttonNewGame = root.Q<Button>("NewGame");
+		buttonSettings = root.Q<Button>("Settings");
+		buttonQuit = root.Q<Button>("Quit");
+		buttonCCamera = root.Q<Button>("CCamera");
 
 		buttonContinue.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.Back);
 		buttonNewGame.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.NewGame);
 		buttonSettings.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.Settings);
 		buttonCCamera.clicked += () => { mainCameraZoom.ResetCamera(); };
 
-		buttonQuit.clicked += () => { Singleton.scenesStruct.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); };
+		buttonQuit.clicked += () => { Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); };
 	}
 
 	public void Hide()

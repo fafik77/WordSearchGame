@@ -1,3 +1,4 @@
+using Assets.Scripts.Internal;
 using BoardContent;
 using System;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ public static class Singleton
 		}
 
 	}
-	public static ClickAndDragStruct clickAndDrag;
+	public static ClickAndDragStruct clickAndDrag = new();
 
 	public struct BoardUiEvents
 	{
@@ -127,10 +128,10 @@ public static class Singleton
 		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
 		public void CreateBoard(bool predefined) { CreateBoardEvent?.Invoke(predefined); }
 	}
-	public static BoardUiEvents boardUiEvents;
+	public static BoardUiEvents boardUiEvents = new();
 
-	
-	public static WordList wordList;
+
+	public static WordList wordList = new();
 	public static LetterTileScript[,] TilesSript2D { get; set; }
 
 	public struct ScenesStruct
@@ -140,30 +141,22 @@ public static class Singleton
 		public void SwitchToScene(string sceneName)
 		{
 			var currScene = SceneManager.GetActiveScene();
-			if (currScene.path == sceneName || currScene.name == sceneName)
+			if (currScene.path == sceneName || currScene.name == sceneName || currScene.path.Contains(sceneName))
 				return;
 			SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 		}
 	}
-	public static ScenesStruct scenesStruct;
+	public static ScenesStruct SceneMgr = new();
 
-	public struct ChooseBoardSStruct
-	{
-		public string Lang;
-		//public string file;
-		//public string board;
-		public List<string> wordsOnBoard;
-		public char[,] predefinedBoard2D;
-	}
-	public static ChooseBoardSStruct choosenBoard;
+	public static ChooseBoardDispatcher choosenBoard = new();
 
 	public struct SettingsPersistent
 	{
 		public bool upperCase;
 		public int ZoomDeadZoneSize;
-
+		public int wordsMaxLenght;
+		public string LanguageUi;
+		public string LanguageWords;
 	}
-	public static SettingsPersistent settingsPersistent;
-
-	public static List<string> EngWordsList;
+	public static SettingsPersistent settingsPersistent = new();
 }
