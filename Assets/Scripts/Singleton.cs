@@ -127,6 +127,8 @@ public static class Singleton
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
 		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
 		public void CreateBoard(bool predefined) { CreateBoardEvent?.Invoke(predefined); }
+
+		public OnScreenNotification onScreenNotification;
 	}
 	public static BoardUiEvents boardUiEvents = new();
 

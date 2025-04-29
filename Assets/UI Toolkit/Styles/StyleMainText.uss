@@ -125,3 +125,7 @@
 
 .darkUI {
 }
+
+.error_text {
+    color: rgb(245, 93, 34);
+}

@@ -42,21 +42,13 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
 		sliderIntWordLength.RegisterValueChangedCallback(OnWordLengthSliderChange);
 		if (Singleton.settingsPersistent.wordsMaxLenght > 2)
-		{
 			sliderIntWordLength.value = Singleton.settingsPersistent.wordsMaxLenght;
-		}
 		else
-		{
 			Singleton.settingsPersistent.wordsMaxLenght = sliderIntWordLength.value;
-		}
 		if (Singleton.settingsPersistent.LanguageWords != null)
-		{
 			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
-		}
 		else
-		{
 			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
-		}
 	}
 
 	private void ButtonCreateRandom_clicked()
@@ -69,6 +61,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		}
 		catch (Exception e)
 		{
+			Singleton.boardUiEvents.onScreenNotification.setText($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}!");
 			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e);
 			return;
 		}

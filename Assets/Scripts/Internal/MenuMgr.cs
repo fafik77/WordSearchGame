@@ -14,8 +14,10 @@ public class MenuMgr : MonoBehaviour
 	[SerializeField] private ChooseBoardUI chooseBoardUI;
 	[SerializeField] private SettingsUi settingsUi;
 	[SerializeField] private MainMenuUI mainMenuUI;
+	[SerializeField] private OnScreenNotification onScreenNotification;
 
 	Stack<MonoBehaviour> menusStack = new Stack<MonoBehaviour>();
+	public OnScreenNotification OnScreenNotification { get { return onScreenNotification; } }
 
 	public enum MenuNavigationEnum
 	{
@@ -40,6 +42,13 @@ public class MenuMgr : MonoBehaviour
 			settingsUi = this.gameObject.GetComponentInChildren<SettingsUi>(true);
 		if (!mainMenuUI)
 			mainMenuUI = this.gameObject.GetComponentInChildren<MainMenuUI>(true);
+		if (!onScreenNotification)
+			onScreenNotification = this.gameObject.GetComponentInChildren<OnScreenNotification>(true);
+		Singleton.boardUiEvents.onScreenNotification = onScreenNotification;
+	}
+	private void OnDestroy()
+	{
+		Singleton.boardUiEvents.onScreenNotification = null;
 	}
 
 	private void Start()
