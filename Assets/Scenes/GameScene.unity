@@ -1204,7 +1204,7 @@ GameObject:
   - component: {fileID: 1664249616}
   - component: {fileID: 1664249615}
   - component: {fileID: 1664249614}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: OnScreenNotification
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1661,7 +1661,7 @@ GameObject:
   - component: {fileID: 2103206532}
   - component: {fileID: 2103206533}
   - component: {fileID: 2103206534}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Test DeadCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}

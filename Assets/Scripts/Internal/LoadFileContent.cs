@@ -20,7 +20,7 @@ namespace Assets.Scripts.Internal
 		/// <param name="pathOnly">Directory in which file resides?</param>
 		/// <param name="fileName">Exact or wildard file name</param>
 		/// <returns>One Line per request</returns>
-		public IEnumerable<string> ReadLine(string pathOnly, LoadFileLikeExact fileName)
+		public IEnumerable<string> ReadLine(string pathOnly, LoadFileLikeExact fileName, Encoding encoding = null)
 		{
 			if (pathOnly.StartsWith("jar") || pathOnly.StartsWith("http"))
 			{
@@ -30,16 +30,32 @@ namespace Assets.Scripts.Internal
 			}
 			else
 			{
+				if (encoding == null) encoding = Encoding.UTF8;
 				foreach (var file in GetLocalDirectoryContent(pathOnly, fileName))
 				{	//get all files that match
 					// This is a regular file path on most platforms and in playmode of the editor
-					foreach (var line in System.IO.File.ReadLines(file, Encoding.UTF8))
+					foreach (var line in System.IO.File.ReadLines(file, encoding))
 					{
 						yield return line;
 					}
 				}
 			}
 		}
+		/// <summary>
+		/// Reads up to all lines in given file or wildard files
+		/// </summary>
+		/// <param name="filePath">Full path to file with file (might fail when providing file likeness)</param>
+		/// <returns>One Line per request</returns>
+		public IEnumerable<string> ReadLineLikeExactFile(string filePath, Encoding encoding = null)
+		{
+			string path = System.IO.Path.GetDirectoryName(filePath);
+			string filename = System.IO.Path.GetFileName(filePath);
+			LoadFileLikeExact loadFileLikeExact = new LoadFileLikeExact();
+			if (filename.Contains('*')) loadFileLikeExact.like = filename;
+			else loadFileLikeExact.exact = filename;
+			foreach(var line in ReadLine(path, loadFileLikeExact, encoding)) {  yield return line; }
+		}
+
 
 		private string GetWebFileContent(string filePath)
 		{

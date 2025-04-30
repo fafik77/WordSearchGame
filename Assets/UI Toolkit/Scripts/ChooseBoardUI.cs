@@ -56,10 +56,12 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 	private void ButtonLoadFile_clicked()
 	{
-		var filePicked = StandaloneFileBrowser.OpenFilePanel("pick file", ".", "*", false);
-		foreach(var item in filePicked)
+		var filePicked = StandaloneFileBrowser.OpenFilePanel("Pick Board File", ".", "txt", false);
+		//user has sellected a file?, is it correct ?
+		foreach (var file in filePicked)
 		{
-			Debug.Log($"{item}");
+			Debug.Log($"{file}");
+			Singleton.choosenBoard.LoadFromFile(file);
 		}
 	}
 
@@ -74,7 +76,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		catch (Exception e)
 		{
 			Singleton.boardUiEvents.onScreenNotification.setText($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}!");
-			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e);
+			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
 			return;
 		}
 		navigateAction(MenuMgr.MenuNavigationEnum.Home);

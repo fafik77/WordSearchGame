@@ -16,7 +16,7 @@
                             <engine:Button text="B" name="CaseButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
                         </engine:VisualElement>
                     </engine:VisualElement>
-                    <engine:VisualElement template="SliderWithText">
+                    <engine:VisualElement template="SliderWithText" name="ZoomSlider">
                         <engine:VisualElement name="ZoomDeadZone" enabled="true" class="horizontal menuItem" style="margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px;">
                             <engine:Label text="Zoom Dead Zone" style="margin-top: 0;" />
                             <engine:SliderInt value="64" high-value="200" fill="true" low-value="1" name="ZoomDeadZoneSlider" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />

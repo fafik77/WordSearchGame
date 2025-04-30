@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Assets.Scripts.Internal
 {
-	public class ChooseBoardDispatcher
+    public class ChooseBoardDispatcher
 	{
 		protected Dictionary<string, List<string>> LangDictOfWords = new Dictionary<string, List<string>>();
 		public bool WaitingForApply { get; set; }
@@ -19,9 +18,11 @@ namespace Assets.Scripts.Internal
 		/// <summary>
 		/// Transforms provided data into Board
 		/// </summary>
-		public void ApplyBoard()
+		protected void ApplyBoard()
 		{
-
+			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/GameScene.unity");
+			WaitingForApply = true;
+			Singleton.boardUiEvents.CreateBoard(predefined: PredefinedBoard2D != null); //is it random or predefined ?
 		}
 
 		/// <summary>
@@ -29,7 +30,7 @@ namespace Assets.Scripts.Internal
 		/// </summary>
 		/// <param name="lang"></param>
 		/// <param name="maxWordLen"></param>
-		/// <returns></returns>
+		/// <returns>Amount of words chosen</returns>
 		public int CreateRandom(string lang, int maxWordLen)
 		{
 			PredefinedBoard2D = null;
@@ -49,15 +50,90 @@ namespace Assets.Scripts.Internal
 				wordsChosen.Add(wordsNoLongerThan[random.Next(0, totalWords)]);
 			}
 			WordsOnBoard = wordsChosen;
-			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/GameScene.unity");
-			WaitingForApply = true;
-			Singleton.boardUiEvents.CreateBoard(predefined: false);	//its random, not predefined
+			ApplyBoard();
 			return wordsChosen.Count;
 		}
 
 
+		/// <summary>
+		/// Loads a file where first line is words separated by space or comma, [other lines: row x col]
+		/// </summary>
+		/// <param name="fileName">File to load</param>
+		/// <returns>true on success</returns>
+		public bool LoadFromFile(string fileName)
+		{
+            LoadFileContent loadFileContent = new LoadFileContent();
+			List<string> lines = new List<string>();
+			foreach (var line in loadFileContent.ReadLineLikeExactFile(fileName, Encoding.UTF8))
+			{
+				lines.Add(line);
+			}
+			if (lines.Count > 1) //predefined board
+			{
+				return Load2DPredefinedBoard(lines);
+			}
+			else //only words
+			{
+				return LoadProvidedWords(lines[0]) != 0;
+			}
+		}
 
 
+		/// <summary>
+		/// Tokenizes Str:words into a list of words
+		/// </summary>
+		/// <param name="words">Words separated by non letter (\w+)</param>
+		/// <returns>List of tokenized words(\w+)</returns>
+		public List<string> TokenizeProvidedWords(string words)
+		{
+			Regex regexWord = new("\\w+", RegexOptions.IgnoreCase);
+			List<string> wordList = new List<string>();
+			foreach (Match word in regexWord.Matches(words))
+			{
+				wordList.Add(word.Value);
+			}
+			return wordList;
+		}
+
+		/// <summary>
+		/// Tokenizes Str:words into a list of words and tries to make a board out of them
+		/// </summary>
+		/// <param name="words">Words separated by non letter (\w+)</param>
+		/// <returns>amount of words found</returns>
+		public int LoadProvidedWords(string words)
+		{
+			var wordList = TokenizeProvidedWords(words);
+			return LoadProvidedWords(wordList);
+		}
+		/// <summary>
+		/// tries to make a board out of provided wordList
+		/// </summary>
+		/// <param name="wordList">List composed of words</param>
+		/// <returns>amount of words</returns>
+		public int LoadProvidedWords(List<string> wordList)
+		{
+			if (wordList == null || wordList.Count == 0) return 0;
+			PredefinedBoard2D = null;
+			WordsOnBoard = wordList;
+			ApplyBoard();
+			return wordList.Count;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="lines">First line contains all words</param>
+		/// <returns></returns>
+		public bool Load2DPredefinedBoard(List<string> lines)
+		{
+			var wordsList = TokenizeProvidedWords(lines[0]);
+			var rows = lines.Skip(1);
+			foreach (var row in rows)
+			{
+
+			}
+			return false;
+		}
 
 
 
