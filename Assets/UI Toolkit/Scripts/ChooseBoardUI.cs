@@ -1,10 +1,12 @@
 using Assets.Scripts.Internal;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
+using SFB;
 
 public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
@@ -38,6 +40,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		LabelWordLength = WordLengthElement.Q<Label>("Amount");
 
 		dropdownLang.RegisterValueChangedCallback(OnLanguageSelectionChange);
+		buttonLoadFile.clicked += ButtonLoadFile_clicked;
 
 		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
 		sliderIntWordLength.RegisterValueChangedCallback(OnWordLengthSliderChange);
@@ -49,6 +52,15 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
 		else
 			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
+	}
+
+	private void ButtonLoadFile_clicked()
+	{
+		var filePicked = StandaloneFileBrowser.OpenFilePanel("pick file", ".", "*", false);
+		foreach(var item in filePicked)
+		{
+			Debug.Log($"{item}");
+		}
 	}
 
 	private void ButtonCreateRandom_clicked()
@@ -81,6 +93,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void OnDisable()
 	{
 		buttonCreateRandom.clicked -= ButtonCreateRandom_clicked;
+		buttonLoadFile.clicked -= ButtonLoadFile_clicked;
 
 		dropdownLang.UnregisterValueChangedCallback(OnLanguageSelectionChange);
 		sliderIntWordLength.UnregisterValueChangedCallback(OnWordLengthSliderChange);
