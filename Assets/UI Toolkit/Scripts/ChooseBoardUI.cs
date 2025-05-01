@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 using SFB;
+using System.Threading;
 
 public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
@@ -57,11 +58,17 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void ButtonLoadFile_clicked()
 	{
 		var filePicked = StandaloneFileBrowser.OpenFilePanel("Pick Board File", ".", "txt", false);
+		//--> https://docs.unity3d.com/Manual/Input.html (change the input system to the new one to fix small annoyance: when double clicking a file it loads it and clicks on a tile)
 		//user has sellected a file?, is it correct ?
 		foreach (var file in filePicked)
 		{
-			Debug.Log($"{file}");
-			Singleton.choosenBoard.LoadFromFile(file);
+			//Debug.Log($"{file}");
+			var success = Singleton.choosenBoard.LoadFromFile(file);
+			if (success)
+			{
+				navigateAction(MenuMgr.MenuNavigationEnum.Home);
+			}
+			return; //accept only 1 file
 		}
 	}
 

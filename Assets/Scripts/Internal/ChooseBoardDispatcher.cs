@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Internal
 {
-    public class ChooseBoardDispatcher
+	public class ChooseBoardDispatcher
 	{
 		protected Dictionary<string, List<string>> LangDictOfWords = new Dictionary<string, List<string>>();
 		public bool WaitingForApply { get; set; }
@@ -62,7 +62,7 @@ namespace Assets.Scripts.Internal
 		/// <returns>true on success</returns>
 		public bool LoadFromFile(string fileName)
 		{
-            LoadFileContent loadFileContent = new LoadFileContent();
+			LoadFileContent loadFileContent = new LoadFileContent();
 			List<string> lines = new List<string>();
 			foreach (var line in loadFileContent.ReadLineLikeExactFile(fileName, Encoding.UTF8))
 			{
@@ -126,12 +126,22 @@ namespace Assets.Scripts.Internal
 		/// <returns></returns>
 		public bool Load2DPredefinedBoard(List<string> lines)
 		{
-			var wordsList = TokenizeProvidedWords(lines[0]);
+			int colAmount = 0;
+			List<string> BoardRows = new List<string>();
 			var rows = lines.Skip(1);
 			foreach (var row in rows)
 			{
-
+				if (colAmount != 0)
+				{
+					if (row.Length == colAmount) BoardRows.Add(row);
+					else if (row.Trim().Length == colAmount) BoardRows.Add(row.Trim());
+					else 
+						throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRows.Count}");
+				}
+				else
+					BoardRows.Add(row);
 			}
+			var wordsList = TokenizeProvidedWords(lines[0]);
 			return false;
 		}
 
