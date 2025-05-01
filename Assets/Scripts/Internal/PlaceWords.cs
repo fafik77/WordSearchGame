@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Exceptions;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 namespace BoardContent
 {
-    enum WordOrientationEnum
+	enum WordOrientationEnum
 	{
 		horizontal = 0,
 		vertical = 1,
@@ -126,8 +127,19 @@ namespace BoardContent
 			Singleton.wordList.wordsToFind = finalBoard.wordsToFind.ToList();
 
 			//write onto the screen
-			var iterSrc = finalBoard.tiles2DDummy.GetEnumerator();
-			var iterDst = TilesSript2D.GetEnumerator();
+			WriteContentOntoScreen(finalBoard.tiles2DDummy, TilesSript2D);
+			return 0x00;
+		}
+		/// <summary>
+		/// Writes onto the screen
+		/// </summary>
+		/// <param name="content">Src</param>
+		/// <param name="screen">Dst</param>
+		public static void WriteContentOntoScreen(char[,] content, LetterTileScript[,] screen)
+		{
+			//write onto the screen
+			var iterSrc = content.GetEnumerator();
+			var iterDst = screen.GetEnumerator();
 			if (Singleton.settingsPersistent.upperCase)
 			{
 				while (iterSrc.MoveNext() && iterDst.MoveNext())
@@ -142,9 +154,93 @@ namespace BoardContent
 					(iterDst.Current as LetterTileScript).Letter = char.ToLower((char)iterSrc.Current);
 				}
 			}
-
-			return 0x00;
 		}
+
+		struct CoordinatesXY
+		{
+			public int X;
+			public int Y;
+			public CoordinatesXY(int x, int y) { X = x; Y = y; }
+		}
+
+		/// <summary>
+		/// Finds words on board in less than O(#words*(W*H))
+		/// </summary>
+		/// <param name="boardContent">lowercase</param>
+		/// <param name="words">lowercase</param>
+		/// <returns>List of all directions the words are present in</returns>
+		public static SortedSet<WordOrientationEnum> FindWordsOnBoard(char[,] boardContent, List<string> words)
+		{
+			Singleton.wordList.Reset();
+			///make a copy early so we can take out the provided words
+			Singleton.wordList.wordsToFind = words.Select(x => x.ToLower()).ToList();
+			Singleton.wordList.wordsToFind.Sort();
+			words = Singleton.wordList.wordsToFind.ToList();
+			SortedSet<WordOrientationEnum> wordOrientations = new SortedSet<WordOrientationEnum>();
+			List<WordListEntry> wordList = new List<WordListEntry>();
+
+			int width = boardContent.GetLength(0), height = boardContent.GetLength(1);
+
+
+			PlaceWordsOnBoardReturns boardReturns = new PlaceWordsOnBoardReturns(width, height);
+			boardReturns.tiles2DDummy = boardContent;
+			CoordinatesXY posTo = new CoordinatesXY();
+
+			for (int i = 0; i!= width; ++i)
+			{
+				for (int ii = 0; ii != height; ++ii)
+				{
+					foreach(var word in words)
+					{
+						bool success = false;
+						if (word[0] == boardContent[i, ii])
+						{
+							WordOrientationEnum foundLike;
+							(success, foundLike) = FindWordOnBoard(boardReturns, word, new CoordinatesXY(i, ii), ref posTo);
+							if (success)
+							{
+								wordList.Add(new WordListEntry()
+								{
+									word = word,
+									posFrom = new Vector2(i, ii),
+									posTo = new Vector2(posTo.X, posTo.Y)
+								});
+								wordOrientations.Add(foundLike);
+								words.Remove(word);
+								break;
+							}
+						}
+					}
+				}
+			}
+			Singleton.wordList.list = wordList;
+			return wordOrientations;
+		}
+		
+
+		static (bool, WordOrientationEnum) FindWordOnBoard(PlaceWordsOnBoardReturns boardContent, string word, CoordinatesXY pos, ref CoordinatesXY posToOut)
+		{
+			var orients = Enum.GetValues(typeof(WordOrientationEnum)).Cast<WordOrientationEnum>();
+			foreach (var orient in orients)
+			{
+				if (FindWordOnBoardOrientation(boardContent, word, orient, pos, ref posToOut))
+				{
+					return (true, orient);
+				}
+			}
+			return (false, 0);
+		}
+		static bool FindWordOnBoardOrientation(PlaceWordsOnBoardReturns boardContent, string word, WordOrientationEnum orientation, CoordinatesXY pos, ref CoordinatesXY posTo)
+		{
+			var wordPlaceOk = CanPlaceWordHere(pos.X, pos.Y, boardContent, orientation, word);
+			if (wordPlaceOk.ok)
+			{
+				posTo.X = pos.X + wordPlaceOk.xmod * (word.Length - 1);
+				posTo.Y = pos.Y + wordPlaceOk.ymod * (word.Length - 1);
+			}
+			return wordPlaceOk.ok;
+		}
+
 
 		struct PlaceWordsOnBoardReturns
 		{
@@ -153,11 +249,14 @@ namespace BoardContent
 			public List<WordListEntry> wordList;
 			public SortedSet<string> wordsToFind;
 			public bool fullyComplete;
+			public int width, height;
 			public PlaceWordsOnBoardReturns(int width, int height)
 			{
 				fullyComplete = false;
 				wordsTimedout = 0;
 				tiles2DDummy = new char[width, height];
+				this.width = width;
+				this.height = height;
 				wordList = new List<WordListEntry>();
 				wordsToFind = new SortedSet<string>();
 			}
@@ -309,7 +408,7 @@ namespace BoardContent
 		/// <param name="orientEnum"></param>
 		/// <param name="word"></param>
 		/// <returns></returns>
-		WordPlaceOk CanPlaceWordHere(int x, int y, PlaceWordsOnBoardReturns boardTry, WordOrientationEnum orientEnum, string word)
+		static WordPlaceOk CanPlaceWordHere(int x, int y, PlaceWordsOnBoardReturns boardTry, WordOrientationEnum orientEnum, string word)
 		{
 			int xmod = 0, ymod = 0;
 			switch (orientEnum)
@@ -348,10 +447,10 @@ namespace BoardContent
 					}
 			}
 			WordPlaceOk wordPlaceOk = new WordPlaceOk() { xmod = xmod, ymod = ymod, ok = false };
-			int xok = x + xmod * word.Length;
-			int yok = y + ymod * word.Length;
-			if (xok > 0 && yok > 0)
-				if (xok < width && yok < height) wordPlaceOk.ok = true;
+			int xok = x + xmod * (word.Length - 1);
+			int yok = y + ymod * (word.Length - 1);
+			if (xok >= 0 && yok >= 0)
+				if (xok < boardTry.width && yok < boardTry.height) wordPlaceOk.ok = true;
 			if (!wordPlaceOk.ok) return wordPlaceOk;
 
 			for (int i = 0; i < word.Length; i++)

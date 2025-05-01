@@ -126,23 +126,41 @@ namespace Assets.Scripts.Internal
 		/// <returns></returns>
 		public bool Load2DPredefinedBoard(List<string> lines)
 		{
-			int colAmount = 0;
-			List<string> BoardRows = new List<string>();
+			int colsInLineWidth = 0;
+			List<string> BoardRowsHeight = new List<string>();
 			var rows = lines.Skip(1);
+			Regex lettersReg = new("\\w", RegexOptions.IgnoreCase);
 			foreach (var row in rows)
 			{
-				if (colAmount != 0)
+				///skip empty lines
+				if (row.Length < 3) continue;
+				///process each line extracting only letters?
+				StringBuilder thisRowCharsBuilder = new StringBuilder(row.Length);
+				foreach (Match LetterInWord in lettersReg.Matches(row))
 				{
-					if (row.Length == colAmount) BoardRows.Add(row);
-					else if (row.Trim().Length == colAmount) BoardRows.Add(row.Trim());
-					else 
-						throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRows.Count}");
+					thisRowCharsBuilder.Append(LetterInWord.Value);
 				}
-				else
-					BoardRows.Add(row);
+				if (colsInLineWidth == 0)
+					colsInLineWidth = thisRowCharsBuilder.Length;
+				else if (thisRowCharsBuilder.Length != colsInLineWidth) ///error cols dont match
+				{
+					throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRowsHeight.Count}");
+				}
+				BoardRowsHeight.Add(thisRowCharsBuilder.ToString().ToLower());
 			}
-			var wordsList = TokenizeProvidedWords(lines[0]);
-			return false;
+			///save each char into the board
+			PredefinedBoard2D = new char[colsInLineWidth, BoardRowsHeight.Count];
+			for (int i = 0; i != BoardRowsHeight.Count; ++i)
+			{
+				for (int ii = 0; ii != colsInLineWidth; ++ii)
+				{
+					PredefinedBoard2D[ii,i] = BoardRowsHeight[i][ii]; //reverse the order couse thats a thing
+				}
+			}
+			var words = TokenizeProvidedWords(lines[0]);
+			WordsOnBoard = words.Select(x => x.ToLower()).ToList();
+			ApplyBoard();
+			return true;
 		}
 
 

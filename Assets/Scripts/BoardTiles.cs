@@ -1,17 +1,13 @@
 using UnityEngine;
 using System.Linq;
-using System.Collections;
-using System.Threading;
 using BoardContent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Exceptions;
-using Assets.Scripts.Internal;
-using System;
-using Unity.VisualScripting;
 
 public class BoardTiles : MonoBehaviour
 {
+	/// <summary>
+	/// The tile Template to create
+	/// </summary>
 	[SerializeField] private GameObject tile;
 	//[SerializeField] private int awaitTimeoutMs = 1000;
 
@@ -47,7 +43,14 @@ public class BoardTiles : MonoBehaviour
 
 	private void BoardUiEvents_CreateBoardEvent(bool predef)
 	{
-		PlaceWordsOnBoard(Singleton.choosenBoard.WordsOnBoard);
+		if (predef)
+		{
+			PlaceContentOnBoard(Singleton.choosenBoard.PredefinedBoard2D, Singleton.choosenBoard.WordsOnBoard);
+		}
+		else
+		{
+			PlaceWordsOnBoard(Singleton.choosenBoard.WordsOnBoard);
+		}
 		Singleton.choosenBoard.WaitingForApply = false;
 	}
 
@@ -94,9 +97,16 @@ public class BoardTiles : MonoBehaviour
 	{
 		overlayFoundWord.RemoveAllHighlights();
 		///search through provided content to find wordsToFind
-		var width = content.GetLength(0);
-		var height = content.GetLength(1);
-		CreateBoard(width, height);
+		var widthLocal = content.GetLength(0);
+		var heightLocal = content.GetLength(1);
+		CreateBoard(widthLocal, heightLocal);
+		///find words on board
+		var orientations = PlaceWords.FindWordsOnBoard(content, wordsToFind);
+		///write onto the screen
+		PlaceWords.WriteContentOntoScreen(content, tilesSript2D);
+
+		Singleton.boardUiEvents.RefreshBoardUi();
+		ZoomCameraOnBoard();
 	}
 	public void PlaceWordsOnBoard(List<string> words)
 	{

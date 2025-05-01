@@ -68,6 +68,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			{
 				navigateAction(MenuMgr.MenuNavigationEnum.Home);
 			}
+			else
+			{
+				Singleton.boardUiEvents.onScreenNotification.setText($"Failed to load: {file}");
+			}
 			return; //accept only 1 file
 		}
 	}
