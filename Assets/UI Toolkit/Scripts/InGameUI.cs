@@ -14,6 +14,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private ListView listViewWordsFound;
 	private Label TimeCounterLabel;
 	private float timeCounter;
+	private int HintsUsed;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 	public float TimeCounter
 	{
@@ -77,6 +78,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 				Singleton.clickAndDrag.AddClickPoint(tile, null, false);
 				tile.Highlight();
+				++HintsUsed;
 			}
 		};
 
@@ -97,6 +99,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private void BoardUiEvents_CreateBoardEvent(bool predef)
 	{
 		timeCounter = 0;
+		HintsUsed = 0;
 	}
 
 	private void BoardRefreshUiEvent()

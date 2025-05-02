@@ -185,7 +185,7 @@ namespace BoardContent
 			PlaceWordsOnBoardReturns boardReturns = new PlaceWordsOnBoardReturns(width, height);
 			boardReturns.tiles2DDummy = boardContent;
 			CoordinatesXY posTo = new CoordinatesXY();
-
+			//List<string> wordsToRemove = new List<string>();
 			for (int i = 0; i!= width; ++i)
 			{
 				for (int ii = 0; ii != height; ++ii)
@@ -206,8 +206,8 @@ namespace BoardContent
 									posTo = new Vector2(posTo.X, posTo.Y)
 								});
 								wordOrientations.Add(foundLike);
-								words.Remove(word);
-								break;
+								//words.Remove(word);
+								//break;
 							}
 						}
 					}

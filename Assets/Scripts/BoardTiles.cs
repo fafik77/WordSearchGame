@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Linq;
 using BoardContent;
 using System.Collections.Generic;
+using System.IO;
+using System;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -111,13 +113,38 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		overlayFoundWord.RemoveAllHighlights();
-		//delegate logic to separete class
+		///delegate logic to separete class
 		PlaceWords placeWords = new PlaceWords(words, AspectRatio: new(14, 9), CreateBoard, wordsInReverse: true, AdditionalCharsPercent: 1.2f);
-		//try to place words on board
+		///try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
 		Singleton.boardUiEvents.RefreshBoardUi();
 
 		ZoomCameraOnBoard();
+
+		//DebugOnlyBoardDump();
+	}
+
+	[Obsolete("Debug Only Function")]
+	private void DebugOnlyBoardDump()
+	{
+		var timeNowStr = DateTime.Now.ToString("HH-mm-ss");
+		StreamWriter streamWriter = new StreamWriter(@$"V:\board dump{timeNowStr}.txt", false);
+		foreach (var word in Singleton.wordList.wordsToFind)
+		{
+			streamWriter.Write(word + " ");
+		}
+		streamWriter.Write("\n");
+		var width = tilesSript2D.GetLength(0);
+		var height = tilesSript2D.GetLength(1);
+		for (int ii = 0; ii != height; ++ii)
+		{
+			for (int i = 0; i != width; ++i)
+			{
+				streamWriter.Write(tilesSript2D[i, ii].Letter);
+			}
+			streamWriter.Write("\n");
+		}
+		streamWriter.Close();
 	}
 
 	public void ZoomCameraOnBoard()
@@ -126,7 +153,8 @@ public class BoardTiles : MonoBehaviour
 		///8:5 ->  4,-2,-10 size = 2.5
 		///18:11 -> 10,-5,-10 size = 6
 		//float ratio = 14f / 9f;
-		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)widthPrev) / 2.92f, new(widthPrev, heightPrev));
+		//mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)widthPrev) / 2.92f, new(widthPrev, heightPrev));
+		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)heightPrev) / 1.92f, new(widthPrev, heightPrev));
 	}
 
 

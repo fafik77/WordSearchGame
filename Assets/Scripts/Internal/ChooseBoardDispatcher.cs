@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.LoadFileContent;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Assets.Scripts.Internal
 	public class ChooseBoardDispatcher
 	{
 		protected Dictionary<string, List<string>> LangDictOfWords = new Dictionary<string, List<string>>();
+		LoadFileContent.LoadFileContent loadFileContent = new();
 		public bool WaitingForApply { get; set; }
 		public string Lang;
 		public List<string> WordsOnBoard;
@@ -62,9 +64,8 @@ namespace Assets.Scripts.Internal
 		/// <returns>true on success</returns>
 		public bool LoadFromFile(string fileName)
 		{
-			LoadFileContent loadFileContent = new LoadFileContent();
 			List<string> lines = new List<string>();
-			foreach (var line in loadFileContent.ReadLineLikeExactFile(fileName, Encoding.UTF8))
+			foreach (var line in loadFileContent.ReadLines(fileName, Encoding.UTF8))
 			{
 				lines.Add(line);
 			}
@@ -174,24 +175,9 @@ namespace Assets.Scripts.Internal
 			if (words.Count == 0)
 			{
 				string pathOnly = System.IO.Path.Combine(Application.streamingAssetsPath, "Dictionary");
-				LoadFileContent loadFileContent = new LoadFileContent();
-				LoadFileLikeExact fileLike = new LoadFileLikeExact() { like = lang + " *.txt" };
+				LoadFileLikeExact fileLike = new LoadFileLikeExact() { like = lang + " *.txt", matchFile = new Regex(lang + ".*\\.txt") };
 
-				
-				//var path = AppContext.BaseDirectory;	//unity editor path
-				//path = Application.persistentDataPath; //for per user config
-				//var path = Application.dataPath;        // (project)/Assets
-				//path = Path.Combine(path, "Data");
-				//foreach (var file in Directory.GetFiles(pathOnly, lang + " *.txt"))
-				//{
-				//	foreach(var line in File.ReadLines(file, Encoding.UTF8))
-				//	{
-				//		var lineTrim = line.Trim();
-				//		if (lineTrim.Length > 2)
-				//			words.Add(lineTrim);
-				//	}
-				//}
-				foreach(var line in loadFileContent.ReadLine(pathOnly, fileLike))
+				foreach(var line in loadFileContent.ReadLinesFromMultipleFiles(pathOnly, fileLike))
 				{
 					var lineTrim = line.Trim();
 					if (lineTrim.Length > 2)
