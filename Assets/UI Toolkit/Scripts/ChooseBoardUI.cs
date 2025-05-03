@@ -8,6 +8,10 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 using SFB;
 using System.Threading;
+using Assets.Scripts.LoadFileContent;
+using Assets.UI_Toolkit.Scripts;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
@@ -20,6 +24,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	TextField SearchField;
 	SliderInt sliderIntWordLength;
 	Label LabelWordLength;
+	TreeView treeViewCategories;
+
+	Coroutine CategoriesForTreeCoroutine;
+
 
 
 	private void Awake()
@@ -32,11 +40,20 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		var root = ui.rootVisualElement;
 		buttonLoadFile = root.Q<Button>("LoadFile");
 		buttonCreateRandom = root.Q<Button>("CreateRandom");
-		buttonPickRandom = root.Q<Button>("PickRandom");
 		dropdownLang = root.Q<DropdownField>("Language");
 		SearchField = root.Q<TextField>("Search");
-		var WordLengthElement = root.Q<VisualElement>("WordLength");
 
+		var Categories = root.Q<VisualElement>("Categories");
+		treeViewCategories = Categories.Q<TreeView>();
+		buttonPickRandom = Categories.Q<Button>("PickRandom");
+		treeViewCategories.selectionType = SelectionType.Single;
+		treeViewCategories.itemsChosen += TreeViewCategories_itemsChosen;
+
+		///https://github.com/Unity-Technologies/ui-toolkit-manual-code-examples/blob/master/create-listviews-treeviews/PlanetsWindow.cs
+		///populate tree
+		StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
+
+		var WordLengthElement = root.Q<VisualElement>("WordLength");
 		sliderIntWordLength = WordLengthElement.Q<SliderInt>();
 		LabelWordLength = WordLengthElement.Q<Label>("Amount");
 
@@ -53,6 +70,43 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
 		else
 			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
+
+		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
+	}
+
+	private void TreeViewCategories_itemsChosen(IEnumerable<object> obj)
+	{
+		var item = obj.First() as ICategoryOrGroup;
+		var category = item as CategoryOnly;
+
+		if (category == null)
+		{	///group
+			//treeViewCategories.ExpandItem()
+		}
+		else
+		{   ///category
+			try
+			{
+				Singleton.choosenBoard.LoadProvidedWords(category.words, 16);
+			}
+			catch (Exception e)
+			{
+				Singleton.boardUiEvents.onScreenNotification.setText($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}!");
+				Debug.LogError($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
+				return;
+			}
+			navigateAction(MenuMgr.MenuNavigationEnum.Home);
+		}
+		//Debug.Log(item);
+	}
+
+	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0)
+	{
+		yield return new WaitForSeconds(delaySec);
+		treeViewCategories.SetRootItems(Singleton.choosenBoard.GetCategoriesRootsForLang(Singleton.settingsPersistent.LanguageWords));
+		treeViewCategories.makeItem = () => new Label();
+		treeViewCategories.bindItem = (VisualElement element, int index) =>
+			(element as Label).text = treeViewCategories.GetItemDataForIndex<ICategoryOrGroup>(index).Name;
 	}
 
 	private void ButtonLoadFile_clicked()
@@ -101,6 +155,9 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void OnLanguageSelectionChange(ChangeEvent<string> change)
 	{
 		Singleton.settingsPersistent.LanguageWords = change.newValue;
+		///populate tree again
+		StopCoroutine(CategoriesForTreeCoroutine);
+		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
 	}
 
 	private void OnDisable()

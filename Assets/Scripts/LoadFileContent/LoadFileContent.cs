@@ -5,6 +5,16 @@ using System.Text.RegularExpressions;
 
 namespace Assets.Scripts.LoadFileContent
 {
+	public struct FileDir
+	{
+		public string Name;
+		public bool IsDirectory;
+		public FileDir(string name, bool directory)
+		{
+			Name = name;
+			IsDirectory = directory;
+		}
+	}
 	public struct LoadFileLikeExact
 	{
 		/// <summary>
@@ -92,8 +102,9 @@ namespace Assets.Scripts.LoadFileContent
 
 				foreach (var file in files)
 				{
-					if (!matcher.Match(file).Success) continue;
-					foreach (var line in loadFileContentInterface.ReadLines(file, encoding))
+					if(file.IsDirectory) continue;
+					if (!matcher.Match(file.Name).Success) continue;
+					foreach (var line in loadFileContentInterface.ReadLines(file.Name, encoding))
 					{
 						yield return line;
 					}
@@ -115,7 +126,7 @@ namespace Assets.Scripts.LoadFileContent
 			foreach(var line in ReadLinesFromMultipleFiles(path, loadFileLikeExact, encoding)) {  yield return line; }
 		}
 
-		public List<string> GetDirectory(string pathOnly, string searchPattern = null)
+		public List<FileDir> GetDirectory(string pathOnly, string searchPattern = null)
 		{
 			ILoadFileContent loadFileContentInterface = ChooseInterfaceForGet(pathOnly);
 			return loadFileContentInterface.GetDirectory(pathOnly, searchPattern);

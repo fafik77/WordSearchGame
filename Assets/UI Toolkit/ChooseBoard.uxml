@@ -20,7 +20,7 @@
                         </engine:VisualElement>
                     </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement style="flex-grow: 1; margin-top: 20px; margin-left: 10%; margin-right: 10%; background-color: rgba(27, 27, 27, 0.5); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
+                <engine:VisualElement name="Categories" style="flex-grow: 1; margin-top: 20px; margin-left: 10%; margin-right: 10%; background-color: rgba(27, 27, 27, 0.5); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
                     <engine:VisualElement style="flex-grow: 1; min-height: 400px;">
                         <engine:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row;">
                             <engine:VisualElement style="flex-grow: 1; flex-direction: row;">
@@ -33,7 +33,7 @@
                                 </engine:VisualElement>
                             </engine:VisualElement>
                         </engine:VisualElement>
-                        <engine:TreeView name="TreeView" show-alternating-row-backgrounds="ContentOnly" />
+                        <engine:TreeView name="TreeView" show-alternating-row-backgrounds="ContentOnly" virtualization-method="DynamicHeight" />
                     </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>

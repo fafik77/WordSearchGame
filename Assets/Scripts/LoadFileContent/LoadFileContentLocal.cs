@@ -8,12 +8,15 @@ namespace Assets.Scripts.LoadFileContent
 {
 	public class LoadFileContentLocal : ILoadFileContent
 	{
-		public List<string> GetDirectory(string pathOnly, string searchPattern = null)
+		public List<FileDir> GetDirectory(string pathOnly, string searchPattern = null)
 		{
 			if (searchPattern == null || searchPattern.Length == 0)
-				searchPattern = "*.*";
-			return System.IO.Directory.GetFiles(pathOnly, searchPattern).ToList();
-		}
+				searchPattern = new string("*.*");
+			List<FileDir> entries = new List<FileDir>();
+			entries.AddRange(System.IO.Directory.GetDirectories(pathOnly).Select(x => new FileDir { Name = x, IsDirectory = true }));
+			entries.AddRange(System.IO.Directory.GetFiles(pathOnly, searchPattern).Select(x => new FileDir { Name = x, IsDirectory = false }));
+			return entries;
+        }
 
 		public IEnumerable<string> ReadLines(string filePath, Encoding encoding = null)
 		{

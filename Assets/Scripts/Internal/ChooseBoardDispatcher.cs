@@ -1,16 +1,20 @@
 ﻿using Assets.Scripts.LoadFileContent;
+using Assets.UI_Toolkit.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
 
 namespace Assets.Scripts.Internal
 {
 	public class ChooseBoardDispatcher
 	{
 		protected Dictionary<string, List<string>> LangDictOfWords = new Dictionary<string, List<string>>();
+		protected Dictionary<string, CategoryOrGroup> LangDictOfCategories = new Dictionary<string, CategoryOrGroup>();
 		LoadFileContent.LoadFileContent loadFileContent = new();
 		public bool WaitingForApply { get; set; }
 		public string Lang;
@@ -79,6 +83,51 @@ namespace Assets.Scripts.Internal
 			}
 		}
 
+		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
+		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang)
+		{
+			lang = lang.ToLower();
+			var categories = LangDictOfCategories.GetOrCreate(lang);
+			int id = 0;
+			if (categories.HasSubContent == false)
+			{
+				string path = System.IO.Path.Combine(Application.streamingAssetsPath, "Categories", lang);
+				LoadCategoriesRecursiveForPath(path, ref categories);
+			}
+			CategoriesInCurrLang = categories;
+			return categories.GetRoots(ref id);
+		}
+
+		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into)
+		{
+			foreach (var item in loadFileContent.GetDirectory(path, "*.txt"))
+			{
+				if (item.IsDirectory)
+				{
+					string nameOnly = System.IO.Path.GetFileName(item.Name);
+					if (into.SubCategories == null) into.SubCategories = new();
+					CategoryOrGroup subCategory = new CategoryOrGroup(nameOnly);
+					LoadCategoriesRecursiveForPath(item.Name, ref subCategory);
+					into.SubCategories.Add(subCategory);
+				}
+				else
+				{
+					List<string> words = new List<string>();
+					foreach (var line in loadFileContent.ReadLines(item.Name))
+					{
+						var lineTrim = line.Trim().ToLower();
+						if (lineTrim.Length > 1)
+						{
+							words.Add(lineTrim);
+						}
+					}
+					string nameOnly = System.IO.Path.GetFileNameWithoutExtension(item.Name);
+					if (into.Categories == null) into.Categories = new();
+					into.Categories.Add(new CategoryOnly(nameOnly, words));
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Tokenizes Str:words into a list of words
@@ -100,22 +149,39 @@ namespace Assets.Scripts.Internal
 		/// Tokenizes Str:words into a list of words and tries to make a board out of them
 		/// </summary>
 		/// <param name="words">Words separated by non letter (\w+)</param>
+		/// <param name="amountMax">Limit maximum amount of words to</param>
 		/// <returns>amount of words found</returns>
-		public int LoadProvidedWords(string words)
+		public int LoadProvidedWords(string words, int amountMax = -1)
 		{
 			var wordList = TokenizeProvidedWords(words);
-			return LoadProvidedWords(wordList);
+			return LoadProvidedWords(wordList, amountMax);
 		}
 		/// <summary>
 		/// tries to make a board out of provided wordList
 		/// </summary>
 		/// <param name="wordList">List composed of words</param>
+		/// <param name="amountMax">Limit maximum amount of words to</param>
 		/// <returns>amount of words</returns>
-		public int LoadProvidedWords(List<string> wordList)
+		public int LoadProvidedWords(List<string> wordList, int amountMax = -1)
 		{
 			if (wordList == null || wordList.Count == 0) return 0;
 			PredefinedBoard2D = null;
-			WordsOnBoard = wordList;
+
+
+			if (amountMax > 0)
+			{
+				if (WordsOnBoard == null) WordsOnBoard = new();
+				WordsOnBoard.Clear();
+				System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+				var amount = random.Next(10, amountMax);
+				var totalWords = wordList.Count;
+				for (int i = 0; i != amount; ++i)
+				{
+					WordsOnBoard.Add(wordList[random.Next(0, totalWords)]);
+				}
+			}
+			else
+				WordsOnBoard = wordList;
 			ApplyBoard();
 			return wordList.Count;
 		}

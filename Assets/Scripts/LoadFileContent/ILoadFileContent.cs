@@ -13,11 +13,11 @@ namespace Assets.Scripts.LoadFileContent
 		/// <returns>One Line per request</returns>
 		public IEnumerable<string> ReadLines(string filePath, Encoding encoding = null);
 		/// <summary>
-		/// Gets files in directory
+		/// Gets files and folders in directory
 		/// </summary>
 		/// <param name="pathOnly">Directory to search in</param>
 		/// <param name="searchPattern">find matching files</param>
 		/// <returns>List of files</returns>
-		public List<string> GetDirectory(string pathOnly, string searchPattern = null);
+		public List<FileDir> GetDirectory(string pathOnly, string searchPattern = null);
 	}
 }

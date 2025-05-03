@@ -38,7 +38,7 @@ namespace Assets.Scripts.LoadFileContent
 			}
 		}
 
-		public List<string> GetDirectory(string pathOnly, string searchPattern)
+		public List<FileDir> GetDirectory(string pathOnly, string searchPattern)
 		{
 			throw new NotImplementedException();
 		}
