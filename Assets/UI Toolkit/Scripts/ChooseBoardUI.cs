@@ -51,7 +51,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 		///https://github.com/Unity-Technologies/ui-toolkit-manual-code-examples/blob/master/create-listviews-treeviews/PlanetsWindow.cs
 		///populate tree
-		StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
+		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
 
 		var WordLengthElement = root.Q<VisualElement>("WordLength");
 		sliderIntWordLength = WordLengthElement.Q<SliderInt>();
@@ -70,8 +70,6 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
 		else
 			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
-
-		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
 	}
 
 	private void TreeViewCategories_itemsChosen(IEnumerable<object> obj)
@@ -107,6 +105,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		treeViewCategories.makeItem = () => new Label();
 		treeViewCategories.bindItem = (VisualElement element, int index) =>
 			(element as Label).text = treeViewCategories.GetItemDataForIndex<ICategoryOrGroup>(index).Name;
+		treeViewCategories.Rebuild();
 	}
 
 	private void ButtonLoadFile_clicked()
@@ -157,7 +156,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		Singleton.settingsPersistent.LanguageWords = change.newValue;
 		///populate tree again
 		StopCoroutine(CategoriesForTreeCoroutine);
-		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.5f));
+		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.1f));
 	}
 
 	private void OnDisable()

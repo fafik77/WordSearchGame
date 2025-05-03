@@ -89,7 +89,7 @@ namespace Assets.Scripts.Internal
 			lang = lang.ToLower();
 			var categories = LangDictOfCategories.GetOrCreate(lang);
 			int id = 0;
-			if (categories.HasSubContent == false)
+			if (categories.HasAnyContent == false)
 			{
 				string path = System.IO.Path.Combine(Application.streamingAssetsPath, "Categories", lang);
 				LoadCategoriesRecursiveForPath(path, ref categories);
@@ -170,14 +170,19 @@ namespace Assets.Scripts.Internal
 
 			if (amountMax > 0)
 			{
-				if (WordsOnBoard == null) WordsOnBoard = new();
-				WordsOnBoard.Clear();
-				System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
-				var amount = random.Next(10, amountMax);
 				var totalWords = wordList.Count;
-				for (int i = 0; i != amount; ++i)
+				if (totalWords <= amountMax)
 				{
-					WordsOnBoard.Add(wordList[random.Next(0, totalWords)]);
+					WordsOnBoard = wordList;
+				}
+				else
+				{
+					if (WordsOnBoard == null) WordsOnBoard = new();
+					WordsOnBoard.Clear();
+					System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+					var amount = random.Next(10, amountMax);
+					for (int i = 0; i != amount; ++i)
+						WordsOnBoard.Add(wordList[random.Next(0, totalWords)]);
 				}
 			}
 			else

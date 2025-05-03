@@ -55,6 +55,7 @@ namespace Assets.UI_Toolkit.Scripts
 		public List<CategoryOnly> Categories { get; set; }
 		public string Name => name;
 		public bool HasSubContent => (SubCategories != null && SubCategories.Count != 0);
+		public bool HasAnyContent => (HasSubContent || (Categories != null && Categories.Count != 0));
 
 		public IList<TreeViewItemData<ICategoryOrGroup>> GetRoots(ref int id)
 		{
