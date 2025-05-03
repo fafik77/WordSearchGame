@@ -1,5 +1,7 @@
+using Assets.Scripts.Internal;
 using BoardContent;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -106,7 +108,7 @@ public static class Singleton
 		}
 
 	}
-	public static ClickAndDragStruct clickAndDrag;
+	public static ClickAndDragStruct clickAndDrag = new();
 
 	public struct BoardUiEvents
 	{
@@ -116,15 +118,22 @@ public static class Singleton
 		/// Set to bool UpperCase
 		/// </summary>
 		public event Action<bool> BoardSetCaseEvent;
+		/// <summary>
+		/// predefined Board?
+		/// </summary>
+		public event Action<bool> CreateBoardEvent;
 
 		public void FoundWord(string word) => FoundWordEvent?.Invoke(this, word);
 		public void RefreshBoardUi() => BoardRefreshUiEvent?.Invoke();
 		public void BoardSetCase(bool UpperCase) => BoardSetCaseEvent?.Invoke(UpperCase);
-	}
-	public static BoardUiEvents boardUiEvents;
+		public void CreateBoard(bool predefined) { CreateBoardEvent?.Invoke(predefined); }
 
-	
-	public static WordList wordList;
+		public OnScreenNotification onScreenNotification;
+	}
+	public static BoardUiEvents boardUiEvents = new();
+
+
+	public static WordList wordList = new();
 	public static LetterTileScript[,] TilesSript2D { get; set; }
 
 	public struct ScenesStruct
@@ -134,26 +143,22 @@ public static class Singleton
 		public void SwitchToScene(string sceneName)
 		{
 			var currScene = SceneManager.GetActiveScene();
-			if (currScene.path == sceneName || currScene.name == sceneName)
+			if (currScene.path == sceneName || currScene.name == sceneName || currScene.path.Contains(sceneName))
 				return;
 			SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
 		}
 	}
-	public static ScenesStruct scenesStruct;
+	public static ScenesStruct SceneMgr = new();
 
-	public struct ChooseBoardSStruct
-	{
-		public string Lang;
-		public string file;
-		public string board;
-	}
-	public static ChooseBoardSStruct chooseBoardSStruct;
+	public static ChooseBoardDispatcher choosenBoard = new();
 
 	public struct SettingsPersistent
 	{
 		public bool upperCase;
 		public int ZoomDeadZoneSize;
-
+		public int wordsMaxLenght;
+		public string LanguageUi;
+		public string LanguageWords;
 	}
-	public static SettingsPersistent settingsPersistent;
+	public static SettingsPersistent settingsPersistent = new();
 }

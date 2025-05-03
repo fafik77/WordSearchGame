@@ -9,12 +9,12 @@
                     <engine:Button text="Continue" name="Continue" class="button" style="margin-right: 10px; flex-shrink: 1; flex-grow: 1;" />
                     <engine:Button text="New Game" name="NewGame" class="button" style="text-overflow: ellipsis; margin-left: 10px; flex-shrink: 1; flex-grow: 1;" />
                 </engine:VisualElement>
-                <engine:VisualElement style="justify-content: center; align-self: flex-start; align-items: stretch; min-width: 200px;">
+                <engine:VisualElement style="justify-content: center; align-self: stretch; align-items: stretch; min-width: 200px;">
                     <engine:Button text="Settings" name="Settings" class="button" style="align-self: stretch;" />
                     <engine:Button text="Center Camera" name="CCamera" class="button" style="align-self: stretch;" />
                 </engine:VisualElement>
-                <engine:VisualElement style="justify-content: center; align-self: flex-start; align-items: stretch; min-width: 200px;">
-                    <engine:Button text="Quit" name="Quit" class="button" style="align-self: stretch; flex-grow: 1;" />
+                <engine:VisualElement class="horizontal" style="min-width: 200px;">
+                    <engine:Button text="Quit" name="Quit" class="button" style="flex-grow: 1; flex-shrink: 1; margin-right: 20%; margin-left: 20%;" />
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>

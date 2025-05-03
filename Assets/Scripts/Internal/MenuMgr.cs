@@ -14,12 +14,15 @@ public class MenuMgr : MonoBehaviour
 	[SerializeField] private ChooseBoardUI chooseBoardUI;
 	[SerializeField] private SettingsUi settingsUi;
 	[SerializeField] private MainMenuUI mainMenuUI;
+	[SerializeField] private OnScreenNotification onScreenNotification;
 
 	Stack<MonoBehaviour> menusStack = new Stack<MonoBehaviour>();
+	public OnScreenNotification OnScreenNotification { get { return onScreenNotification; } }
 
 	public enum MenuNavigationEnum
 	{
 		None,
+		Home,
 		Back,
 		Settings,
 		PauseMenu,
@@ -39,6 +42,13 @@ public class MenuMgr : MonoBehaviour
 			settingsUi = this.gameObject.GetComponentInChildren<SettingsUi>(true);
 		if (!mainMenuUI)
 			mainMenuUI = this.gameObject.GetComponentInChildren<MainMenuUI>(true);
+		if (!onScreenNotification)
+			onScreenNotification = this.gameObject.GetComponentInChildren<OnScreenNotification>(true);
+		Singleton.boardUiEvents.onScreenNotification = onScreenNotification;
+	}
+	private void OnDestroy()
+	{
+		Singleton.boardUiEvents.onScreenNotification = null;
 	}
 
 	private void Start()
@@ -90,6 +100,18 @@ public class MenuMgr : MonoBehaviour
 	}
 	public bool IsIngame() { return menusStack.Count == 0; }
 
+	private void NavigateHome()
+	{
+		while (menusStack.Count != 0)
+		{
+			var last = menusStack.Pop() as ICameraView;
+			last.Hide();
+		}
+		if (mainMenuUI != null)
+			mainMenuUI.Show();
+		else
+			ingameUI.Show();
+	}
 	public void NavigateBack()
 	{
 		if (menusStack.Count == 0)
@@ -129,6 +151,11 @@ public class MenuMgr : MonoBehaviour
 	{
 		switch (navigationEnum)
 		{
+			case MenuNavigationEnum.Home:
+				{
+					NavigateHome();
+					break;
+				}
 			case MenuNavigationEnum.Back:
 				{
 					NavigateBack();
@@ -152,4 +179,5 @@ public class MenuMgr : MonoBehaviour
 		}
 	}
 
+   
 }

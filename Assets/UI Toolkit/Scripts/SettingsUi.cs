@@ -1,8 +1,5 @@
 ﻿using Assets.Scripts.Internal;
-using Exceptions;
 using System;
-using System.Collections.Generic;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -46,6 +43,8 @@ public class SettingsUi : MonoBehaviour, ICameraView
 
 		zoomDeadZoneSlider = ui.rootVisualElement.Q<SliderInt>("ZoomDeadZoneSlider");
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
+		zoomDeadZoneSlider.highValue = (int)(0.2 * Screen.width);
+
 		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
 

@@ -22,7 +22,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 		buttonQuit = ui.rootVisualElement.Q<Button>("Quit");
 
 		buttonQuit.clicked += () => {
-			Singleton.scenesStruct.SwitchToScene("Assets/Scenes/GameScene.unity");
+			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/GameScene.unity");
 			Application.Quit();
 		};
 		buttonStart.clicked += ButtonStart_clicked;
@@ -36,7 +36,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 
 	private void Start()
 	{
-		//StartCoroutine(LoadSceneAsync());
+		buttonStart.Focus();
 	}
 
 	//IEnumerator LoadSceneAsync()
@@ -70,6 +70,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 	public void Show()
 	{
 		this.gameObject.SetActive(true);
+		buttonStart.Focus();
 	}
 	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
 }

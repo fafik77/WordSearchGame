@@ -7,21 +7,34 @@
                 <engine:VisualElement class="horizontal" style="margin-top: 10px; margin-right: 10%; margin-left: 10%;">
                     <engine:VisualElement class="horizontal" style="flex-grow: 1;">
                         <engine:Button text="Load File" name="LoadFile" class="button" style="padding-top: 8px; padding-bottom: 8px; padding-right: 8px; padding-left: 8px; margin-top: 2px; margin-right: 20px; margin-bottom: 2px; margin-left: 4px;" />
-                        <engine:Button text="Create Random" name="CreateRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 20px; margin-bottom: 2px; margin-left: 4px;" />
                         <engine:VisualElement>
-                            <engine:DropdownField label="Language" choices="English,Polski,Espanol" index="0" name="Language" class="buttonBeside darkUI" style="min-width: 300px; min-height: 50px;" />
+                            <engine:DropdownField label="Language" choices="English,Polski,Espanol" index="0" name="Language" class="darkUI menuItem buttonBeside" style="min-width: 330px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;" />
+                        </engine:VisualElement>
+                        <engine:Button text="Create Random" name="CreateRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 20px; margin-bottom: 2px; margin-left: 4px;" />
+                        <engine:VisualElement template="SliderWithText">
+                            <engine:VisualElement name="WordLength" enabled="true" class="horizontal menuItem" style="margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">
+                                <engine:Label text="Word Length" style="margin-top: 0;" />
+                                <engine:SliderInt value="10" high-value="40" fill="true" low-value="3" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
+                                <engine:Label text="10" name="Amount" style="min-width: 35px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 5px;" />
+                            </engine:VisualElement>
                         </engine:VisualElement>
                     </engine:VisualElement>
-                    <engine:VisualElement style="flex-grow: 1; flex-direction: column;">
-                        <engine:TextField placeholder-text="Search" max-length="255" hide-placeholder-on-focus="true" name="Search" class="text_black" style="max-width: 200px; min-width: 200px; flex-direction: column; align-self: flex-end;" />
-                    </engine:VisualElement>
                 </engine:VisualElement>
-                <engine:VisualElement style="flex-grow: 1; margin-top: 20px; margin-left: 10%; margin-right: 10%; background-color: rgba(27, 27, 27, 0.5); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
-                    <engine:VisualElement style="flex-grow: 1; flex-direction: row;">
-                        <engine:Label text="Categories" style="margin-bottom: 2px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-right: 20px;" />
-                        <engine:Button text="Random" name="PickRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 4px;" />
+                <engine:VisualElement name="Categories" style="flex-grow: 1; margin-top: 20px; margin-left: 10%; margin-right: 10%; background-color: rgba(27, 27, 27, 0.5); border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px;">
+                    <engine:VisualElement style="flex-grow: 1; min-height: 400px;">
+                        <engine:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row;">
+                            <engine:VisualElement style="flex-grow: 1; flex-direction: row;">
+                                <engine:Label text="Categories" style="margin-bottom: 2px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; margin-right: 20px;" />
+                                <engine:Button text="Random" name="PickRandom" class="button" style="padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 4px;" />
+                            </engine:VisualElement>
+                            <engine:VisualElement style="max-width: 30%;">
+                                <engine:VisualElement style="flex-grow: 1; flex-direction: column;">
+                                    <engine:TextField placeholder-text="Search" max-length="255" hide-placeholder-on-focus="true" name="Search" class="text_black" style="max-width: 300px; min-width: 200px; flex-direction: column; align-self: flex-end;" />
+                                </engine:VisualElement>
+                            </engine:VisualElement>
+                        </engine:VisualElement>
+                        <engine:TreeView name="TreeView" show-alternating-row-backgrounds="ContentOnly" virtualization-method="DynamicHeight" />
                     </engine:VisualElement>
-                    <engine:TreeView name="TreeView" show-alternating-row-backgrounds="ContentOnly" />
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>

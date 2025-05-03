@@ -22,6 +22,7 @@ public class CameraZoom : MonoBehaviour
 	Vector3 mainCameraOrigPos;
 	float mainCameraOrigZoom;
 	Vector2 boardSize;
+	GameInputSubscription gameInput;
 
 
 	void Start()
@@ -30,27 +31,30 @@ public class CameraZoom : MonoBehaviour
 		mainCamera = Camera.main;
 		mainCameraOrigPos = mainCamera.transform.position;
 		mainCameraOrigZoom = mainCamera.orthographicSize;
+		gameInput = GetComponent<GameInputSubscription>();
 	}
 
 	void Update()
 	{
 		if (!menuMgr.IsIngame()) return;
 
-		float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+		//float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+		float scrollInput = gameInput.ZoomInput.y;
 		// If there's scroll input, perform the zoom
 		if (scrollInput != 0)
 		{
 			PerformZoom(scrollInput);
 		}
 
-		if (Input.GetMouseButtonDown(2))
+
+		if (gameInput.BoardCenter != 0 || gameInput.MMBtap)
 		{
 			ResetCamera();
 		}
 
-		if (Input.GetMouseButton(1))
+		if (gameInput.MoveInput.magnitude != 0)
 		{
-			var off = Input.mousePositionDelta;
+			Vector3 off = gameInput.MoveInput;
 			if (reverseCamera_x)
 				off.x = -off.x;
 			if (reverseCamera_y)

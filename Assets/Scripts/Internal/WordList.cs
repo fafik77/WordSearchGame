@@ -1,25 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor.Experimental.GraphView;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BoardContent
 {
-	//public enum WordListDirectionEnum
-	//{
-	//	None = 0,
-	//	Horizontal,
-	//	Vertical,
-	//	Crossed
-	//}
-
 	public struct WordListEntry
 	{
-		//public WordListDirectionEnum direction;
 		public string word;
 		public Vector2 posFrom, posTo;
 		public bool found;
