@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Exceptions;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 namespace BoardContent
 {
-	enum WordOrientationEnum
+    enum WordOrientationEnum
 	{
 		horizontal = 0,
 		vertical = 1,

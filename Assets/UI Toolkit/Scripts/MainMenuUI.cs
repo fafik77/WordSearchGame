@@ -16,6 +16,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 
 	private void OnEnable()
 	{
+		Application.targetFrameRate = 30;
 		ui = GetComponent<UIDocument>();
 		ui.enabled = true;
 		buttonStart = ui.rootVisualElement.Q<Button>("Start");
