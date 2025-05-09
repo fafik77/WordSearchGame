@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BoardContent
 {
-    enum WordOrientationEnum
+	enum WordOrientationEnum
 	{
 		horizontal = 0,
 		vertical = 1,
@@ -487,8 +487,8 @@ namespace BoardContent
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
 			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
-			var wordsLower = words.ConvertAll(x => new string(x.ToLower()));
-
+			var wordsLower = words.ConvertAll(x => new string(x.ToLower())).Distinct().ToList();
+			amountRemoved += words.Count - wordsLower.Count;
 			wordsLower.Sort(); // sort alpabetical
 			wordsLower.Sort((x, y) => -x.Length.CompareTo(y.Length)); // sort it from longest to shortest (keep previous alpabetical)
 
@@ -509,12 +509,12 @@ namespace BoardContent
 				for (int idx2 = idx+1; idx2 < wordsMinToMax.Count; ++idx2)
 				{
 					string longerWord = wordsMinToMax[idx2];
-					if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
-					{
-						++amountRemoved;
-						removeWord = true;
-						break;
-					}
+					//if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
+					//{
+					//	++amountRemoved;
+					//	removeWord = true;
+					//	break;
+					//}
 
 					var matches = regexContains.Matches(longerWord);
 

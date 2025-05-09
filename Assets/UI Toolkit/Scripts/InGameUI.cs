@@ -24,6 +24,9 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private Coroutine timeCounterCoroutine;
 	Camera mainCamera;
 
+	List<string> wordsToFind = new List<string>();
+	List<string> wordsFound = new List<string>();
+
 	/// The "makeItem" function will be called as needed when the ListView needs more items to render
 	Func<VisualElement> makeItem = () => new Label();
 	private void Awake()
@@ -41,25 +44,29 @@ public class InGameUI : MonoBehaviour, ICameraView
 	{
 		Application.targetFrameRate = 60;
 		/// As the user scrolls through the list, the ListView object will recycle elements created by the "makeItem" and invoke the "bindItem" callback to associate the element with the matching data item (specified as an index in the list)
-		Action<VisualElement, int> bindItemLeft = (e, i) => (e as Label).text = Singleton.wordList.wordsToFind[i];
-		Action<VisualElement, int> bindItemFound = (e, i) => (e as Label).text = Singleton.wordList.wordsFound[i];
+		Action<VisualElement, int> bindItemLeft = (e, i) => (e as Label).text = wordsToFind[i];
+		Action<VisualElement, int> bindItemFound = (e, i) => (e as Label).text = wordsFound[i];
+		
 		if (Singleton.wordList.wordsToFind == null)
 			Singleton.wordList.wordsToFind = new List<string>();
 		if (Singleton.wordList.wordsFound == null)
 			Singleton.wordList.wordsFound = new List<string>();
+		wordsToFind = Singleton.wordList.wordsToFind.ToList();
+		wordsFound = Singleton.wordList.wordsFound.ToList();
 
+		UpdateLetterCase();
 
 		ui = GetComponent<UIDocument>();
 		TimeCounterLabel = ui.rootVisualElement.Q<Label>("TimeCounter");
 		listViewWordsLeft = ui.rootVisualElement.Q<ListView>("WordsLeft");
 		listViewWordsLeft.makeItem = makeItem;
 		listViewWordsLeft.bindItem = bindItemLeft;
-		listViewWordsLeft.itemsSource = Singleton.wordList.wordsToFind;
+		listViewWordsLeft.itemsSource = wordsToFind;
 		listViewWordsLeft.selectionType = SelectionType.Single;
 		listViewWordsFound = ui.rootVisualElement.Q<ListView>("WordsFound");
 		listViewWordsFound.makeItem = makeItem;
 		listViewWordsFound.bindItem = bindItemFound;
-		listViewWordsFound.itemsSource = Singleton.wordList.wordsFound;
+		listViewWordsFound.itemsSource = wordsFound;
 		listViewWordsFound.selectionType = SelectionType.None;
 		///update the timer every 1 second
 		timeCounterCoroutine = StartCoroutine(TimeCounterSecond());
@@ -67,7 +74,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 
 		listViewWordsLeft.itemsChosen += (selectedItems) =>
 		{
-			string item = selectedItems.First() as string;
+			string item = (selectedItems.First() as string).ToLower();
 			Debug.Log("Items chosen: " + item);
 			///TODO make Help prettier
 			var help = Singleton.wordList.list.Where(i => { return i.word == item; }).Take(1);
@@ -97,6 +104,32 @@ public class InGameUI : MonoBehaviour, ICameraView
 		Singleton.boardUiEvents.CreateBoardEvent -= BoardUiEvents_CreateBoardEvent;
 	}
 
+	private void UpdateLetterCase()
+	{
+		var upperCase = Singleton.settingsPersistent.upperCase;
+		if (upperCase)
+		{
+			for (int i = 0; i != wordsToFind.Count; ++i)
+			{
+				wordsToFind[i] = wordsToFind[i].ToUpper();
+			}
+			for (int i = 0; i != wordsFound.Count; ++i)
+			{
+				wordsFound[i] = wordsFound[i].ToUpper();
+			}
+		}
+		else
+		{
+			for (int i = 0; i != wordsToFind.Count; ++i)
+			{
+				wordsToFind[i] = wordsToFind[i].ToLower();
+			}
+			for (int i = 0; i != wordsFound.Count; ++i)
+			{
+				wordsFound[i] = wordsFound[i].ToLower();
+			}
+		}
+	}
 	private void BoardUiEvents_CreateBoardEvent(bool predef)
 	{
 		timeCounter = 0;
@@ -116,6 +149,9 @@ public class InGameUI : MonoBehaviour, ICameraView
 	{
 		Singleton.wordList.wordsFound.Insert(0, word);
 		Singleton.wordList.wordsToFind.Remove(word);
+		var upperCase = Singleton.settingsPersistent.upperCase;
+		wordsFound.Insert(0, upperCase ? word.ToUpper() : word.ToLower());
+		wordsToFind.Remove(upperCase ? word.ToUpper() : word.ToLower());
 		RefreshItems();
 	}
 	private void RefreshItems()
