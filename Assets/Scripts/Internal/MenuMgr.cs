@@ -136,9 +136,13 @@ public class MenuMgr : MonoBehaviour
 		if (menusStack.Count == 0)
 		{
 			if (mainMenuUI != null) menusStack.Push(mainMenuUI);
+			if (ingameUI) ingameUI.Hide();
 		}
-		var prev = menusStack.Peek();
-		(prev as ICameraView).Hide();
+		if (menusStack.Count != 0)
+		{
+			var prev = menusStack.Peek();
+			(prev as ICameraView).Hide();
+		}
 		menusStack.Push(menu);
 		(menu as ICameraView).Show();
 	}

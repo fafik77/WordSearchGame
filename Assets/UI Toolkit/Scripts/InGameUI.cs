@@ -16,6 +16,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private float timeCounter;
 	private int HintsUsed;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
+	CongratulationsYouWon congratulationsYouWon;
 	public float TimeCounter
 	{
 		get { return timeCounter; }
@@ -36,6 +37,9 @@ public class InGameUI : MonoBehaviour, ICameraView
 		if (Singleton.SceneMgr.MainMenuScene.path == null)
 			Singleton.SceneMgr.MainMenuScene = SceneManager.GetSceneByName("MainMenuScene");
 		mainCamera = Camera.main;
+		congratulationsYouWon = this.transform.parent.GetComponentInChildren<CongratulationsYouWon>(true);
+		if (congratulationsYouWon) congratulationsYouWon.SetActive(false);
+
 
 		Singleton.boardUiEvents.CreateBoardEvent += BoardUiEvents_CreateBoardEvent;
 	}
@@ -153,7 +157,22 @@ public class InGameUI : MonoBehaviour, ICameraView
 		wordsFound.Insert(0, upperCase ? word.ToUpper() : word.ToLower());
 		wordsToFind.Remove(upperCase ? word.ToUpper() : word.ToLower());
 		RefreshItems();
+		if (Singleton.wordList.wordsToFind.Count == 0)
+		{
+			StartCoroutine(BringUpPauseCoroutine());
+			if (congratulationsYouWon)
+			{
+				congratulationsYouWon.SetActive(true);
+				congratulationsYouWon.SetTimeText(TimeCounterLabel.text);
+			}
+		}
 	}
+	private IEnumerator BringUpPauseCoroutine()
+	{
+		yield return new WaitForSeconds(1);
+		navigateAction(MenuMgr.MenuNavigationEnum.PauseMenu);
+	}
+
 	private void RefreshItems()
 	{
 		listViewWordsLeft.RefreshItems();
