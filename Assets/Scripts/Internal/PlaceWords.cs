@@ -487,6 +487,7 @@ namespace BoardContent
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
 			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
+			///remove duplicate words, that is not allowed
 			var wordsLower = words.ConvertAll(x => new string(x.ToLower())).Distinct().ToList();
 			amountRemoved += words.Count - wordsLower.Count;
 			wordsLower.Sort(); // sort alpabetical
@@ -509,13 +510,6 @@ namespace BoardContent
 				for (int idx2 = idx+1; idx2 < wordsMinToMax.Count; ++idx2)
 				{
 					string longerWord = wordsMinToMax[idx2];
-					//if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
-					//{
-					//	++amountRemoved;
-					//	removeWord = true;
-					//	break;
-					//}
-
 					var matches = regexContains.Matches(longerWord);
 
 					if (matches.Count!=0)	//we have a contained duplicate
