@@ -6,6 +6,10 @@ using UnityEngine.UIElements;
 
 public class PauseMenuUI : MonoBehaviour, ICameraView
 {
+	[SerializeField]
+	private UIDocument PauseMenuHelp;
+
+
 	private UIDocument ui;
 	private Button buttonContinue;
 	private Button buttonNewGame;
@@ -23,6 +27,10 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		ui.enabled = true;
 		mainCamera = Camera.main;
 		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
+	}
+	private void OnDisable()
+	{
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(false); }
 	}
 	private void OnEnable()
 	{
@@ -47,6 +55,7 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 			Singleton.settingsPersistent_SaveJson(pathSettings);
 			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); 
 		};
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(true); }
 	}
 
 	public void Hide()

@@ -22,9 +22,15 @@
                             <engine:SliderInt value="64" high-value="200" fill="true" low-value="1" name="ZoomDeadZoneSlider" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
                         </engine:VisualElement>
                     </engine:VisualElement>
-                    <engine:Label text="Words" />
-                    <engine:Toggle name="Diagonal" text="Diagonal" enabled="false" class="buttonBeside" />
-                    <engine:Toggle name="Reversed" text="Reversed" enabled="false" class="buttonBeside" />
+                    <engine:Label text="Words On Board" style="margin-top: 14px;" />
+                    <engine:VisualElement name="Diagonal" style="flex-grow: 1; flex-direction: row;">
+                        <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                        <engine:Label text="Diagonal" />
+                    </engine:VisualElement>
+                    <engine:VisualElement name="Reversed" style="flex-grow: 1; flex-direction: row;">
+                        <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                        <engine:Label text="Reversed" />
+                    </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>

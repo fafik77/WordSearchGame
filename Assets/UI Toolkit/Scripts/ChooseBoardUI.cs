@@ -125,6 +125,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		{	///show empty tree and re-throw
 			treeViewCategories.SetRootItems(new List<TreeViewItemData<ICategoryOrGroup>>());
 			treeViewCategories.Rebuild();
+			Singleton.boardUiEvents.onScreenNotification.setText($"No Categories found for {Singleton.settingsPersistent.LanguageWords}!");
 
 			throw; //pass higher up
 		}

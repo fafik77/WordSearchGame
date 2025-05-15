@@ -5,19 +5,24 @@ using UnityEngine.UIElements;
 
 public class SettingsUi : MonoBehaviour, ICameraView
 {
-	//[SerializeField] private GameObject PreviewTiles;
-	//private List<LetterDisplayScript> previewDisplayScripts;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 
 	[SerializeField]
 	private DeadCenterDisplay deadCenterDisplay;
+	[SerializeField]
+	private UIDocument PauseMenuHelp;
 
 	private UIDocument ui;
 
 	private Button letterCaseButton;
 	private SliderInt zoomDeadZoneSlider;
-	Toggle toggleDiagonal;
-	Toggle toggleReversed;
+	Label DiagonalVisualText;
+	Label ReversedVisualText;
+	static readonly string[] CrossTickMarks = new string[] { "☓", "✔" };
+	static readonly Color[] CrossTickMarksColor = new Color[]{
+		ColorExtension.FromHexRGB(new Color(),0xF55D22),
+		ColorExtension.FromHexRGB(new Color(),0x00D9FF)
+	};
 
 	private void Awake()
 	{
@@ -41,13 +46,16 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
 
-		toggleDiagonal = root.Q<Toggle>("Diagonal");
-		toggleReversed = root.Q<Toggle>("Reversed");
-		toggleDiagonal.value = Singleton.wordList.diagonalWords;
-		toggleReversed.value = Singleton.wordList.reversedWords;
+		DiagonalVisualText = root.Q<VisualElement>("Diagonal").Q<Label>("Tick");
+		ReversedVisualText = root.Q<VisualElement>("Reversed").Q<Label>("Tick");
+		DiagonalVisualText.text = CrossTickMarks[Singleton.wordList.diagonalWords ? 1 : 0];
+		DiagonalVisualText.style.color = CrossTickMarksColor[Singleton.wordList.diagonalWords ? 1 : 0];
+		ReversedVisualText.text = CrossTickMarks[Singleton.wordList.reversedWords ? 1 : 0];
+		ReversedVisualText.style.color = CrossTickMarksColor[Singleton.wordList.reversedWords ? 1 : 0];
 
 
 		LetterCaseLoad(Singleton.settingsPersistent.upperCase);
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(true); }
 	}
 	void OnZoomDeadZoneSliderChange(ChangeEvent<int> change)
 	{
@@ -55,45 +63,15 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		deadCenterDisplay.SetCenterSize(change.newValue);
 	}
 
-	//private void BackwardWordsToggle() => BackwardWordsSet(!backwardWords);
-
-	//private void BackwardWordsSet(bool backward)
-	//{
-	//	backwardWords = backward;
-	//	backwardWordsButton.text = backwardWords ? local_Yes : local_No;
-	//	if (!backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) == 'A') return; //ok
-	//	if (backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) != 'A') return; //ok
-	//	//switch needed
-	//	int idx = 1;
-	//	if (previewDisplayScripts[1].Letter == ' ') idx = 3;
-	//	char letter = previewDisplayScripts[0].Letter;
-	//	previewDisplayScripts[0].Letter = previewDisplayScripts[idx].Letter;
-	//	previewDisplayScripts[idx].Letter = letter;
-	//}
-
 	private void OnDisable()
 	{
 		if (letterCaseButton != null)
 		{
 			letterCaseButton.clicked -= LetterCaseToggle;
-			//diagonalWordsButton.clicked -= DiagonalWordsToggle;
-			//backwardWordsButton.clicked -= BackwardWordsToggle;
 		}
 		zoomDeadZoneSlider.UnregisterValueChangedCallback(OnZoomDeadZoneSliderChange);
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(false); }
 	}
-
-	//private void DiagonalWordsToggle() => DiagonalWordsSet(!diagonalWords);
-	//private void DiagonalWordsSet(bool diagonal)
-	//{
-	//	diagonalWords = diagonal;
-	//	diagonalWordsButton.text = diagonalWords ? local_Yes : local_No;
-	//	if (diagonal && previewDisplayScripts[3].Letter != ' ') return; //ok
-	//	if (!diagonal && previewDisplayScripts[3].Letter == ' ') return; //ok
-	//	//switch needed
-	//	char temp = previewDisplayScripts[1].Letter;
-	//	previewDisplayScripts[1].Letter = previewDisplayScripts[3].Letter;
-	//	previewDisplayScripts[3].Letter = temp;
-	//}
 
 
 	private void LetterCaseToggle() => LetterCaseSet(!Singleton.settingsPersistent.upperCase);
