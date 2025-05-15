@@ -3,7 +3,7 @@
     <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
     <engine:VisualElement style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.29);">
         <engine:VisualElement class="text_white header" style="flex-grow: 1; align-self: center; margin-top: 10%; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px;">
-            <engine:VisualElement style="flex-grow: 1;">
+            <engine:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.75); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">
                 <engine:Label text="Settings" class="title" style="align-self: center; margin-bottom: 20px;">
                     <Bindings />
                 </engine:Label>
@@ -22,22 +22,9 @@
                             <engine:SliderInt value="64" high-value="200" fill="true" low-value="1" name="ZoomDeadZoneSlider" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
                         </engine:VisualElement>
                     </engine:VisualElement>
-                    <engine:VisualElement name="Diagonal" enabled="false">
-                        <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
-                            <engine:Label text="Diagonal Words" name="DiagonalLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
-                                <Bindings />
-                            </engine:Label>
-                            <engine:Button text="Yes" name="DiagonalButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
-                        </engine:VisualElement>
-                    </engine:VisualElement>
-                    <engine:VisualElement name="Backwards" enabled="false">
-                        <engine:VisualElement name="Horizontal" style="flex-grow: 1; align-items: auto; align-self: auto; align-content: flex-start; flex-direction: row;">
-                            <engine:Label text="Backwards Words" name="BackwardsLabel" style="align-items: flex-start; align-self: center; justify-content: flex-start;">
-                                <Bindings />
-                            </engine:Label>
-                            <engine:Button text="Yes" name="BackwardsButton" class="buttonBeside" style="align-self: auto; align-items: auto;" />
-                        </engine:VisualElement>
-                    </engine:VisualElement>
+                    <engine:Label text="Words" />
+                    <engine:Toggle name="Diagonal" text="Diagonal" enabled="false" class="buttonBeside" />
+                    <engine:Toggle name="Reversed" text="Reversed" enabled="false" class="buttonBeside" />
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>

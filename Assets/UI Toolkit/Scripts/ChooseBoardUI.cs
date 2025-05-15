@@ -16,7 +16,7 @@ using System.Linq;
 public class ChooseBoardUI : MonoBehaviour, ICameraView
 {
 	private UIDocument ui;
-	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
+	private Action<MenuMgr.MenuNavigationEnum> navigateToMenuAction;
 	Button buttonLoadFile;
 	Button buttonCreateRandom;
 	Button buttonPickRandom;
@@ -25,6 +25,9 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	SliderInt sliderIntWordLength;
 	Label LabelWordLength;
 	TreeView treeViewCategories;
+	Toggle toggleDiagonal;
+	Toggle toggleReversed;
+
 
 	Coroutine CategoriesForTreeCoroutine;
 
@@ -35,19 +38,31 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		ui = GetComponent<UIDocument>();
 		ui.enabled = true;
 	}
+	private void OnDisable()
+	{
+		buttonCreateRandom.clicked -= ButtonCreateRandom_clicked;
+		buttonLoadFile.clicked -= ButtonLoadFile_clicked;
+
+		dropdownLang.UnregisterValueChangedCallback(OnLanguageSelectionChange);
+		sliderIntWordLength.UnregisterValueChangedCallback(OnWordLengthSliderChange);
+	}
 	private void OnEnable()
 	{
 		var root = ui.rootVisualElement;
 		buttonLoadFile = root.Q<Button>("LoadFile");
 		buttonCreateRandom = root.Q<Button>("CreateRandom");
 		dropdownLang = root.Q<DropdownField>("Language");
-		SearchField = root.Q<TextField>("Search");
 
 		var Categories = root.Q<VisualElement>("Categories");
 		treeViewCategories = Categories.Q<TreeView>();
 		buttonPickRandom = Categories.Q<Button>("PickRandom");
 		treeViewCategories.selectionType = SelectionType.Single;
 		treeViewCategories.itemsChosen += TreeViewCategories_itemsChosen;
+		toggleDiagonal = root.Q<Toggle>("Diagonal");
+		toggleReversed = root.Q<Toggle>("Reversed");
+		SearchField = root.Q<TextField>("Search");
+		toggleDiagonal.value = Singleton.settingsPersistent.diagonalWords;
+		toggleReversed.value = Singleton.settingsPersistent.reversedWords;
 
 		///https://github.com/Unity-Technologies/ui-toolkit-manual-code-examples/blob/master/create-listviews-treeviews/PlanetsWindow.cs
 		///populate tree
@@ -83,6 +98,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		}
 		else
 		{   ///category
+			Save_choosenBoard();
 			try
 			{
 				Singleton.choosenBoard.LoadProvidedWords(category.words, 16);
@@ -93,7 +109,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 				Debug.LogError($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
 				return;
 			}
-			navigateAction(MenuMgr.MenuNavigationEnum.Home);
+			navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
 		}
 		//Debug.Log(item);
 	}
@@ -101,12 +117,28 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0)
 	{
 		yield return new WaitForSeconds(delaySec);
-		treeViewCategories.SetRootItems(Singleton.choosenBoard.GetCategoriesRootsForLang(Singleton.settingsPersistent.LanguageWords));
+		try
+		{
+			treeViewCategories.SetRootItems(Singleton.choosenBoard.GetCategoriesRootsForLang(Singleton.settingsPersistent.LanguageWords));
+		}
+		catch
+		{	///show empty tree and re-throw
+			treeViewCategories.SetRootItems(new List<TreeViewItemData<ICategoryOrGroup>>());
+			treeViewCategories.Rebuild();
+			throw; //pass higher up
+		}
+
 		treeViewCategories.makeItem = () => new Label();
 		treeViewCategories.bindItem = (VisualElement element, int index) =>
 			(element as Label).text = treeViewCategories.GetItemDataForIndex<ICategoryOrGroup>(index).Name;
 		treeViewCategories.Rebuild();
 	}
+	private void Save_choosenBoard()
+	{
+		Singleton.settingsPersistent.reversedWords = toggleReversed.value;
+		Singleton.settingsPersistent.diagonalWords = toggleDiagonal.value;
+	}
+
 
 	private void ButtonLoadFile_clicked()
 	{
@@ -115,11 +147,12 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		//user has sellected a file?, is it correct ?
 		foreach (var file in filePicked)
 		{
+			Save_choosenBoard();
 			//Debug.Log($"{file}");
 			var success = Singleton.choosenBoard.LoadFromFile(file);
 			if (success)
 			{
-				navigateAction(MenuMgr.MenuNavigationEnum.Home);
+				navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
 			}
 			else
 			{
@@ -132,7 +165,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void ButtonCreateRandom_clicked()
 	{
 		var locale = LocalizationSettings.SelectedLocale; //by default pl-PL
-
+		Save_choosenBoard();
 		try
 		{
 			Singleton.choosenBoard.CreateRandom(Singleton.settingsPersistent.LanguageWords, Singleton.settingsPersistent.wordsMaxLenght);
@@ -143,7 +176,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
 			return;
 		}
-		navigateAction(MenuMgr.MenuNavigationEnum.Home);
+		navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
 	}
 	private void OnWordLengthSliderChange(ChangeEvent<int> change)
 	{
@@ -159,17 +192,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.1f));
 	}
 
-	private void OnDisable()
-	{
-		buttonCreateRandom.clicked -= ButtonCreateRandom_clicked;
-		buttonLoadFile.clicked -= ButtonLoadFile_clicked;
-
-		dropdownLang.UnregisterValueChangedCallback(OnLanguageSelectionChange);
-		sliderIntWordLength.UnregisterValueChangedCallback(OnWordLengthSliderChange);
-	}
+	
 	public void Hide() => this.gameObject.SetActive(false);
 
 	public void Show() => this.gameObject.SetActive(true);
 
-	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateAction = action;
+	public void OnNavigateToSet(Action<MenuMgr.MenuNavigationEnum> action) => navigateToMenuAction = action;
 }

@@ -27,6 +27,7 @@ public class MenuMgr : MonoBehaviour
 		Settings,
 		PauseMenu,
 		NewGame,
+		EscapeKey,
 	}
 
 	private void Awake()
@@ -178,6 +179,11 @@ public class MenuMgr : MonoBehaviour
 			case MenuNavigationEnum.Settings:
 				{
 					NavigateForwardTo(settingsUi);
+					break;
+				}
+			case MenuNavigationEnum.EscapeKey:
+				{
+					MenuEscKey();
 					break;
 				}
 		}

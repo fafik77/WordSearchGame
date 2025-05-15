@@ -170,7 +170,7 @@ public class InGameUI : MonoBehaviour, ICameraView
 	private IEnumerator BringUpPauseCoroutine()
 	{
 		yield return new WaitForSeconds(1);
-		navigateAction(MenuMgr.MenuNavigationEnum.PauseMenu);
+		navigateAction(MenuMgr.MenuNavigationEnum.EscapeKey);
 	}
 
 	private void RefreshItems()

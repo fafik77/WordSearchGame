@@ -88,6 +88,7 @@ namespace Assets.Scripts.Internal
 		{
 			lang = lang.ToLower();
 			var categories = LangDictOfCategories.GetOrCreate(lang);
+			CategoriesInCurrLang = categories;
 			int id = 0;
 			if (categories.HasAnyContent == false)
 			{

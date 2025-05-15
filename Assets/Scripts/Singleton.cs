@@ -159,6 +159,8 @@ public static class Singleton
 		public int wordsMaxLenght;
 		public string LanguageUi;
 		public string LanguageWords;
+		public bool reversedWords;
+		public bool diagonalWords;
 	}
 	public static SettingsPersistent settingsPersistent = new();
 }

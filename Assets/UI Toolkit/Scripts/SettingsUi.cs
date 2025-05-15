@@ -15,16 +15,9 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	private UIDocument ui;
 
 	private Button letterCaseButton;
-	//private bool letterCaseUpper = true;
-
 	private SliderInt zoomDeadZoneSlider;
-
-	//private Button diagonalWordsButton;
-	//private bool diagonalWords = false;
-
-	//private Button backwardWordsButton;
-	//private bool backwardWords = false;
-	//private string local_Yes, local_No;
+	Toggle toggleDiagonal;
+	Toggle toggleReversed;
 
 	private void Awake()
 	{
@@ -37,22 +30,22 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		ui = GetComponent<UIDocument>();
 
 		if (ui == null || ui.rootVisualElement == null) return;
-
-		letterCaseButton = ui.rootVisualElement.Q<Button>("CaseButton");
+		var root = ui.rootVisualElement;
+		letterCaseButton = root.Q<Button>("CaseButton");
 		letterCaseButton.clicked += LetterCaseToggle;
 
-		zoomDeadZoneSlider = ui.rootVisualElement.Q<SliderInt>("ZoomDeadZoneSlider");
+		zoomDeadZoneSlider = root.Q<SliderInt>("ZoomDeadZoneSlider");
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
 		zoomDeadZoneSlider.highValue = (int)(0.2 * Screen.width);
 
 		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
 
-		//diagonalWordsButton = ui.rootVisualElement.Q<Button>("DiagonalButton");
-		//diagonalWordsButton.clicked += DiagonalWordsToggle;
+		toggleDiagonal = root.Q<Toggle>("Diagonal");
+		toggleReversed = root.Q<Toggle>("Reversed");
+		toggleDiagonal.value = Singleton.wordList.diagonalWords;
+		toggleReversed.value = Singleton.wordList.reversedWords;
 
-		//backwardWordsButton = ui.rootVisualElement.Q<Button>("BackwardsButton");
-		//backwardWordsButton.clicked += BackwardWordsToggle;
 
 		LetterCaseLoad(Singleton.settingsPersistent.upperCase);
 	}
