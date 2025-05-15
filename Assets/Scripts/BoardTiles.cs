@@ -36,6 +36,8 @@ public class BoardTiles : MonoBehaviour
 		overlayFoundWord = this.gameObject.GetComponentInChildren<OverlayFoundWord>();
 		mainCamera = Camera.main;
 		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
+		string pathSettings = Singleton.settingsPersistent_GetSavePath();
+		Singleton.settingsPersistent_loadJson(pathSettings);
 	}
 	private void OnEnable()
 	{

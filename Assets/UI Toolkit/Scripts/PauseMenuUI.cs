@@ -42,7 +42,11 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		buttonSettings.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.Settings);
 		buttonCCamera.clicked += () => { mainCameraZoom.ResetCamera(); };
 
-		buttonQuit.clicked += () => { Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); };
+		buttonQuit.clicked += () => {
+			string pathSettings = Singleton.settingsPersistent_GetSavePath();
+			Singleton.settingsPersistent_SaveJson(pathSettings);
+			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); 
+		};
 	}
 
 	public void Hide()

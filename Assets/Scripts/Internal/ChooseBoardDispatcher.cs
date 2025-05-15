@@ -20,6 +20,7 @@ namespace Assets.Scripts.Internal
 		public string Lang;
 		public List<string> WordsOnBoard;
 		public char[,] PredefinedBoard2D;
+		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
 
 		/// <summary>
 		/// Transforms provided data into Board
@@ -83,7 +84,6 @@ namespace Assets.Scripts.Internal
 			}
 		}
 
-		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
 		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang)
 		{
 			lang = lang.ToLower();

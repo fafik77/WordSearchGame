@@ -2,6 +2,7 @@ using Assets.Scripts.Internal;
 using BoardContent;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -152,6 +153,7 @@ public static class Singleton
 
 	public static ChooseBoardDispatcher choosenBoard = new();
 
+	[Serializable]
 	public struct SettingsPersistent
 	{
 		public bool upperCase;
@@ -163,4 +165,22 @@ public static class Singleton
 		public bool diagonalWords;
 	}
 	public static SettingsPersistent settingsPersistent = new();
+	public static bool settingsPersistent_loadedFromFile { get; private set; } = false;
+	public static void settingsPersistent_loadJson(string pathToJson, bool forced = false)
+	{
+		if (!forced && settingsPersistent_loadedFromFile) return;
+		var json = File.ReadAllText(pathToJson);
+		settingsPersistent = JsonUtility.FromJson<SettingsPersistent>(json);
+		settingsPersistent_loadedFromFile = true;
+	}
+	public static void settingsPersistent_SaveJson(string pathToJson)
+	{
+		var serializedJson = JsonUtility.ToJson(settingsPersistent);
+		File.WriteAllText(pathToJson, serializedJson);
+	}
+	public static string settingsPersistent_GetSavePath()
+	{
+		string pathSave = System.IO.Path.Combine(Application.persistentDataPath, "Settings.json");
+		return pathSave;
+	}
 }
