@@ -126,7 +126,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			else if (evt.keyCode == KeyCode.O)
 			{
 #if UNITY_EDITOR
-				Debug.LogWarning("Ctr+O was pressed in editor, opening two windows");
+				Debug.LogWarning("Ctr+O was pressed in editor, opening TWO: open file dialogs, and They were confused");
 #endif
 				evt.StopPropagation();
 				ButtonLoadFile_clicked();

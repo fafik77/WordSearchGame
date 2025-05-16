@@ -164,7 +164,7 @@ public class BoardTiles : MonoBehaviour
 		///18:11 -> 10,-5,-10 size = 6
 		//float ratio = 14f / 9f;
 		//mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)widthPrev) / 2.92f, new(widthPrev, heightPrev));
-		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)heightPrev) / 1.92f, new(widthPrev, heightPrev));
+		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)heightPrev) / 1.92f + 1, new(widthPrev, heightPrev));
 	}
 
 
