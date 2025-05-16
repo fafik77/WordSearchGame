@@ -53,6 +53,7 @@ namespace Assets.UI_Toolkit.Scripts
 		string name;
 		public List<ICategoryOrGroup> SubCategories { get; set; }
 		public List<CategoryOnly> Categories { get; set; }
+		public List<CategoryOnly> AllCategories { get; set; }
 		public string Name => name;
 		public bool HasSubContent => (SubCategories != null && SubCategories.Count != 0);
 		public bool HasAnyContent => (HasSubContent || (Categories != null && Categories.Count != 0));

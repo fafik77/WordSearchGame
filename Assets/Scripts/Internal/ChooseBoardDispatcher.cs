@@ -92,27 +92,28 @@ namespace Assets.Scripts.Internal
 			int id = 0;
 			if (categories.HasAnyContent == false)
 			{
+				categories.AllCategories = new();
 				string path = System.IO.Path.Combine(Application.streamingAssetsPath, "Categories", lang);
-				LoadCategoriesRecursiveForPath(path, ref categories);
+				LoadCategoriesRecursiveForPath(path, ref categories, ref categories);
 			}
 			CategoriesInCurrLang = categories;
 			return categories.GetRoots(ref id);
 		}
 
-		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into)
+		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into, ref CategoryOrGroup Root)
 		{
 			foreach (var item in loadFileContent.GetDirectory(path, "*.txt"))
 			{
 				if (item.IsDirectory)
-				{
+				{	///Folder
 					string nameOnly = System.IO.Path.GetFileName(item.Name);
 					if (into.SubCategories == null) into.SubCategories = new();
 					CategoryOrGroup subCategory = new CategoryOrGroup(nameOnly);
-					LoadCategoriesRecursiveForPath(item.Name, ref subCategory);
+					LoadCategoriesRecursiveForPath(item.Name, ref subCategory, ref Root);
 					into.SubCategories.Add(subCategory);
 				}
 				else
-				{
+				{	///file
 					List<string> words = new List<string>();
 					foreach (var line in loadFileContent.ReadLines(item.Name))
 					{
@@ -124,7 +125,9 @@ namespace Assets.Scripts.Internal
 					}
 					string nameOnly = System.IO.Path.GetFileNameWithoutExtension(item.Name);
 					if (into.Categories == null) into.Categories = new();
-					into.Categories.Add(new CategoryOnly(nameOnly, words));
+					var catOnly = new CategoryOnly(nameOnly, words);
+					into.Categories.Add(catOnly);
+					Root.AllCategories.Add(catOnly);
 				}
 			}
 		}

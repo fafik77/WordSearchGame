@@ -77,6 +77,9 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
 		sliderIntWordLength.RegisterValueChangedCallback(OnWordLengthSliderChange);
+
+		buttonPickRandom.clicked += ButtonPickRandom_clicked;
+
 		if (Singleton.settingsPersistent.wordsMaxLenght > 2)
 			sliderIntWordLength.value = Singleton.settingsPersistent.wordsMaxLenght;
 		else
@@ -85,6 +88,15 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			dropdownLang.value = Singleton.settingsPersistent.LanguageWords;
 		else
 			Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
+	}
+
+	private void ButtonPickRandom_clicked()
+	{
+		var catCount = Singleton.choosenBoard.CategoriesInCurrLang.AllCategories.Count;
+		System.Random rand = new System.Random();
+		var randomCatId = rand.Next(0, catCount);
+		var randomCat = Singleton.choosenBoard.CategoriesInCurrLang.AllCategories[randomCatId];
+		LoadCategoryForBoard(randomCat);
 	}
 
 	private void TreeViewCategories_itemsChosen(IEnumerable<object> obj)
@@ -98,20 +110,24 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		}
 		else
 		{   ///category
-			Save_choosenBoard();
-			try
-			{
-				Singleton.choosenBoard.LoadProvidedWords(category.words, 16);
-			}
-			catch (Exception e)
-			{
-				Singleton.boardUiEvents.onScreenNotification.setText($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}!");
-				Debug.LogError($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
-				return;
-			}
-			navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
+			LoadCategoryForBoard(category);
 		}
-		//Debug.Log(item);
+	}
+	private bool LoadCategoryForBoard(CategoryOnly category)
+	{
+		Save_choosenBoard();
+		try
+		{
+			Singleton.choosenBoard.LoadProvidedWords(category.words, 16);
+		}
+		catch (Exception e)
+		{
+			Singleton.boardUiEvents.onScreenNotification.setText($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}!");
+			Debug.LogError($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
+			return false;
+		}
+		navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
+		return true;
 	}
 
 	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0)
