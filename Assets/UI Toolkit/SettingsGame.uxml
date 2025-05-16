@@ -23,13 +23,15 @@
                         </engine:VisualElement>
                     </engine:VisualElement>
                     <engine:Label text="Words On Board" style="margin-top: 14px;" />
-                    <engine:VisualElement name="Diagonal" style="flex-grow: 1; flex-direction: row;">
-                        <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
-                        <engine:Label text="Diagonal" />
-                    </engine:VisualElement>
-                    <engine:VisualElement name="Reversed" style="flex-grow: 1; flex-direction: row;">
-                        <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
-                        <engine:Label text="Reversed" />
+                    <engine:VisualElement style="flex-grow: 1; background-color: rgba(120, 120, 120, 0.73); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
+                        <engine:VisualElement name="Diagonal" style="flex-grow: 1; flex-direction: row;">
+                            <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                            <engine:Label text="Diagonal" />
+                        </engine:VisualElement>
+                        <engine:VisualElement name="Reversed" style="flex-grow: 1; flex-direction: row;">
+                            <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                            <engine:Label text="Reversed" />
+                        </engine:VisualElement>
                     </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>

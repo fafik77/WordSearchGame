@@ -86,10 +86,15 @@ namespace Assets.Scripts.Internal
 
 		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang)
 		{
+			var categories = GetCategoriesForLang(lang);
+			int id = 0;
+			return categories.GetRoots(ref id);
+		}
+		public CategoryOrGroup GetCategoriesForLang(string lang)
+		{
 			lang = lang.ToLower();
 			var categories = LangDictOfCategories.GetOrCreate(lang);
 			CategoriesInCurrLang = categories;
-			int id = 0;
 			if (categories.HasAnyContent == false)
 			{
 				categories.AllCategories = new();
@@ -97,7 +102,7 @@ namespace Assets.Scripts.Internal
 				LoadCategoriesRecursiveForPath(path, ref categories, ref categories);
 			}
 			CategoriesInCurrLang = categories;
-			return categories.GetRoots(ref id);
+			return categories;
 		}
 
 		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into, ref CategoryOrGroup Root)

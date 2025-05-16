@@ -1,0 +1,5 @@
+.unity-collection-view__item:hover {
+    background-color: rgba(0, 118, 240, 0.95);
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}

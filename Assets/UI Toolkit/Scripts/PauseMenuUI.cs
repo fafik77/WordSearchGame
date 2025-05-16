@@ -71,9 +71,8 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		if (!boardTiles) throw new NotFoundException("boardTiles not set");
 
 		var timeNowStr = DateTime.Now.ToString("HH-mm-ss");
-		var userFile = StandaloneFileBrowser.SaveFilePanel("Save Board", ".", $"{timeNowStr}.txt", "txt");
-		var userDir = System.IO.Path.GetDirectoryName(userFile);
-		if (userFile.Length!=0 && Directory.Exists(userDir))
+		var userFile = StandaloneFileBrowser.SaveFilePanel("Save Board", "", $"{timeNowStr}.txt", "txt");
+		if (userFile.Length!=0 && Directory.Exists(System.IO.Path.GetDirectoryName(userFile)))
 		{
 			var boardContent = boardTiles.ExportBoard();
 			File.WriteAllText(userFile, boardContent);

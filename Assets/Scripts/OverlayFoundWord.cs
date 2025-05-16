@@ -90,7 +90,6 @@ public class OverlayFoundWord : MonoBehaviour
 		{
 			findUnknownOrient += Singleton.TilesSript2D[(int)move.x, (int)move.y].Letter;
 		}
-		Debug.Log($"adding '{findUnknownOrient}' to listUnintended:");
 
 		string findForward, findBackward = string.Empty;
 		if (orient.x > 1 || orient.y > 1)
@@ -109,6 +108,7 @@ public class OverlayFoundWord : MonoBehaviour
 				Singleton.wordList.listUnintended.Add(wordListEntry);
 				Singleton.boardUiEvents.FoundWord(wordLoc);
 				RenderLine(bothPointsPosition[0], bothPointsPosition[1]);
+				Debug.Log($"adding '{findUnknownOrient}' to listUnintended:");
 				return;
 			}
 		}

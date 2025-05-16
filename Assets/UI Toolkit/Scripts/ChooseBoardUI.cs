@@ -1,14 +1,10 @@
 using Assets.Scripts.Internal;
 using System;
 using System.Collections;
-using System.IO;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 using SFB;
-using System.Threading;
-using Assets.Scripts.LoadFileContent;
 using Assets.UI_Toolkit.Scripts;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +23,13 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	TreeView treeViewCategories;
 	Toggle toggleDiagonal;
 	Toggle toggleReversed;
+	Label TreeEmptyLabel;
 
 
 	Coroutine CategoriesForTreeCoroutine;
-
-
+	CategoryOrGroup treeViewItemDatasOrig;
+	IList<TreeViewItemData<ICategoryOrGroup>> treeViewItemDatasFiltered;
+	string SearchField_oldValue;
 
 	private void Awake()
 	{
@@ -49,12 +47,16 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private void OnEnable()
 	{
 		var root = ui.rootVisualElement;
+		root.Focus();
 		buttonLoadFile = root.Q<Button>("LoadFile");
+		buttonLoadFile.Focus();
 		buttonCreateRandom = root.Q<Button>("CreateRandom");
 		dropdownLang = root.Q<DropdownField>("Language");
 
 		var Categories = root.Q<VisualElement>("Categories");
 		treeViewCategories = Categories.Q<TreeView>();
+		TreeEmptyLabel = Categories.Q<Label>("TreeEmpty");
+		TreeEmptyLabel.style.display = DisplayStyle.None;
 		buttonPickRandom = Categories.Q<Button>("PickRandom");
 		treeViewCategories.selectionType = SelectionType.Single;
 		treeViewCategories.itemsChosen += TreeViewCategories_itemsChosen;
@@ -77,8 +79,28 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 		buttonCreateRandom.clicked += ButtonCreateRandom_clicked;
 		sliderIntWordLength.RegisterValueChangedCallback(OnWordLengthSliderChange);
-
 		buttonPickRandom.clicked += ButtonPickRandom_clicked;
+		SearchField.RegisterCallback<KeyDownEvent>(evt =>
+		{
+			if (evt.keyCode == KeyCode.KeypadEnter || evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.Tab)
+			{
+				if (SearchField_oldValue != SearchField.value)
+				{
+					SearchField_oldValue = SearchField.value;
+					SearchFieldOnSubmit(SearchField.value);
+				}
+			}
+		}, TrickleDown.TrickleDown);
+		root.RegisterCallback<KeyDownEvent>(evt =>
+		{
+			if ( (evt.commandKey||evt.ctrlKey) && evt.keyCode == KeyCode.F)
+			{
+				SearchField.Focus();
+				evt.StopPropagation();
+			}
+		}, TrickleDown.TrickleDown);
+
+
 
 		if (Singleton.settingsPersistent.wordsMaxLenght > 2)
 			sliderIntWordLength.value = Singleton.settingsPersistent.wordsMaxLenght;
@@ -96,8 +118,15 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		System.Random rand = new System.Random();
 		var randomCatId = rand.Next(0, catCount);
 		var randomCat = Singleton.choosenBoard.CategoriesInCurrLang.AllCategories[randomCatId];
-		LoadCategoryForBoard(randomCat);
+		SearchFieldOnSubmit(randomCat.Name);
+		//LoadCategoryForBoard(randomCat);
 	}
+
+	private void SearchFieldOnSubmit(string text)
+	{
+		PopulateTreeViewCategoriesFiltered(text);
+	}
+
 
 	private void TreeViewCategories_itemsChosen(IEnumerable<object> obj)
 	{
@@ -105,8 +134,8 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		var category = item as CategoryOnly;
 
 		if (category == null)
-		{	///group
-			//treeViewCategories.ExpandItem()
+		{   ///group
+			//treeViewCategories.ExpandItem();
 		}
 		else
 		{   ///category
@@ -133,24 +162,49 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0)
 	{
 		yield return new WaitForSeconds(delaySec);
+		treeViewItemDatasOrig = null;
 		try
 		{
-			treeViewCategories.SetRootItems(Singleton.choosenBoard.GetCategoriesRootsForLang(Singleton.settingsPersistent.LanguageWords));
+			treeViewItemDatasOrig = Singleton.choosenBoard.GetCategoriesForLang(Singleton.settingsPersistent.LanguageWords);
 		}
 		catch
 		{	///show empty tree and re-throw
-			treeViewCategories.SetRootItems(new List<TreeViewItemData<ICategoryOrGroup>>());
-			treeViewCategories.Rebuild();
 			Singleton.boardUiEvents.onScreenNotification.setText($"No Categories found for {Singleton.settingsPersistent.LanguageWords}!");
-
 			throw; //pass higher up
 		}
+		finally
+		{
+			PopulateTreeViewCategoriesFiltered(string.Empty);
+		}
+	}
+	private void PopulateTreeViewCategoriesFiltered(string searchFilter)
+	{
+		int id = 0;
+		if (treeViewItemDatasFiltered == null)
+			treeViewItemDatasFiltered = new List<TreeViewItemData<ICategoryOrGroup>>();
+		treeViewItemDatasFiltered.Clear();
 
+		if (treeViewItemDatasOrig != null)
+			treeViewItemDatasFiltered = treeViewItemDatasOrig.GetRoots(ref id, searchFilter.ToLower());
+
+		///show: "Tree has no items to display"
+		if (treeViewItemDatasFiltered.Count == 0)
+		{
+			TreeEmptyLabel.style.display = DisplayStyle.Flex;
+		}
+		else TreeEmptyLabel.style.display = DisplayStyle.None;
+		treeViewCategories.SetRootItems(treeViewItemDatasFiltered);
 		treeViewCategories.makeItem = () => new Label();
 		treeViewCategories.bindItem = (VisualElement element, int index) =>
 			(element as Label).text = treeViewCategories.GetItemDataForIndex<ICategoryOrGroup>(index).Name;
 		treeViewCategories.Rebuild();
+		///Tree has filtered items
+		if (!string.IsNullOrEmpty(searchFilter) && treeViewItemDatasFiltered.Count <= 5)
+		{
+			treeViewCategories.ExpandRootItems();
+		}
 	}
+
 	private void Save_choosenBoard()
 	{
 		Singleton.settingsPersistent.reversedWords = toggleReversed.value;

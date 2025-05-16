@@ -60,6 +60,29 @@ namespace Assets.UI_Toolkit.Scripts
 
 		public IList<TreeViewItemData<ICategoryOrGroup>> GetRoots(ref int id)
 		{
+			return GetRoots(ref id, search: string.Empty);
+			//int children = 0;
+			//if (SubCategories != null) children += SubCategories.Count;
+			//if (Categories != null) children += Categories.Count;
+			//var roots = new List<TreeViewItemData<ICategoryOrGroup>>(children);
+			//if (SubCategories != null)
+			//{
+			//	foreach (var item in SubCategories)
+			//	{
+			//		roots.Add(new TreeViewItemData<ICategoryOrGroup>(id++, item, item.GetRoots(ref id).ToList()));
+			//	}
+			//}
+			//if (Categories != null)
+			//{
+			//	foreach (var item in Categories)
+			//	{
+			//		roots.Add(new TreeViewItemData<ICategoryOrGroup>(id++, item));
+			//	}
+			//}
+			//return roots;
+		}
+		public IList<TreeViewItemData<ICategoryOrGroup>> GetRoots(ref int id, string search)
+		{
 			int children = 0;
 			if (SubCategories != null) children += SubCategories.Count;
 			if (Categories != null) children += Categories.Count;
@@ -68,14 +91,18 @@ namespace Assets.UI_Toolkit.Scripts
 			{
 				foreach (var item in SubCategories)
 				{
-					roots.Add(new TreeViewItemData<ICategoryOrGroup>(id++, item, item.GetRoots(ref id).ToList()));
+					bool includeDir = (item.Name.ToLower().Contains(search));
+					var conteined = new TreeViewItemData<ICategoryOrGroup>(id++, item, ((CategoryOrGroup)item).GetRoots(ref id, includeDir ? string.Empty : search).ToList());
+					if (string.IsNullOrEmpty(search) || conteined.hasChildren)
+						roots.Add(conteined);
 				}
 			}
 			if (Categories != null)
 			{
 				foreach (var item in Categories)
 				{
-					roots.Add(new TreeViewItemData<ICategoryOrGroup>(id++, item));
+					if (string.IsNullOrEmpty(search) || item.Name.ToLower().Contains(search))
+						roots.Add(new TreeViewItemData<ICategoryOrGroup>(id++, item));
 				}
 			}
 			return roots;
