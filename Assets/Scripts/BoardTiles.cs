@@ -4,6 +4,7 @@ using BoardContent;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Text;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -131,27 +132,29 @@ public class BoardTiles : MonoBehaviour
 		//DebugOnlyBoardDump();
 	}
 
-	[Obsolete("Debug Only Function")]
-	private void DebugOnlyBoardDump()
+	/// <summary>
+	/// Exports board into string, where 1-st line is words, next lines are board content
+	/// </summary>
+	/// <returns></returns>
+	public string ExportBoard()
 	{
-		var timeNowStr = DateTime.Now.ToString("HH-mm-ss");
-		StreamWriter streamWriter = new StreamWriter(@$"V:\board dump{timeNowStr}.txt", false);
+		StringBuilder streamWriter = new StringBuilder();
 		foreach (var word in Singleton.wordList.wordsToFind)
 		{
-			streamWriter.Write(word + " ");
+			streamWriter.Append(word + " ");
 		}
-		streamWriter.Write("\n");
+		streamWriter.Append("\n");
 		var width = tilesSript2D.GetLength(0);
 		var height = tilesSript2D.GetLength(1);
 		for (int ii = 0; ii != height; ++ii)
 		{
 			for (int i = 0; i != width; ++i)
 			{
-				streamWriter.Write(tilesSript2D[i, ii].Letter);
+				streamWriter.Append(tilesSript2D[i, ii].Letter);
 			}
-			streamWriter.Write("\n");
+			streamWriter.Append("\n");
 		}
-		streamWriter.Close();
+		return streamWriter.ToString();
 	}
 
 	public void ZoomCameraOnBoard()

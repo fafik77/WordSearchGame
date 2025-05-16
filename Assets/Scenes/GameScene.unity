@@ -1620,6 +1620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PauseMenuHelp: {fileID: 1375778325}
+  boardTiles: {fileID: 1097585739}
 --- !u!1 &2090078587
 GameObject:
   m_ObjectHideFlags: 0

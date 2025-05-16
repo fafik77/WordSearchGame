@@ -11,13 +11,13 @@ namespace SFB {
     // - WindowWrapper class and GetActiveWindow() are required for modal file dialog.
     // - "PlayerSettings/Visible In Background" should be enabled, otherwise when file dialog opened app window minimizes automatically.
 
-    public class WindowWrapper : IWin32Window {
+    internal class WindowWrapper : IWin32Window {
         private IntPtr _hwnd;
         public WindowWrapper(IntPtr handle) { _hwnd = handle; }
         public IntPtr Handle { get { return _hwnd; } }
     }
 
-    public class StandaloneFileBrowserWindows : IStandaloneFileBrowser {
+    internal class StandaloneFileBrowserWindows : IStandaloneFileBrowser {
         [DllImport("user32.dll")]
         private static extern IntPtr GetActiveWindow();
 
