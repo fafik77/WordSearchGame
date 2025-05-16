@@ -32,7 +32,7 @@
                             </engine:VisualElement>
                             <engine:VisualElement style="max-width: 30%;">
                                 <engine:VisualElement style="flex-grow: 1; flex-direction: column;">
-                                    <engine:TextField placeholder-text="Search" max-length="255" hide-placeholder-on-focus="true" name="Search" class="text_black" style="max-width: 300px; min-width: 200px; flex-direction: column; align-self: flex-end;" />
+                                    <engine:TextField placeholder-text="Search Ctrl+F" max-length="255" hide-placeholder-on-focus="true" name="Search" class="text_black" style="max-width: 300px; min-width: 200px; flex-direction: column; align-self: flex-end;" />
                                 </engine:VisualElement>
                             </engine:VisualElement>
                         </engine:VisualElement>

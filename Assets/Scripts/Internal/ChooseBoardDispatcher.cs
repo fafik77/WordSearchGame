@@ -84,19 +84,21 @@ namespace Assets.Scripts.Internal
 			}
 		}
 
-		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang)
+		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang, bool forceRefresh = false)
 		{
-			var categories = GetCategoriesForLang(lang);
+			var categories = GetCategoriesForLang(lang, forceRefresh);
 			int id = 0;
 			return categories.GetRoots(ref id);
 		}
-		public CategoryOrGroup GetCategoriesForLang(string lang)
+		public CategoryOrGroup GetCategoriesForLang(string lang, bool forceRefresh = false)
 		{
 			lang = lang.ToLower();
 			var categories = LangDictOfCategories.GetOrCreate(lang);
 			CategoriesInCurrLang = categories;
-			if (categories.HasAnyContent == false)
+			if (categories.HasAnyContent == false || forceRefresh)
 			{
+				categories.SubCategories?.Clear();
+				categories.Categories?.Clear();
 				categories.AllCategories = new();
 				string path = System.IO.Path.Combine(Application.streamingAssetsPath, "Categories", lang);
 				LoadCategoriesRecursiveForPath(path, ref categories, ref categories);

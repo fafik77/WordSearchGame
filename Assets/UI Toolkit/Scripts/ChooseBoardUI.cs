@@ -91,15 +91,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 				}
 			}
 		}, TrickleDown.TrickleDown);
-		root.RegisterCallback<KeyDownEvent>(evt =>
-		{
-			if ( (evt.commandKey||evt.ctrlKey) && evt.keyCode == KeyCode.F)
-			{
-				SearchField.Focus();
-				evt.StopPropagation();
-			}
-		}, TrickleDown.TrickleDown);
-
+		root.RegisterCallback<KeyDownEvent>(rootOnKeyDown, TrickleDown.TrickleDown);
 
 
 		if (Singleton.settingsPersistent.wordsMaxLenght > 2)
@@ -119,13 +111,35 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		var randomCatId = rand.Next(0, catCount);
 		var randomCat = Singleton.choosenBoard.CategoriesInCurrLang.AllCategories[randomCatId];
 		SearchFieldOnSubmit(randomCat.Name);
-		//LoadCategoryForBoard(randomCat);
 	}
 
-	private void SearchFieldOnSubmit(string text)
+	private void SearchFieldOnSubmit(string text) => PopulateTreeViewCategoriesFiltered(text);
+	private void rootOnKeyDown(KeyDownEvent evt)
 	{
-		PopulateTreeViewCategoriesFiltered(text);
+		if ((evt.commandKey || evt.ctrlKey))
+		{
+			if (evt.keyCode == KeyCode.F)
+			{
+				SearchField.Focus();
+				evt.StopPropagation();
+			}
+			else if (evt.keyCode == KeyCode.O)
+			{
+#if UNITY_EDITOR
+				Debug.LogWarning("Ctr+O was pressed in editor, opening two windows");
+#endif
+				evt.StopPropagation();
+				ButtonLoadFile_clicked();
+			}
+			else if (evt.keyCode == KeyCode.F5)
+			{
+				evt.StopPropagation();
+				StopCoroutine(CategoriesForTreeCoroutine);
+				CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(delaySec: 0.1f, forceRefresh: true));
+			}
+		}
 	}
+
 
 
 	private void TreeViewCategories_itemsChosen(IEnumerable<object> obj)
@@ -159,13 +173,13 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		return true;
 	}
 
-	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0)
+	private IEnumerator GetCategoriesRootsForTreeLangRutine(float delaySec = 0, bool forceRefresh = false)
 	{
 		yield return new WaitForSeconds(delaySec);
 		treeViewItemDatasOrig = null;
 		try
 		{
-			treeViewItemDatasOrig = Singleton.choosenBoard.GetCategoriesForLang(Singleton.settingsPersistent.LanguageWords);
+			treeViewItemDatasOrig = Singleton.choosenBoard.GetCategoriesForLang(Singleton.settingsPersistent.LanguageWords, forceRefresh);
 		}
 		catch
 		{	///show empty tree and re-throw
