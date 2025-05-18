@@ -145,3 +145,6 @@
 .roboto-font {
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/RobotoMono-VariableFont_wght.ttf?fileID=12800000&guid=cacd94e4e28ebc54e8c692531296e1c8&type=3#RobotoMono-VariableFont_wght");
 }
+
+Foldout > .unity-foldout-toggle {
+}

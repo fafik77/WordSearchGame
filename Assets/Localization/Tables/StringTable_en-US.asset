@@ -27,11 +27,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3085863239680
-    m_Localized: Diagonal Words
+    m_Localized: Diagonal
     m_Metadata:
       m_Items: []
   - m_Id: 3131807645696
-    m_Localized: Backwards Words
+    m_Localized: Reversed
     m_Metadata:
       m_Items: []
   - m_Id: 4831327043584
@@ -52,6 +52,126 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 71674100203520
     m_Localized: Words Found
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430710898688
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201856
+    m_Localized: Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201857
+    m_Localized: New Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396160
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396161
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396162
+    m_Localized: Zoom Dead Zone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396163
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396164
+    m_Localized: Accessibility
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396165
+    m_Localized: 'Words on Board Are:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396166
+    m_Localized: Center Camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396167
+    m_Localized: Save Board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396168
+    m_Localized: Save Board as
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396169
+    m_Localized: Load File
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396170
+    m_Localized: Pick Board File
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396171
+    m_Localized: Random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396172
+    m_Localized: Create Random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396173
+    m_Localized: Word Length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396174
+    m_Localized: Categories
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396175
+    m_Localized: Search (Ctrl+F)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396176
+    m_Localized: Select a Word
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396177
+    m_Localized: Click on Begining And End
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396178
+    m_Localized: Click And Hold From Beginning to End
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396179
+    m_Localized: Zoom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396180
+    m_Localized: Scroll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396181
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396182
+    m_Localized: 'Hold RMB
+
+      And Move'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396183
+    m_Localized: Press Scroll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396184
+    m_Localized: Hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396185
+    m_Localized: 'Double Click
+
+      Word to Find'
     m_Metadata:
       m_Items: []
   references:

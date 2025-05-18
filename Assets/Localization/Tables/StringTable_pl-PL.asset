@@ -54,6 +54,124 @@ MonoBehaviour:
     m_Localized: Znalezione
     m_Metadata:
       m_Items: []
+  - m_Id: 18200430710898688
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201856
+    m_Localized: Kontynuuj
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201857
+    m_Localized: Nowa gra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396160
+    m_Localized: "Wyjd\u017C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396161
+    m_Localized: "J\u0119zyk"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396162
+    m_Localized: "Martwa strefa przybli\u017Cenia"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396163
+    m_Localized: "Rozdzielczo\u015B\u0107"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396164
+    m_Localized: "Dost\u0119pno\u015B\u0107"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396165
+    m_Localized: "S\u0142owa na Planszy to:"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396166
+    m_Localized: "\u015Arodkuj Kamere"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396167
+    m_Localized: "Zapisz plansz\u0119"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396168
+    m_Localized: "Zapisz plansz\u0119 jako"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396169
+    m_Localized: "Za\u0142aduj plik"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396170
+    m_Localized: Wybierz plik planszy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396171
+    m_Localized: Losowa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396172
+    m_Localized: "Utw\xF3rz losow\u0105"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396173
+    m_Localized: "D\u0142ugo\u015B\u0107 s\u0142owa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396174
+    m_Localized: Kategorie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396175
+    m_Localized: Szukaj (Ctrl+F)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396176
+    m_Localized: "Wybierz s\u0142owo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396177
+    m_Localized: "Kliknij Pocz\u0105tek i Koniec"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396178
+    m_Localized: "Kliknij i przytrzymaj od pocz\u0105tku do ko\u0144ca"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396179
+    m_Localized: "Przybli\u017C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396180
+    m_Localized: "k\xF3\u0142ko myszy"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396181
+    m_Localized: Poruszaj
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396182
+    m_Localized: 'Przytrzymaj PPM
+
+      i poruszaj'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396183
+    m_Localized: "Naci\u015Bnij k\xF3\u0142ko myszy"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396184
+    m_Localized: "Podpowied\u017A"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396185
+    m_Localized: "Dwukrotnie kliknij\nSzukane s\u0142owo"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

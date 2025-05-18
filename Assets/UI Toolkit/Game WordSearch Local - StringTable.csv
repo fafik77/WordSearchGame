@@ -1,0 +1,39 @@
+Key,Id,English (United States)(en-US),Polish (Poland)(pl-PL)
+menu.settings.uppercase,2956015976448,Uppercase,Wielkie Litery
+menu.settings.diagonal,3085863239680,Diagonal,Po Przekątnej
+menu.settings.reversed,3131807645696,Reversed,Od Tyłu
+text.yes,4831327043584,Yes,Tak
+text.no,4878395523072,No,Nie
+ingame.time,45528428068864,Time,Czas
+ingame.wordsToFind,45769407610880,Words Left,Pozostałe
+ingame.wordsFound,71674100203520,Words Found,Znalezione
+menu.pauseMenu,,Menu,Menu
+menu.continue,,Continue,Kontynuuj
+menu.new_game,,New Game,Nowa gra
+menu.settings,125779329024,Settings,Ustawienia
+menu.quit,,Quit,Wyjdż
+text.language,,Language,Język
+settings.zoom_dead_zone,,Zoom Dead Zone,Martwa strefa przybliżenia
+settings.resolution,,Resolution,Rozdzielczość
+settings.accessibility,,Accessibility,Dostępność
+settings.info_board,,Words on Board Are:,Słowa na Planszy to:
+menu.center_camera,,Center Camera,Środkuj Kamere
+menu.save_board,,Save Board,Zapisz planszę
+menu.save_board.save_as,,Save Board as,Zapisz planszę jako
+menu.board.loadFile,,Load File,Załaduj plik
+menu.board.loadfile_pick_board_file,,Pick Board File,Wybierz plik planszy
+menu.board.random,,Random,Losowa
+menu.board.create_random,,Create Random,Utwórz losową
+menu.board.word_length,,Word Length,Długość słowa
+menu.board.categories,,Categories,Kategorie
+menu.board.search,,Search (Ctrl+F),Szukaj (Ctrl+F)
+menu.text.select_word,,Select a Word,Wybierz słowo
+menu.text.select_word.click,,Click on Begining And End,Kliknij Początek i Koniec
+menu.text.select_word.drag,,Click And Hold From Beginning to End,Kliknij i przytrzymaj od początku do końca
+menu.text.zoom,,Zoom,Przybliż
+menu.text.scroll,,Scroll,kółko myszy
+menu.text.move,,Move,Poruszaj
+menu.text.move.rmb,,Hold RMB\nAnd Move,Przytrzymaj PPM\ni poruszaj
+menu.center_camera.scroll,,Press Scroll,Naciśnij kółko myszy
+menu.text.hint,,Hint,Podpowiedź
+menu.text.hint.dclick,,Double Click\nWord to Find,Dwukrotnie kliknij\nSzukane słowo

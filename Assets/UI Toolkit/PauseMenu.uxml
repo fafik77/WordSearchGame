@@ -3,19 +3,47 @@
     <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
     <engine:VisualElement name="Screen" class="roboto-font" style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.4);">
         <engine:VisualElement name="Content" class="text_aliceblue text_white" style="flex-grow: 1; margin-top: 10%; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; align-self: center;">
-            <engine:Label text="Menu" name="Label" class="title" style="align-items: auto; align-self: center; margin-bottom: 10px;" />
+            <engine:Label text="Menu" name="Label" class="title" style="align-items: auto; align-self: center; margin-bottom: 10px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430710898688)" />
+                </Bindings>
+            </engine:Label>
             <engine:VisualElement class="header">
                 <engine:VisualElement class="horizontal" style="justify-content: space-around;">
-                    <engine:Button text="Continue" name="Continue" class="button" style="margin-right: 10px; flex-shrink: 1; flex-grow: 1;" />
-                    <engine:Button text="New Game" name="NewGame" class="button" style="text-overflow: ellipsis; margin-left: 10px; flex-shrink: 1; flex-grow: 1;" />
+                    <engine:Button text="Continue" name="Continue" class="button" style="margin-right: 10px; flex-shrink: 1; flex-grow: 1;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430782201856)" />
+                        </Bindings>
+                    </engine:Button>
+                    <engine:Button text="New Game" name="NewGame" class="button" style="text-overflow: ellipsis; margin-left: 10px; flex-shrink: 1; flex-grow: 1;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430782201857)" />
+                        </Bindings>
+                    </engine:Button>
                 </engine:VisualElement>
                 <engine:VisualElement style="justify-content: center; align-self: stretch; align-items: stretch; min-width: 200px;">
-                    <engine:Button text="Settings" name="Settings" class="button" style="align-self: stretch;" />
-                    <engine:Button text="Center Camera" name="CCamera" class="button" style="align-self: stretch;" />
-                    <engine:Button text="Save Board" name="SaveBoard" class="button" style="align-self: stretch;" />
+                    <engine:Button text="Settings" name="Settings" class="button" style="align-self: stretch;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(125779329024)" />
+                        </Bindings>
+                    </engine:Button>
+                    <engine:Button text="Center Camera" name="CCamera" class="button" style="align-self: stretch;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396166)" />
+                        </Bindings>
+                    </engine:Button>
+                    <engine:Button text="Save Board" name="SaveBoard" class="button" style="align-self: stretch;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396167)" />
+                        </Bindings>
+                    </engine:Button>
                 </engine:VisualElement>
                 <engine:VisualElement class="horizontal" style="min-width: 200px;">
-                    <engine:Button text="Quit" name="Quit" class="button" style="flex-grow: 1; flex-shrink: 1; margin-right: 20%; margin-left: 20%;" />
+                    <engine:Button text="Quit" name="Quit" class="button" style="flex-grow: 1; flex-shrink: 1; margin-right: 20%; margin-left: 20%;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396160)" />
+                        </Bindings>
+                    </engine:Button>
                 </engine:VisualElement>
             </engine:VisualElement>
         </engine:VisualElement>
