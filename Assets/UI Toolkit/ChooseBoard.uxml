@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
     <Style src="project://database/Assets/UI%20Toolkit/Styles/SliderCustom.uss?fileID=7433441132597879392&amp;guid=02e4696af2941ce40b9fa8f15f9c85ba&amp;type=3#SliderCustom" />
     <Style src="project://database/Assets/UI%20Toolkit/Styles/TreeViewStyles.uss?fileID=7433441132597879392&amp;guid=5bd59209bda529d449c484dd1a514a10&amp;type=3#TreeViewStyles" />
-    <engine:VisualElement style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.4);">
+    <engine:VisualElement class="roboto-font" style="flex-grow: 1; background-color: rgba(11, 10, 10, 0.4);">
         <engine:VisualElement class="header text_white" style="top: 2%;">
             <engine:VisualElement>
                 <engine:VisualElement class="horizontal" style="margin-top: 10px; margin-right: 10%; margin-left: 10%;">
