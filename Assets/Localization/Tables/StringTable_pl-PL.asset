@@ -192,6 +192,14 @@ MonoBehaviour:
     m_Localized: "Nie uda\u0142o si\u0119 za\u0142adowa\u0107 {0} w {1}!"
     m_Metadata:
       m_Items: []
+  - m_Id: 19239918140669952
+    m_Localized: Anuluj zaznaczenie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19239918174224384
+    m_Localized: "Naci\u015Bnij PPM"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

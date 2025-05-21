@@ -131,6 +131,13 @@
     text-shadow: 10px 2px 0 rgb(244, 250, 255);
 }
 
+.text_lgray {
+    color: rgb(166, 166, 166);
+    -unity-text-outline-color: rgb(255, 255, 255);
+    -unity-text-outline-width: 0.3px;
+    text-shadow: 10px 2px 0 rgb(0, 0, 0);
+}
+
 .darkUI .unity-base-field__label {
     color: rgb(244, 244, 244);
 }

@@ -13,7 +13,7 @@
                             </Bindings>
                         </engine:Button>
                         <engine:VisualElement>
-                            <engine:DropdownField label="Language" choices="English,Polski,Espanol" index="0" name="Language" class="darkUI menuItem buttonBeside" style="min-width: 330px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">
+                            <engine:DropdownField label="Language" choices="English,Polski,Español" index="0" name="Language" class="darkUI menuItem buttonBeside" style="min-width: 330px; margin-top: 2px; margin-right: 2px; margin-bottom: 2px; margin-left: 2px;">
                                 <Bindings>
                                     <UnityEngine.Localization.LocalizedString property="label" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396161)" />
                                 </Bindings>

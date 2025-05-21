@@ -44,13 +44,15 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		letterCaseButton = root.Q<Button>("CaseButton");
 		letterCaseButton.clicked += LetterCaseToggle;
 
-		zoomDeadZoneSlider = root.Q<SliderInt>("ZoomDeadZoneSlider");
+		var ZoomDeadZone = root.Q<VisualElement>("ZoomDeadZone");
+		zoomDeadZoneSlider = ZoomDeadZone.Q<SliderInt>("ZoomDeadZoneSlider");
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
 		zoomDeadZoneSlider.highValue = (int)(0.2 * Screen.width);
-
 		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1)
 			Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
+		if (!deadCenterDisplay)
+			ZoomDeadZone.SetEnabled(false);
 
 		dropdownLang = root.Q<DropdownField>("Language");
 		dropdownLang.choices = LanguagesManager.Languages.Select(item => item.Key).ToList();
@@ -82,9 +84,6 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	private void OnLangChange(ChangeEvent<string> evt)
 	{
 		Singleton.settingsPersistent.LanguageUi = dropdownLang.value;
-		//var curr = LocalizationSettings.SelectedLocale;
-		//var locales = LocalizationSettings.AvailableLocales.Locales;
-
 		LanguagesManager.SetLocale(dropdownLang.value);
 	}
 
@@ -125,7 +124,8 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	public void Hide()
 	{
 		this.gameObject.SetActive(false);
-		deadCenterDisplay.Hide();
+		if (deadCenterDisplay)
+			deadCenterDisplay.Hide();
 	}
 
 	public void Show()

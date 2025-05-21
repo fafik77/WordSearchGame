@@ -155,6 +155,14 @@ MonoBehaviour:
     m_Key: menu.text.move.rmb
     m_Metadata:
       m_Items: []
+  - m_Id: 19239918140669952
+    m_Key: menu.text.cancel_selection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19239918174224384
+    m_Key: menu.text.press_rmb
+    m_Metadata:
+      m_Items: []
   - m_Id: 18200430786396183
     m_Key: menu.center_camera.scroll
     m_Metadata:

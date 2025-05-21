@@ -11,6 +11,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 	UIDocument ui;
 	Button buttonStart;
 	Button buttonQuit;
+	Button buttonSettings;
 	private Action<MenuMgr.MenuNavigationEnum> navigateToMenuAction;
 
 
@@ -21,6 +22,7 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 		ui.enabled = true;
 		buttonStart = ui.rootVisualElement.Q<Button>("Start");
 		buttonQuit = ui.rootVisualElement.Q<Button>("Quit");
+		buttonSettings = ui.rootVisualElement.Q<Button>("Settings");
 
 		buttonQuit.clicked += () => {
 			string pathSettings = Singleton.settingsPersistent_GetSavePath();
@@ -28,12 +30,8 @@ public class MainMenuUI : MonoBehaviour, ICameraView
 			Application.Quit();
 			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/GameScene.unity");
 		};
-		buttonStart.clicked += ButtonStart_clicked;
-	}
-
-	private void ButtonStart_clicked()
-	{
-		navigateToMenuAction(MenuMgr.MenuNavigationEnum.NewGame);
+		buttonStart.clicked += () => navigateToMenuAction(MenuMgr.MenuNavigationEnum.NewGame);
+		buttonSettings.clicked += () => navigateToMenuAction(MenuMgr.MenuNavigationEnum.Settings);
 	}
 
 	private void Start()

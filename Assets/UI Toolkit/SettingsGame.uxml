@@ -15,7 +15,7 @@
                             <UnityEngine.Localization.LocalizedString property="label" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396163)" />
                         </Bindings>
                     </engine:DropdownField>
-                    <engine:DropdownField label="Language" choices="English,Polski" name="Language" enabled="true" index="10" class="buttonBeside" style="font-size: 20px;">
+                    <engine:DropdownField label="Language" choices="English,Polski,... ..." name="Language" enabled="true" index="10" class="buttonBeside" style="font-size: 20px;">
                         <Bindings>
                             <UnityEngine.Localization.LocalizedString property="label" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396161)" />
                         </Bindings>
@@ -36,7 +36,7 @@
                         </engine:VisualElement>
                     </engine:VisualElement>
                     <engine:VisualElement template="SliderWithText" name="ZoomSlider">
-                        <engine:VisualElement name="ZoomDeadZone" enabled="true" class="horizontal menuItem" style="margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px;">
+                        <engine:VisualElement name="ZoomDeadZone" enabled="true" class="horizontal menuItem" style="margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px; font-size: 20px;">
                             <engine:Label text="Zoom Dead Zone" style="margin-top: 0;">
                                 <Bindings>
                                     <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396162)" />
@@ -45,27 +45,29 @@
                             <engine:SliderInt value="64" high-value="200" fill="true" low-value="1" name="ZoomDeadZoneSlider" class="SliderMenu" style="min-width: 100px; margin-left: 10px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; align-self: stretch;" />
                         </engine:VisualElement>
                     </engine:VisualElement>
-                    <engine:Label text="Words On Board Are:" style="margin-top: 14px; -unity-text-align: upper-center;">
-                        <Bindings>
-                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396165)" />
-                        </Bindings>
-                    </engine:Label>
-                    <engine:VisualElement style="flex-grow: 1; background-color: rgba(120, 120, 120, 0.73); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;">
-                        <engine:VisualElement name="Diagonal" style="flex-grow: 1; flex-direction: row;">
-                            <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
-                            <engine:Label text="Diagonal">
-                                <Bindings>
-                                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3085863239680)" />
-                                </Bindings>
-                            </engine:Label>
-                        </engine:VisualElement>
-                        <engine:VisualElement name="Reversed" style="flex-grow: 1; flex-direction: row;">
-                            <engine:Label text="✔" name="Tick" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
-                            <engine:Label text="Reversed">
-                                <Bindings>
-                                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3131807645696)" />
-                                </Bindings>
-                            </engine:Label>
+                    <engine:VisualElement name="WordOnBoard" class="text_lgray" style="background-color: rgba(120, 120, 120, 0); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; margin-top: 15px; flex-grow: 1;">
+                        <engine:Label text="Words On Board Are:" style="-unity-text-align: upper-center;">
+                            <Bindings>
+                                <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396165)" />
+                            </Bindings>
+                        </engine:Label>
+                        <engine:VisualElement style="flex-grow: 1;">
+                            <engine:VisualElement name="Diagonal" style="flex-grow: 1; flex-direction: row;">
+                                <engine:Label text="✔" name="Tick" style="border-left-color: rgb(166, 166, 166); border-right-color: rgb(166, 166, 166); border-top-color: rgb(166, 166, 166); border-bottom-color: rgb(166, 166, 166); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                                <engine:Label text="Diagonal">
+                                    <Bindings>
+                                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3085863239680)" />
+                                    </Bindings>
+                                </engine:Label>
+                            </engine:VisualElement>
+                            <engine:VisualElement name="Reversed" style="flex-grow: 1; flex-direction: row;">
+                                <engine:Label text="✔" name="Tick" style="border-left-color: rgb(166, 166, 166); border-right-color: rgb(166, 166, 166); border-top-color: rgb(166, 166, 166); border-bottom-color: rgb(166, 166, 166); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; color: rgb(0, 217, 255); min-width: 20px;" />
+                                <engine:Label text="Reversed">
+                                    <Bindings>
+                                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(3131807645696)" />
+                                    </Bindings>
+                                </engine:Label>
+                            </engine:VisualElement>
                         </engine:VisualElement>
                     </engine:VisualElement>
                 </engine:VisualElement>
