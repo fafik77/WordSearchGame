@@ -15,10 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: StringTable
   m_TableCollectionNameGuidString: 39dd52e2b1131a04eb35f8c3c5ff1f7b
   m_Entries:
-  - m_Id: 125779329024
-    m_Key: menu.settings
-    m_Metadata:
-      m_Items: []
   - m_Id: 2956015976448
     m_Key: menu.settings.uppercase
     m_Metadata:
@@ -28,15 +24,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3131807645696
-    m_Key: menu.settings.backward
+    m_Key: menu.settings.reversed
     m_Metadata:
       m_Items: []
   - m_Id: 4831327043584
-    m_Key: Yes
+    m_Key: text.yes
     m_Metadata:
       m_Items: []
   - m_Id: 4878395523072
-    m_Key: No
+    m_Key: text.no
     m_Metadata:
       m_Items: []
   - m_Id: 45528428068864
@@ -49,6 +45,154 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 71674100203520
     m_Key: ingame.wordsFound
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430710898688
+    m_Key: menu.pauseMenu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201856
+    m_Key: menu.continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430782201857
+    m_Key: menu.new_game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 125779329024
+    m_Key: menu.settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396160
+    m_Key: menu.quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396161
+    m_Key: text.language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396162
+    m_Key: settings.zoom_dead_zone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396163
+    m_Key: settings.resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396164
+    m_Key: settings.accessibility
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396165
+    m_Key: settings.info_board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396166
+    m_Key: menu.center_camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396167
+    m_Key: menu.save_board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396168
+    m_Key: menu.save_board.save_as
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396169
+    m_Key: menu.board.loadFile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396170
+    m_Key: menu.board.loadfile_pick_board_file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396171
+    m_Key: menu.board.random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396172
+    m_Key: menu.board.create_random
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396173
+    m_Key: menu.board.word_length
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396174
+    m_Key: menu.board.categories
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396175
+    m_Key: menu.board.search
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396176
+    m_Key: menu.text.select_word
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396177
+    m_Key: menu.text.select_word.click
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396178
+    m_Key: menu.text.select_word.drag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396179
+    m_Key: menu.text.zoom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396180
+    m_Key: menu.text.scroll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396181
+    m_Key: menu.text.move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396182
+    m_Key: menu.text.move.rmb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19239918140669952
+    m_Key: menu.text.cancel_selection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19239918174224384
+    m_Key: menu.text.press_rmb
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396183
+    m_Key: menu.center_camera.scroll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396184
+    m_Key: menu.text.hint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18200430786396185
+    m_Key: menu.text.hint.dclick
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038481858560
+    m_Key: ingame.win_congrats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412992
+    m_Key: error.no_matching_categories
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412993
+    m_Key: error.no_dictionary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412994
+    m_Key: error.failed_to_load_file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412995
+    m_Key: error.failed_to_load_category
     m_Metadata:
       m_Items: []
   m_Metadata:

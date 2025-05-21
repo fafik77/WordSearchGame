@@ -20,6 +20,7 @@ namespace Assets.Scripts.Internal
 		public string Lang;
 		public List<string> WordsOnBoard;
 		public char[,] PredefinedBoard2D;
+		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
 
 		/// <summary>
 		/// Transforms provided data into Board
@@ -83,35 +84,43 @@ namespace Assets.Scripts.Internal
 			}
 		}
 
-		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
-		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang)
+		public IList<TreeViewItemData<ICategoryOrGroup>> GetCategoriesRootsForLang(string lang, bool forceRefresh = false)
+		{
+			var categories = GetCategoriesForLang(lang, forceRefresh);
+			int id = 0;
+			return categories.GetRoots(ref id);
+		}
+		public CategoryOrGroup GetCategoriesForLang(string lang, bool forceRefresh = false)
 		{
 			lang = lang.ToLower();
 			var categories = LangDictOfCategories.GetOrCreate(lang);
-			int id = 0;
-			if (categories.HasSubContent == false)
+			CategoriesInCurrLang = categories;
+			if (categories.HasAnyContent == false || forceRefresh)
 			{
+				categories.SubCategories?.Clear();
+				categories.Categories?.Clear();
+				categories.AllCategories = new();
 				string path = System.IO.Path.Combine(Application.streamingAssetsPath, "Categories", lang);
-				LoadCategoriesRecursiveForPath(path, ref categories);
+				LoadCategoriesRecursiveForPath(path, ref categories, ref categories);
 			}
 			CategoriesInCurrLang = categories;
-			return categories.GetRoots(ref id);
+			return categories;
 		}
 
-		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into)
+		void LoadCategoriesRecursiveForPath(string path, ref CategoryOrGroup into, ref CategoryOrGroup Root)
 		{
 			foreach (var item in loadFileContent.GetDirectory(path, "*.txt"))
 			{
 				if (item.IsDirectory)
-				{
+				{	///Folder
 					string nameOnly = System.IO.Path.GetFileName(item.Name);
 					if (into.SubCategories == null) into.SubCategories = new();
 					CategoryOrGroup subCategory = new CategoryOrGroup(nameOnly);
-					LoadCategoriesRecursiveForPath(item.Name, ref subCategory);
+					LoadCategoriesRecursiveForPath(item.Name, ref subCategory, ref Root);
 					into.SubCategories.Add(subCategory);
 				}
 				else
-				{
+				{	///file
 					List<string> words = new List<string>();
 					foreach (var line in loadFileContent.ReadLines(item.Name))
 					{
@@ -123,7 +132,9 @@ namespace Assets.Scripts.Internal
 					}
 					string nameOnly = System.IO.Path.GetFileNameWithoutExtension(item.Name);
 					if (into.Categories == null) into.Categories = new();
-					into.Categories.Add(new CategoryOnly(nameOnly, words));
+					var catOnly = new CategoryOnly(nameOnly, words);
+					into.Categories.Add(catOnly);
+					Root.AllCategories.Add(catOnly);
 				}
 			}
 		}
@@ -170,14 +181,19 @@ namespace Assets.Scripts.Internal
 
 			if (amountMax > 0)
 			{
-				if (WordsOnBoard == null) WordsOnBoard = new();
-				WordsOnBoard.Clear();
-				System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
-				var amount = random.Next(10, amountMax);
 				var totalWords = wordList.Count;
-				for (int i = 0; i != amount; ++i)
+				if (totalWords <= amountMax)
 				{
-					WordsOnBoard.Add(wordList[random.Next(0, totalWords)]);
+					WordsOnBoard = wordList;
+				}
+				else
+				{
+					if (WordsOnBoard == null) WordsOnBoard = new();
+					WordsOnBoard.Clear();
+					System.Random random = new System.Random(Guid.NewGuid().GetHashCode());
+					var amount = random.Next(10, amountMax);
+					for (int i = 0; i != amount; ++i)
+						WordsOnBoard.Add(wordList[random.Next(0, totalWords)]);
 				}
 			}
 			else
@@ -196,7 +212,7 @@ namespace Assets.Scripts.Internal
 			int colsInLineWidth = 0;
 			List<string> BoardRowsHeight = new List<string>();
 			var rows = lines.Skip(1);
-			Regex lettersReg = new("\\w", RegexOptions.IgnoreCase);
+			Regex lettersReg = new("[\\w-]", RegexOptions.IgnoreCase);
 			foreach (var row in rows)
 			{
 				///skip empty lines
@@ -211,7 +227,8 @@ namespace Assets.Scripts.Internal
 					colsInLineWidth = thisRowCharsBuilder.Length;
 				else if (thisRowCharsBuilder.Length != colsInLineWidth) ///error cols dont match
 				{
-					throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRowsHeight.Count}");
+					///+1 for header line, +1 as it starts from 0
+					throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRowsHeight.Count + 2}: {thisRowCharsBuilder.ToString()}");
 				}
 				BoardRowsHeight.Add(thisRowCharsBuilder.ToString().ToLower());
 			}

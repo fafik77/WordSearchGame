@@ -1,0 +1,10 @@
+.unity-collection-view__item:hover {
+    background-color: rgba(0, 80, 160, 0.95);
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+}
+
+.unity-foldout__toggle .unity-foldout__checkmark {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    background-size: 140% 140%;
+}

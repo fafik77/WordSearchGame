@@ -4,6 +4,7 @@ using BoardContent;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using System.Text;
 
 public class BoardTiles : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class BoardTiles : MonoBehaviour
 		overlayFoundWord = this.gameObject.GetComponentInChildren<OverlayFoundWord>();
 		mainCamera = Camera.main;
 		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
+		string pathSettings = Singleton.settingsPersistent_GetSavePath();
+		Singleton.settingsPersistent_loadJson(pathSettings);
 	}
 	private void OnEnable()
 	{
@@ -106,6 +109,9 @@ public class BoardTiles : MonoBehaviour
 		var orientations = PlaceWords.FindWordsOnBoard(content, wordsToFind);
 		///write onto the screen
 		PlaceWords.WriteContentOntoScreen(content, tilesSript2D);
+		if (orientations.Contains(WordOrientationEnum.diagonal) || orientations.Contains(WordOrientationEnum.diagonalBack)) Singleton.wordList.diagonalWords = true;
+		if (orientations.Contains(WordOrientationEnum.diagonalBack) || orientations.Contains(WordOrientationEnum.horizontalBack) ||
+			orientations.Contains(WordOrientationEnum.verticalBack)) Singleton.wordList.reversedWords = true;
 
 		Singleton.boardUiEvents.RefreshBoardUi();
 		ZoomCameraOnBoard();
@@ -113,10 +119,12 @@ public class BoardTiles : MonoBehaviour
 	public void PlaceWordsOnBoard(List<string> words)
 	{
 		overlayFoundWord.RemoveAllHighlights();
+
 		///delegate logic to separete class
-		PlaceWords placeWords = new PlaceWords(words, AspectRatio: new(14, 9), CreateBoard, wordsInReverse: true, AdditionalCharsPercent: 1.2f);
+		PlaceWords placeWords = new PlaceWords(words, AspectRatio: new(14, 9), CreateBoard, wordsInReverse: Singleton.settingsPersistent.reversedWords, AdditionalCharsPercent: 1.2f);
 		///try to place words on board
 		placeWords.PlaceWordsOnBoardThreaded(wordPlaceMaxRetry: 100, maxThreads: 8);
+
 		Singleton.boardUiEvents.RefreshBoardUi();
 
 		ZoomCameraOnBoard();
@@ -124,27 +132,29 @@ public class BoardTiles : MonoBehaviour
 		//DebugOnlyBoardDump();
 	}
 
-	[Obsolete("Debug Only Function")]
-	private void DebugOnlyBoardDump()
+	/// <summary>
+	/// Exports board into string, where 1-st line is words, next lines are board content
+	/// </summary>
+	/// <returns></returns>
+	public string ExportBoard()
 	{
-		var timeNowStr = DateTime.Now.ToString("HH-mm-ss");
-		StreamWriter streamWriter = new StreamWriter(@$"V:\board dump{timeNowStr}.txt", false);
+		StringBuilder streamWriter = new StringBuilder();
 		foreach (var word in Singleton.wordList.wordsToFind)
 		{
-			streamWriter.Write(word + " ");
+			streamWriter.Append(word + " ");
 		}
-		streamWriter.Write("\n");
+		streamWriter.Append("\n");
 		var width = tilesSript2D.GetLength(0);
 		var height = tilesSript2D.GetLength(1);
 		for (int ii = 0; ii != height; ++ii)
 		{
 			for (int i = 0; i != width; ++i)
 			{
-				streamWriter.Write(tilesSript2D[i, ii].Letter);
+				streamWriter.Append(tilesSript2D[i, ii].Letter);
 			}
-			streamWriter.Write("\n");
+			streamWriter.Append("\n");
 		}
-		streamWriter.Close();
+		return streamWriter.ToString();
 	}
 
 	public void ZoomCameraOnBoard()
@@ -154,7 +164,7 @@ public class BoardTiles : MonoBehaviour
 		///18:11 -> 10,-5,-10 size = 6
 		//float ratio = 14f / 9f;
 		//mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)widthPrev) / 2.92f, new(widthPrev, heightPrev));
-		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)heightPrev) / 1.92f, new(widthPrev, heightPrev));
+		mainCameraZoom.SetCameraDefaults(new(widthPrev / 2 + 0.5f, -(heightPrev / 2)), ((float)heightPrev) / 1.92f + 1, new(widthPrev, heightPrev));
 	}
 
 

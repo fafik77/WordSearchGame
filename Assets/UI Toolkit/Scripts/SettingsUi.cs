@@ -1,30 +1,33 @@
 ﻿using Assets.Scripts.Internal;
 using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 public class SettingsUi : MonoBehaviour, ICameraView
 {
-	//[SerializeField] private GameObject PreviewTiles;
-	//private List<LetterDisplayScript> previewDisplayScripts;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 
 	[SerializeField]
 	private DeadCenterDisplay deadCenterDisplay;
+	[SerializeField]
+	private UIDocument PauseMenuHelp;
 
 	private UIDocument ui;
 
 	private Button letterCaseButton;
-	//private bool letterCaseUpper = true;
-
 	private SliderInt zoomDeadZoneSlider;
+	Label DiagonalVisualText;
+	Label ReversedVisualText;
+	DropdownField dropdownLang;
+	DropdownField dropdownResolution;
 
-	//private Button diagonalWordsButton;
-	//private bool diagonalWords = false;
-
-	//private Button backwardWordsButton;
-	//private bool backwardWords = false;
-	//private string local_Yes, local_No;
+	static readonly string[] CrossTickMarks = new string[] { "☓", "✔" };
+	static readonly Color[] CrossTickMarksColor = new Color[]{
+		ColorExtension.FromHexRGB(new Color(),0xF55D22),
+		ColorExtension.FromHexRGB(new Color(),0x00D9FF)
+	};
 
 	private void Awake()
 	{
@@ -37,70 +40,68 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		ui = GetComponent<UIDocument>();
 
 		if (ui == null || ui.rootVisualElement == null) return;
-
-		letterCaseButton = ui.rootVisualElement.Q<Button>("CaseButton");
+		var root = ui.rootVisualElement;
+		letterCaseButton = root.Q<Button>("CaseButton");
 		letterCaseButton.clicked += LetterCaseToggle;
 
-		zoomDeadZoneSlider = ui.rootVisualElement.Q<SliderInt>("ZoomDeadZoneSlider");
+		var ZoomDeadZone = root.Q<VisualElement>("ZoomDeadZone");
+		zoomDeadZoneSlider = ZoomDeadZone.Q<SliderInt>("ZoomDeadZoneSlider");
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
 		zoomDeadZoneSlider.highValue = (int)(0.2 * Screen.width);
-
-		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
+		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1)
+			Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
+		if (!deadCenterDisplay)
+			ZoomDeadZone.SetEnabled(false);
 
-		//diagonalWordsButton = ui.rootVisualElement.Q<Button>("DiagonalButton");
-		//diagonalWordsButton.clicked += DiagonalWordsToggle;
+		dropdownLang = root.Q<DropdownField>("Language");
+		dropdownLang.choices = LanguagesManager.Languages.Select(item => item.Key).ToList();
+		dropdownLang.RegisterValueChangedCallback(OnLangChange);
+		dropdownResolution = root.Q<DropdownField>("Resolution");
+		dropdownResolution.RegisterValueChangedCallback(OnResolutionChange);
+		if (!string.IsNullOrEmpty(Singleton.settingsPersistent.LanguageUi))
+			dropdownLang.SetValueWithoutNotify(Singleton.settingsPersistent.LanguageUi);
 
-		//backwardWordsButton = ui.rootVisualElement.Q<Button>("BackwardsButton");
-		//backwardWordsButton.clicked += BackwardWordsToggle;
+		DiagonalVisualText = root.Q<VisualElement>("Diagonal").Q<Label>("Tick");
+		ReversedVisualText = root.Q<VisualElement>("Reversed").Q<Label>("Tick");
+		DiagonalVisualText.text = CrossTickMarks[Singleton.wordList.diagonalWords ? 1 : 0];
+		DiagonalVisualText.style.color = CrossTickMarksColor[Singleton.wordList.diagonalWords ? 1 : 0];
+		ReversedVisualText.text = CrossTickMarks[Singleton.wordList.reversedWords ? 1 : 0];
+		ReversedVisualText.style.color = CrossTickMarksColor[Singleton.wordList.reversedWords ? 1 : 0];
+
 
 		LetterCaseLoad(Singleton.settingsPersistent.upperCase);
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(true); }
 	}
+
+	private void OnResolutionChange(ChangeEvent<string> evt)
+	{
+		throw new NotImplementedException("Settings > OnResolutionChange");
+		//var resol = dropdownResolution.value;
+		//Singleton.settingsPersistent.resolution
+	}
+
+	private void OnLangChange(ChangeEvent<string> evt)
+	{
+		Singleton.settingsPersistent.LanguageUi = dropdownLang.value;
+		LanguagesManager.SetLocale(dropdownLang.value);
+	}
+
 	void OnZoomDeadZoneSliderChange(ChangeEvent<int> change)
 	{
 		deadCenterDisplay.ShowForTime(seconds: 2f);
 		deadCenterDisplay.SetCenterSize(change.newValue);
 	}
 
-	//private void BackwardWordsToggle() => BackwardWordsSet(!backwardWords);
-
-	//private void BackwardWordsSet(bool backward)
-	//{
-	//	backwardWords = backward;
-	//	backwardWordsButton.text = backwardWords ? local_Yes : local_No;
-	//	if (!backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) == 'A') return; //ok
-	//	if (backwardWords && char.ToUpper(previewDisplayScripts[0].Letter) != 'A') return; //ok
-	//	//switch needed
-	//	int idx = 1;
-	//	if (previewDisplayScripts[1].Letter == ' ') idx = 3;
-	//	char letter = previewDisplayScripts[0].Letter;
-	//	previewDisplayScripts[0].Letter = previewDisplayScripts[idx].Letter;
-	//	previewDisplayScripts[idx].Letter = letter;
-	//}
-
 	private void OnDisable()
 	{
 		if (letterCaseButton != null)
 		{
 			letterCaseButton.clicked -= LetterCaseToggle;
-			//diagonalWordsButton.clicked -= DiagonalWordsToggle;
-			//backwardWordsButton.clicked -= BackwardWordsToggle;
 		}
 		zoomDeadZoneSlider.UnregisterValueChangedCallback(OnZoomDeadZoneSliderChange);
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(false); }
 	}
-
-	//private void DiagonalWordsToggle() => DiagonalWordsSet(!diagonalWords);
-	//private void DiagonalWordsSet(bool diagonal)
-	//{
-	//	diagonalWords = diagonal;
-	//	diagonalWordsButton.text = diagonalWords ? local_Yes : local_No;
-	//	if (diagonal && previewDisplayScripts[3].Letter != ' ') return; //ok
-	//	if (!diagonal && previewDisplayScripts[3].Letter == ' ') return; //ok
-	//	//switch needed
-	//	char temp = previewDisplayScripts[1].Letter;
-	//	previewDisplayScripts[1].Letter = previewDisplayScripts[3].Letter;
-	//	previewDisplayScripts[3].Letter = temp;
-	//}
 
 
 	private void LetterCaseToggle() => LetterCaseSet(!Singleton.settingsPersistent.upperCase);
@@ -123,7 +124,8 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	public void Hide()
 	{
 		this.gameObject.SetActive(false);
-		deadCenterDisplay.Hide();
+		if (deadCenterDisplay)
+			deadCenterDisplay.Hide();
 	}
 
 	public void Show()

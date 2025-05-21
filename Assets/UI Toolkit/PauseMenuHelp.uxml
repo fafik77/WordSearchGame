@@ -1,0 +1,104 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <ui:VisualElement picking-mode="Ignore" class="header text_aliceblue textOutline roboto-font" style="flex-grow: 1; margin-top: 1%; margin-right: 1%; margin-bottom: 1%; margin-left: 1%; flex-direction: row;">
+        <ui:VisualElement name="LeftWing" enabled="true" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-start; margin-top: 5%;">
+            <ui:Label text="Select a Word" picking-mode="Ignore" name="SellectWord">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396176)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; margin-left: 1%; flex-direction: column;">
+                <ui:Label text="Click on Begining and End" style="margin-bottom: 0;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396177)" />
+                    </Bindings>
+                </ui:Label>
+                <ui:Label text="Click and Hold from Beginning to End" style="margin-top: 0;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396178)" />
+                    </Bindings>
+                </ui:Label>
+            </ui:VisualElement>
+            <ui:Label picking-mode="Ignore" name="CancelSelection" text="Cancel selection">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(19239918140669952)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: column; margin-left: 1%;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row;">
+                    <ui:VisualElement picking-mode="Ignore" enabled="true" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;mouse-right-click&apos;); width: 64px; height: 64px;" />
+                    <ui:Label picking-mode="Ignore" text="Press RMB" style="align-self: center;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(19239918174224384)" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Zoom" picking-mode="Ignore" name="zoom">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396179)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; margin-left: 1%; flex-direction: column;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row;">
+                    <ui:VisualElement picking-mode="Ignore" enabled="true" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;scroll-wheel-scroll&apos;); width: 64px; height: 64px;" />
+                    <ui:Label text="Scroll" picking-mode="Ignore" style="align-self: center;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396180)" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Move" picking-mode="Ignore" name="Move" style="margin-top: 14px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396181)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; margin-left: 1%; flex-direction: column;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row;">
+                    <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;mouse-right-click-move&apos;); width: 64px; height: 64px;" />
+                    <ui:Label text="Hold RMB&#10;And Move" picking-mode="Ignore" style="align-self: center;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396182)" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row; align-self: flex-start;">
+                    <ui:Label text="W S A D" picking-mode="Ignore" class="darkbg" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="RightWing" picking-mode="Ignore" style="flex-grow: 1; align-items: flex-end; margin-top: 5%;">
+            <ui:Label picking-mode="Ignore" text="Hint" name="Hint">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396184)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: column;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row;">
+                    <ui:Label text="Double Click&#10;Word To Find" picking-mode="Ignore" style="align-self: center;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396185)" />
+                        </Bindings>
+                    </ui:Label>
+                    <ui:VisualElement picking-mode="Ignore" enabled="true" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;mouse-right-click&apos;); width: 64px; height: 64px; scale: -1 1;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Center Camera" picking-mode="Ignore" name="CenterCamera" style="margin-top: 14px;">
+                <Bindings>
+                    <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396166)" />
+                </Bindings>
+            </ui:Label>
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: column;">
+                <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; flex-direction: row;">
+                    <ui:Label text="Press Scroll" picking-mode="Ignore" style="align-self: center;">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396183)" />
+                        </Bindings>
+                    </ui:Label>
+                    <ui:VisualElement picking-mode="Ignore" enabled="true" style="flex-grow: 0; flex-shrink: 0; background-image: resource(&apos;scroll-wheel-press&apos;); width: 64px; height: 64px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

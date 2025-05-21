@@ -1,0 +1,22 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/StyleMainText.uss?fileID=7433441132597879392&amp;guid=a30bf1fe6ffa7c048b5a8596bc92c73b&amp;type=3#StyleMainText" />
+    <ui:VisualElement class="text_aliceblue roboto-font" style="flex-grow: 1; margin-top: 10%; align-items: center;">
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:VisualElement style="background-color: rgba(0, 0, 0, 0.9); border-top-width: 5px; border-right-width: 5px; border-bottom-width: 5px; border-left-width: 5px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px;">
+                <ui:Label text="Congratulations&#10;You Won" class="title" style="-unity-text-align: upper-center;">
+                    <Bindings>
+                        <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18923038481858560)" />
+                    </Bindings>
+                </ui:Label>
+                <ui:VisualElement class="header" style="flex-grow: 0; flex-direction: row; flex-wrap: nowrap;">
+                    <ui:Label text="Time: ">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(45528428068864)" />
+                        </Bindings>
+                    </ui:Label>
+                    <ui:Label name="time" style="margin-left: 10px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Exceptions;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 namespace BoardContent
@@ -48,6 +47,8 @@ namespace BoardContent
 		public bool PrefferWordsShareLetters;
 		public float MaxWaitTimeForThreadsSec = 5f;
 
+		SortedSet<WordOrientationEnum> allowedOrientationsSet;
+
 		bool _TerminatingThreads;
 
 
@@ -75,6 +76,7 @@ namespace BoardContent
 			if (AspectRatio != null)
 				this.AspectRatio = AspectRatio;
 			MinimumBoardSize = this.AspectRatio;
+			allowedOrientationsSet = new();
 			this.AdditionalCharsPercent = AdditionalCharsPercent;
 			WordsRemoved = SepareteContainedDuplicateWords(ref words, out wordsContained, out uniqueLettersFrequency, wordsInReverse);
 			this.words = words;
@@ -91,6 +93,20 @@ namespace BoardContent
 			if (maxThreads < 1) maxThreads = 1;
 			Singleton.wordList.Reset();
 			_TerminatingThreads = false;
+
+			allowedOrientationsSet.Add(WordOrientationEnum.horizontal);
+			allowedOrientationsSet.Add(WordOrientationEnum.vertical);
+			Singleton.wordList.diagonalWords = Singleton.settingsPersistent.diagonalWords;
+			Singleton.wordList.reversedWords = Singleton.settingsPersistent.reversedWords;
+			if (Singleton.wordList.diagonalWords) allowedOrientationsSet.Add(WordOrientationEnum.diagonal);
+			if (Singleton.wordList.reversedWords)
+			{
+				allowedOrientationsSet.Add(WordOrientationEnum.horizontalBack);
+				allowedOrientationsSet.Add(WordOrientationEnum.verticalBack);
+				if (Singleton.wordList.diagonalWords) allowedOrientationsSet.Add(WordOrientationEnum.diagonalBack);
+			}
+
+
 
 			List<Task<PlaceWordsOnBoardReturns>> tryBoardTasks = new(maxThreads);
 			List<PlaceWordsOnBoardReturns> triedBoards = new(maxThreads);
@@ -173,7 +189,7 @@ namespace BoardContent
 		{
 			Singleton.wordList.Reset();
 			///make a copy early so we can take out the provided words
-			Singleton.wordList.wordsToFind = words.Select(x => x.ToLower()).ToList();
+			Singleton.wordList.wordsToFind = words.Select(x => x.ToLower()).Distinct().ToList();
 			Singleton.wordList.wordsToFind.Sort();
 			words = Singleton.wordList.wordsToFind.ToList();
 			SortedSet<WordOrientationEnum> wordOrientations = new SortedSet<WordOrientationEnum>();
@@ -291,7 +307,7 @@ namespace BoardContent
 						if (tries > maxRetries) throw new RetriesTimeoutException(tries, $"To Many ReTries placing the word: \"{word}\"");
 						x = random.Next(0, width);  // nice ducumentation you have there MS
 						y = random.Next(0, height); // https://stackoverflow.com/a/5063289
-						orientEnum = (WordOrientationEnum)random.Next(0, 5);
+						orientEnum = allowedOrientationsSet.ElementAt(random.Next(0, allowedOrientationsSet.Count));
 					}
 					while (!(wordPlaceOk = CanPlaceWordHere(x, y, boardTry, orientEnum, word)).ok);
 				}
@@ -488,8 +504,9 @@ namespace BoardContent
 		{
 			int amountRemoved = words.RemoveAll(s => s.Length <= 1);    //do not allow single letters
 			outSeparetedWords = new SortedDictionary<string, List<WordContainedFrom>>();
-			var wordsLower = words.ConvertAll(x => new string(x.ToLower()));
-
+			///remove duplicate words, that is not allowed
+			var wordsLower = words.ConvertAll(x => new string(x.ToLower())).Distinct().ToList();
+			amountRemoved += words.Count - wordsLower.Count;
 			wordsLower.Sort(); // sort alpabetical
 			wordsLower.Sort((x, y) => -x.Length.CompareTo(y.Length)); // sort it from longest to shortest (keep previous alpabetical)
 
@@ -510,13 +527,6 @@ namespace BoardContent
 				for (int idx2 = idx+1; idx2 < wordsMinToMax.Count; ++idx2)
 				{
 					string longerWord = wordsMinToMax[idx2];
-					if (longerWord == shorterWord)	//same word appeared multiple times, that is not allowed
-					{
-						++amountRemoved;
-						removeWord = true;
-						break;
-					}
-
 					var matches = regexContains.Matches(longerWord);
 
 					if (matches.Count!=0)	//we have a contained duplicate

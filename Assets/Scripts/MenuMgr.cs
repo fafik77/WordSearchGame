@@ -1,10 +1,5 @@
 using Assets.Scripts.Internal;
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MenuMgr : MonoBehaviour
@@ -27,6 +22,7 @@ public class MenuMgr : MonoBehaviour
 		Settings,
 		PauseMenu,
 		NewGame,
+		EscapeKey,
 	}
 
 	private void Awake()
@@ -136,9 +132,13 @@ public class MenuMgr : MonoBehaviour
 		if (menusStack.Count == 0)
 		{
 			if (mainMenuUI != null) menusStack.Push(mainMenuUI);
+			if (ingameUI) ingameUI.Hide();
 		}
-		var prev = menusStack.Peek();
-		(prev as ICameraView).Hide();
+		if (menusStack.Count != 0)
+		{
+			var prev = menusStack.Peek();
+			(prev as ICameraView).Hide();
+		}
 		menusStack.Push(menu);
 		(menu as ICameraView).Show();
 	}
@@ -174,6 +174,11 @@ public class MenuMgr : MonoBehaviour
 			case MenuNavigationEnum.Settings:
 				{
 					NavigateForwardTo(settingsUi);
+					break;
+				}
+			case MenuNavigationEnum.EscapeKey:
+				{
+					MenuEscKey();
 					break;
 				}
 		}

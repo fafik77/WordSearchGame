@@ -21,8 +21,11 @@ namespace BoardContent
 	public struct WordList
 	{
 		public List<WordListEntry> list;
+		public List<WordListEntry> listUnintended;
 		public List<string> wordsToFind;
 		public List<string> wordsFound;
+		public bool reversedWords;
+		public bool diagonalWords;
 
 
 		public void Reset()
@@ -33,6 +36,8 @@ namespace BoardContent
 			wordsToFind.Clear();
 			if (wordsFound == null) wordsFound = new List<string>();
 			wordsFound.Clear();
+			if (listUnintended == null) listUnintended = new List<WordListEntry>();
+			listUnintended.Clear();
 		}
 	}
 

@@ -3,15 +3,25 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using SFB;
+using System.IO;
+using Exceptions;
 
 public class PauseMenuUI : MonoBehaviour, ICameraView
 {
+	[SerializeField]
+	private UIDocument PauseMenuHelp;
+	[SerializeField]
+	private BoardTiles boardTiles;
+
+
 	private UIDocument ui;
 	private Button buttonContinue;
 	private Button buttonNewGame;
 	private Button buttonSettings;
 	private Button buttonQuit;
 	private Button buttonCCamera;
+	private Button buttonSaveBoard;
 	private Action<MenuMgr.MenuNavigationEnum> navigateAction;
 	private Camera mainCamera;
 	private CameraZoom mainCameraZoom;
@@ -23,6 +33,10 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		ui.enabled = true;
 		mainCamera = Camera.main;
 		mainCameraZoom = mainCamera.GetComponent<CameraZoom>();
+	}
+	private void OnDisable()
+	{
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(false); }
 	}
 	private void OnEnable()
 	{
@@ -36,13 +50,33 @@ public class PauseMenuUI : MonoBehaviour, ICameraView
 		buttonSettings = root.Q<Button>("Settings");
 		buttonQuit = root.Q<Button>("Quit");
 		buttonCCamera = root.Q<Button>("CCamera");
+		buttonSaveBoard = root.Q<Button>("SaveBoard");
 
 		buttonContinue.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.Back);
 		buttonNewGame.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.NewGame);
 		buttonSettings.clicked += () => navigateAction(MenuMgr.MenuNavigationEnum.Settings);
 		buttonCCamera.clicked += () => { mainCameraZoom.ResetCamera(); };
+		buttonSaveBoard.clicked += ButtonSaveBoard_clicked;
 
-		buttonQuit.clicked += () => { Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); };
+		buttonQuit.clicked += () => {
+			string pathSettings = Singleton.settingsPersistent_GetSavePath();
+			Singleton.settingsPersistent_SaveJson(pathSettings);
+			Singleton.SceneMgr.SwitchToScene("Assets/Scenes/MainMenuScene.unity"); 
+		};
+		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(true); }
+	}
+
+	private void ButtonSaveBoard_clicked()
+	{
+		if (!boardTiles) throw new NotFoundException("boardTiles not set");
+
+		var timeNowStr = DateTime.Now.ToString("HH-mm-ss");
+		var userFile = StandaloneFileBrowser.SaveFilePanel("Save Board", "", $"{timeNowStr}.txt", "txt");
+		if (userFile.Length!=0 && Directory.Exists(System.IO.Path.GetDirectoryName(userFile)))
+		{
+			var boardContent = boardTiles.ExportBoard();
+			File.WriteAllText(userFile, boardContent);
+		}
 	}
 
 	public void Hide()

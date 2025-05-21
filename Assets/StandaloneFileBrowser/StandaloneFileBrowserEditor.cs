@@ -4,7 +4,7 @@ using System;
 using UnityEditor;
 
 namespace SFB {
-    public class StandaloneFileBrowserEditor : IStandaloneFileBrowser  {
+    internal class StandaloneFileBrowserEditor : IStandaloneFileBrowser  {
         public string[] OpenFilePanel(string title, string directory, ExtensionFilter[] extensions, bool multiselect) {
             string path = "";
 
