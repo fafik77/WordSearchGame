@@ -172,6 +172,26 @@ MonoBehaviour:
     m_Localized: "Dwukrotnie kliknij\nSzukane s\u0142owo"
     m_Metadata:
       m_Items: []
+  - m_Id: 18923038481858560
+    m_Localized: "Gratulacje, wygra\u0142e\u015B"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412992
+    m_Localized: "Brak kategorii pasuj\u0105cych do Twojego wyszukiwania"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412993
+    m_Localized: "Nie znaleziono s\u0142ownika dla {0}!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412994
+    m_Localized: "Nie uda\u0142o si\u0119 za\u0142adowa\u0107: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412995
+    m_Localized: "Nie uda\u0142o si\u0119 za\u0142adowa\u0107 {0} w {1}!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

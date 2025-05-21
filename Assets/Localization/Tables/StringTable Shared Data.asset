@@ -167,6 +167,26 @@ MonoBehaviour:
     m_Key: menu.text.hint.dclick
     m_Metadata:
       m_Items: []
+  - m_Id: 18923038481858560
+    m_Key: ingame.win_congrats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412992
+    m_Key: error.no_matching_categories
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412993
+    m_Key: error.no_dictionary
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412994
+    m_Key: error.failed_to_load_file
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18923038515412995
+    m_Key: error.failed_to_load_category
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

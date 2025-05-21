@@ -73,7 +73,11 @@
                             </engine:VisualElement>
                         </engine:VisualElement>
                         <engine:TreeView name="TreeView" show-alternating-row-backgrounds="None" virtualization-method="DynamicHeight" class="SameBGColor" />
-                        <engine:Label text="There are no Categories matching your search" name="TreeEmpty" picking-mode="Ignore" class="title error_text" style="-unity-text-align: upper-center; white-space: normal;" />
+                        <engine:Label text="There are no Categories matching your search" name="TreeEmpty" picking-mode="Ignore" class="title error_text" style="-unity-text-align: upper-center; white-space: normal;">
+                            <Bindings>
+                                <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18923038515412992)" />
+                            </Bindings>
+                        </engine:Label>
                     </engine:VisualElement>
                 </engine:VisualElement>
             </engine:VisualElement>

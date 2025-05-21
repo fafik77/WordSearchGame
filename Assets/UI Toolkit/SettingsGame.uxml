@@ -10,12 +10,12 @@
                     </Bindings>
                 </engine:Label>
                 <engine:VisualElement style="flex-grow: 1;">
-                    <engine:DropdownField label="Resolution" index="0" choices="1920 x 1080" class="buttonBeside" style="font-size: 20px;">
+                    <engine:DropdownField label="Resolution" index="0" choices="1920 x 1080" name="Resolution" enabled="false" class="buttonBeside" style="font-size: 20px;">
                         <Bindings>
                             <UnityEngine.Localization.LocalizedString property="label" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396163)" />
                         </Bindings>
                     </engine:DropdownField>
-                    <engine:DropdownField label="Language" choices="English,Polski" index="0" name="Language" class="buttonBeside" style="font-size: 20px;">
+                    <engine:DropdownField label="Language" choices="English,Polski" name="Language" enabled="true" index="10" class="buttonBeside" style="font-size: 20px;">
                         <Bindings>
                             <UnityEngine.Localization.LocalizedString property="label" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(18200430786396161)" />
                         </Bindings>

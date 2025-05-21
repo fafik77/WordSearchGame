@@ -212,7 +212,7 @@ namespace Assets.Scripts.Internal
 			int colsInLineWidth = 0;
 			List<string> BoardRowsHeight = new List<string>();
 			var rows = lines.Skip(1);
-			Regex lettersReg = new("\\w", RegexOptions.IgnoreCase);
+			Regex lettersReg = new("[\\w-]", RegexOptions.IgnoreCase);
 			foreach (var row in rows)
 			{
 				///skip empty lines
@@ -227,7 +227,8 @@ namespace Assets.Scripts.Internal
 					colsInLineWidth = thisRowCharsBuilder.Length;
 				else if (thisRowCharsBuilder.Length != colsInLineWidth) ///error cols dont match
 				{
-					throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRowsHeight.Count}");
+					///+1 for header line, +1 as it starts from 0
+					throw new ArrayTypeMismatchException($"Column lenght mismatch, starting at line {BoardRowsHeight.Count + 2}: {thisRowCharsBuilder.ToString()}");
 				}
 				BoardRowsHeight.Add(thisRowCharsBuilder.ToString().ToLower());
 			}

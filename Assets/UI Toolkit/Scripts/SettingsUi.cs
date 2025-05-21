@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts.Internal;
 using System;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 public class SettingsUi : MonoBehaviour, ICameraView
@@ -18,6 +20,9 @@ public class SettingsUi : MonoBehaviour, ICameraView
 	private SliderInt zoomDeadZoneSlider;
 	Label DiagonalVisualText;
 	Label ReversedVisualText;
+	DropdownField dropdownLang;
+	DropdownField dropdownResolution;
+
 	static readonly string[] CrossTickMarks = new string[] { "☓", "✔" };
 	static readonly Color[] CrossTickMarksColor = new Color[]{
 		ColorExtension.FromHexRGB(new Color(),0xF55D22),
@@ -43,8 +48,17 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		zoomDeadZoneSlider.RegisterValueChangedCallback(OnZoomDeadZoneSliderChange);
 		zoomDeadZoneSlider.highValue = (int)(0.2 * Screen.width);
 
-		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1) Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
+		if (Singleton.settingsPersistent.ZoomDeadZoneSize <= 1)
+			Singleton.settingsPersistent.ZoomDeadZoneSize = 64;
 		zoomDeadZoneSlider.SetValueWithoutNotify(Singleton.settingsPersistent.ZoomDeadZoneSize);
+
+		dropdownLang = root.Q<DropdownField>("Language");
+		dropdownLang.choices = LanguagesManager.Languages.Select(item => item.Key).ToList();
+		dropdownLang.RegisterValueChangedCallback(OnLangChange);
+		dropdownResolution = root.Q<DropdownField>("Resolution");
+		dropdownResolution.RegisterValueChangedCallback(OnResolutionChange);
+		if (!string.IsNullOrEmpty(Singleton.settingsPersistent.LanguageUi))
+			dropdownLang.SetValueWithoutNotify(Singleton.settingsPersistent.LanguageUi);
 
 		DiagonalVisualText = root.Q<VisualElement>("Diagonal").Q<Label>("Tick");
 		ReversedVisualText = root.Q<VisualElement>("Reversed").Q<Label>("Tick");
@@ -57,6 +71,23 @@ public class SettingsUi : MonoBehaviour, ICameraView
 		LetterCaseLoad(Singleton.settingsPersistent.upperCase);
 		if (PauseMenuHelp) { PauseMenuHelp.gameObject.SetActive(true); }
 	}
+
+	private void OnResolutionChange(ChangeEvent<string> evt)
+	{
+		throw new NotImplementedException("Settings > OnResolutionChange");
+		//var resol = dropdownResolution.value;
+		//Singleton.settingsPersistent.resolution
+	}
+
+	private void OnLangChange(ChangeEvent<string> evt)
+	{
+		Singleton.settingsPersistent.LanguageUi = dropdownLang.value;
+		//var curr = LocalizationSettings.SelectedLocale;
+		//var locales = LocalizationSettings.AvailableLocales.Locales;
+
+		LanguagesManager.SetLocale(dropdownLang.value);
+	}
+
 	void OnZoomDeadZoneSliderChange(ChangeEvent<int> change)
 	{
 		deadCenterDisplay.ShowForTime(seconds: 2f);

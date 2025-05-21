@@ -3,10 +3,12 @@ using BoardContent;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 
 public static class Singleton
@@ -153,6 +155,7 @@ public static class Singleton
 
 	public static ChooseBoardDispatcher choosenBoard = new();
 
+	//public static Resolution
 	[Serializable]
 	public struct SettingsPersistent
 	{
@@ -163,15 +166,22 @@ public static class Singleton
 		public string LanguageWords;
 		public bool reversedWords;
 		public bool diagonalWords;
+		//public Resolution resolution;
 	}
 	public static SettingsPersistent settingsPersistent = new();
 	public static bool settingsPersistent_loadedFromFile { get; private set; } = false;
 	public static void settingsPersistent_loadJson(string pathToJson, bool forced = false)
 	{
 		if (!forced && settingsPersistent_loadedFromFile) return;
+		//load all languages
+		LanguagesManager.AddAvailableLocales();
+
 		var json = File.ReadAllText(pathToJson);
 		settingsPersistent = JsonUtility.FromJson<SettingsPersistent>(json);
 		settingsPersistent_loadedFromFile = true;
+		//apply the language
+		if (!string.IsNullOrEmpty(Singleton.settingsPersistent.LanguageUi))
+			LanguagesManager.SetLocale(Singleton.settingsPersistent.LanguageUi);
 	}
 	public static void settingsPersistent_SaveJson(string pathToJson)
 	{

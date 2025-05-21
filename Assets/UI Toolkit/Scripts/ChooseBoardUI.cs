@@ -165,8 +165,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		}
 		catch (Exception e)
 		{
-			Singleton.boardUiEvents.onScreenNotification.setText($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}!");
-			Debug.LogError($"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
+			var err_load = LocalizationHelper.GetTranslation("error.failed_to_load_category");
+			if (err_load.Length == 0) err_load = $"Could not load {category.Name} in {Singleton.settingsPersistent.LanguageWords}!";
+			Singleton.boardUiEvents.onScreenNotification.setText(err_load);
+			Debug.LogError(err_load + ": " + e.GetType());
 			return false;
 		}
 		navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
@@ -228,7 +230,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 	private void ButtonLoadFile_clicked()
 	{
-		var filePicked = StandaloneFileBrowser.OpenFilePanel("Pick Board File", ".", "txt", false);
+		string loadfile_pick_board_file = LocalizationHelper.GetTranslation("menu.board.loadfile_pick_board_file");
+		if (loadfile_pick_board_file.Length == 0) loadfile_pick_board_file = "Pick Board File";
+
+		var filePicked = StandaloneFileBrowser.OpenFilePanel(loadfile_pick_board_file, ".", "txt", false);
 		//--> https://docs.unity3d.com/Manual/Input.html (change the input system to the new one to fix small annoyance: when double clicking a file it loads it and clicks on a tile)
 		//user has sellected a file?, is it correct ?
 		foreach (var file in filePicked)
@@ -242,7 +247,9 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 			}
 			else
 			{
-				Singleton.boardUiEvents.onScreenNotification.setText($"Failed to load: {file}");
+				string error_failed = LocalizationHelper.GetTranslation("error.failed_to_load_file", file);
+				if (error_failed.Length == 0) error_failed = $"Failed to load: {file}";
+				Singleton.boardUiEvents.onScreenNotification.setText(error_failed);
 			}
 			return; //accept only 1 file
 		}
@@ -258,8 +265,10 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 		}
 		catch (Exception e)
 		{
-			Singleton.boardUiEvents.onScreenNotification.setText($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}!");
-			Debug.LogError($"No Dictionary found for {Singleton.settingsPersistent.LanguageWords}: " + e.GetType());
+			var err_no_dict = LocalizationHelper.GetTranslation("error.no_dictionary", Singleton.settingsPersistent.LanguageWords);
+			if (err_no_dict.Length == 0) err_no_dict = $"No Dictionary Found For {Singleton.settingsPersistent.LanguageWords}!";
+			Singleton.boardUiEvents.onScreenNotification.setText(err_no_dict);
+			Debug.LogError(err_no_dict + ": " + e.GetType());
 			return;
 		}
 		navigateToMenuAction(MenuMgr.MenuNavigationEnum.Home);
@@ -272,7 +281,7 @@ public class ChooseBoardUI : MonoBehaviour, ICameraView
 
 	private void OnLanguageSelectionChange(ChangeEvent<string> change)
 	{
-		Singleton.settingsPersistent.LanguageWords = change.newValue;
+		Singleton.settingsPersistent.LanguageWords = dropdownLang.value;
 		///populate tree again
 		StopCoroutine(CategoriesForTreeCoroutine);
 		CategoriesForTreeCoroutine = StartCoroutine(GetCategoriesRootsForTreeLangRutine(0.1f));
