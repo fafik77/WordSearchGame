@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 18200430786396165
-    m_Localized: "S\u0142owa na Planszy to:"
+    m_Localized: "S\u0142owa na Planszy Wystepuj\u0105:"
     m_Metadata:
       m_Items: []
   - m_Id: 18200430786396166
@@ -198,6 +198,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 19239918174224384
     m_Localized: "Naci\u015Bnij PPM"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19848707323740160
+    m_Localized: "U\u017Cyte podpowiedzi"
     m_Metadata:
       m_Items: []
   references:

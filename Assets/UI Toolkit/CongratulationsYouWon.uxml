@@ -16,6 +16,14 @@
                     </ui:Label>
                     <ui:Label name="time" style="margin-left: 10px;" />
                 </ui:VisualElement>
+                <ui:VisualElement class="header" style="flex-grow: 0; flex-direction: row; flex-wrap: nowrap;">
+                    <ui:Label text="Hints">
+                        <Bindings>
+                            <UnityEngine.Localization.LocalizedString property="text" table="GUID:39dd52e2b1131a04eb35f8c3c5ff1f7b" entry="Id(19848707323740160)" />
+                        </Bindings>
+                    </ui:Label>
+                    <ui:Label name="hints" style="margin-left: 10px;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

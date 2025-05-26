@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 18200430786396165
-    m_Localized: 'Words on Board Are:'
+    m_Localized: 'Words on Board Appear:'
     m_Metadata:
       m_Items: []
   - m_Id: 18200430786396166
@@ -202,6 +202,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 19239918174224384
     m_Localized: Press RMB
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19848707323740160
+    m_Localized: Hints Used
     m_Metadata:
       m_Items: []
   references:

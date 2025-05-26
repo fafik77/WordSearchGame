@@ -48,6 +48,8 @@ public class BoardTiles : MonoBehaviour
 
 	private void BoardUiEvents_CreateBoardEvent(bool predef)
 	{
+		//Singleton.choosenBoard.HintsUsed = 0;
+
 		if (predef)
 		{
 			PlaceContentOnBoard(Singleton.choosenBoard.PredefinedBoard2D, Singleton.choosenBoard.WordsOnBoard);

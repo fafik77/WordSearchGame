@@ -20,6 +20,7 @@ namespace Assets.Scripts.Internal
 		public string Lang;
 		public List<string> WordsOnBoard;
 		public char[,] PredefinedBoard2D;
+		public int HintsUsed;
 		public CategoryOrGroup CategoriesInCurrLang { get; private set; }
 
 		/// <summary>

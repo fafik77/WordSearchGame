@@ -195,6 +195,10 @@ MonoBehaviour:
     m_Key: error.failed_to_load_category
     m_Metadata:
       m_Items: []
+  - m_Id: 19848707323740160
+    m_Key: ingame.hints_used
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
