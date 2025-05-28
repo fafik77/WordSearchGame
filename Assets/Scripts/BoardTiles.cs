@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Text;
-
+/// <summary>
+/// 
+/// </summary>
 public class BoardTiles : MonoBehaviour
 {
 	/// <summary>
@@ -20,7 +22,7 @@ public class BoardTiles : MonoBehaviour
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
 	//private Mutex mutexTilesPool = new Mutex();
-	private bool ModyfyingTilesPool = false;
+	//private bool ModyfyingTilesPool = false;
 	Camera mainCamera;
 	CameraZoom mainCameraZoom;
 
@@ -199,10 +201,8 @@ public class BoardTiles : MonoBehaviour
 		tile.SetActive(false);  //set all new tiles to not render
 		var results = InstantiateAsync(tile, amountToCreate, tilesParent);
 		results.WaitForCompletion();
-		ModyfyingTilesPool = true;
 		tilesPool.AddRange(results.Result);
 		reservingTilesAmount = 0;
-		ModyfyingTilesPool = false;
 		return amountToCreate;
 	}
 

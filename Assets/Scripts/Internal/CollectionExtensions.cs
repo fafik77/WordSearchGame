@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace System.Collections.Generic
+namespace Assets.Scripts.Internal
 {
 	public static class CollectionExtensions
 	{
