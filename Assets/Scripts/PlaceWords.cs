@@ -230,6 +230,17 @@ namespace BoardContent
 					}
 				}
 			}
+			/*	123
+			 *	456
+			 *	789
+			 *	from 2D board get all (Rows + Cols) then reverse it (that is O(R+C) instead of O(R*C) )
+			 *	for diagonal that is sqrt(R^2+C^2) and reverse it.
+			 *	from those (exactly 6) lists take out all the words ONCE.
+			 *	  additionall benefit of that: if word exists in said list in marks WordOrientationEnum
+			 *	in the end the complexity is O(6*(R+C)* ?words * ?avgLetters)
+			 *	memory usage is 4*RC+2*Diagonal
+			 *	++memory will be continous, just with this benefit it will be faster than accessing a random point in memory
+			 */
 			Singleton.wordList.list = wordList;
 			return wordOrientations;
 		}

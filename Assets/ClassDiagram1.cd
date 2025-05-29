@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Singleton">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="Singleton.ClickAndDragStruct" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Singleton.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Singleton.BoardUiEvents" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Singleton.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Singleton.ScenesStruct" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Singleton.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="Singleton.SettingsPersistent" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Singleton.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAACgQBAAACAAAQgAEAAEQAAA=</HashCode>
+      <FileName>Assets\Scripts\Singleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.Scripts.Internal.ChooseBoardDispatcher" Collapsed="true">
+    <Position X="2" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AwAABAAARBAEAAAQABAEAAgUgAEAAAQABAAAAAAAEAA=</HashCode>
+      <FileName>Assets\Scripts\Internal\ChooseBoardDispatcher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoardTiles" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABgAAAACEAJCAAgAAAAIAIAAAAEAAIAkAEBEAACUA=</HashCode>
+      <FileName>Assets\Scripts\BoardTiles.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraZoom" Collapsed="true">
+    <Position X="7" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAYAAAACESAAACQAAIAGAAowAgAAEEAIAQIAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\CameraZoom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EventSystemHandler">
+    <Position X="16" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAAAAAAAAAAAAAAAAAEAAAAAAAEAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\EventSystemHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LetterDisplayScript" Collapsed="true">
+    <Position X="11.25" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAEBEAEQ=</HashCode>
+      <FileName>Assets\Scripts\LetterDisplayScript.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LetterTileScript" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACABAAAAAAIAgAAAAAAAAIIQAAAAEAAAAAAAABAAEQ=</HashCode>
+      <FileName>Assets\Scripts\LetterTileScript.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LineRendereFound" Collapsed="true">
+    <Position X="7" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAABBAggAAAAIAAAAAgAAAACAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\LineRendereFound.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LineRendererMouse" Collapsed="true">
+    <Position X="8.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAIAAAAAAAAAAAAAAAAIAAAAAAAIACAAAAAACEA=</HashCode>
+      <FileName>Assets\Scripts\LineRendererMouse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuMgr" Collapsed="true">
+    <Position X="1" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAFEAAACCAAAAAAIACBCAAgAAAAAAAACAABAIAAAEI=</HashCode>
+      <FileName>Assets\Scripts\MenuMgr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OverlayFoundWord" Collapsed="true">
+    <Position X="2.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAgAAAAAAAAQAAAAAAgAAAAEAIAAAAAABECEA=</HashCode>
+      <FileName>Assets\Scripts\OverlayFoundWord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoardContent.PlaceWords" Collapsed="true">
+    <Position X="7" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EiAAkAAAAAAmABREQgAEAIAAQgAIAAIAQCIAAEIAKQA=</HashCode>
+      <FileName>Assets\Scripts\PlaceWords.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.UI_Toolkit.Scripts.CategoryOnly" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAQAAQAEAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\CategoryOrGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Assets.UI_Toolkit.Scripts.CategoryOrGroup" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAgAAAAAAAEAQAAQAEEAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\CategoryOrGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChooseBoardUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAggAAAAAMJIEFAAUAEAEAAAGAAAMQQKIGEIICUA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\ChooseBoardUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="CongratulationsYouWon" Collapsed="true">
+    <Position X="3" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAkAAAAAAAACAAAAAAAAAIAEAAAIAACEE=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\CongratulationsYouWon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeadCenterDisplay" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAAAAAAEAAAEAAAAAAAAAAFAAAIEAAACAAACEA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\DeadCenterDisplay.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="InGameUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIQBABgAAgAAEAABEAAQCAQgCEAEEAgKgUgACAABCEQ=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\InGameUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MainMenuUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACAAMAIAEAAAAAAAAAAEAAAAAAAACAAgCAA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\MainMenuUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="OnScreenNotification" Collapsed="true">
+    <Position X="4.75" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEBAAAAAAAACgAAAAAAAIAAAQAAAACEA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\OnScreenNotification.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PauseMenuHelp" Collapsed="true">
+    <Position X="4" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAACEA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\PauseMenuHelp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PauseMenuUI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAIABAABAAAAMAACEAAAAAAgAAAEEEAoAEAACAAACEQ=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\PauseMenuUI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SettingsUi" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAEUAAEEAQEAAgAAgEAAAJAIAASEAQTEQ=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\SettingsUi.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Struct Name="BoardContent.WordListEntry">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAABAAAAIAQAACAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Internal\WordList.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="BoardContent.WordList">
+    <Position X="3.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAiAAAAAABBAAAAAAgAQAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Internal\WordList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="list" />
+      <Field Name="listUnintended" />
+    </ShowAsCollectionAssociation>
+  </Struct>
+  <Struct Name="BoardContent.WordPlaceOk" Collapsed="true">
+    <Position X="4.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAYA=</HashCode>
+      <FileName>Assets\Scripts\PlaceWords.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Assets.Scripts.Internal.ICameraView">
+    <Position X="4.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Internal\ICameraView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Assets.UI_Toolkit.Scripts.ICategoryOrGroup" Collapsed="true">
+    <Position X="12" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAQAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UI Toolkit\Scripts\CategoryOrGroup.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="BoardContent.WordOrientationEnum" Collapsed="true">
+    <Position X="5.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABEAAAAAAAAAAAAAAAABAAAgCAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlaceWords.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

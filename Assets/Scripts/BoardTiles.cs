@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Text;
-/// <summary>
-/// 
-/// </summary>
+
+
 public class BoardTiles : MonoBehaviour
 {
 	/// <summary>
