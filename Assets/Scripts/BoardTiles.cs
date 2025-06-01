@@ -112,9 +112,9 @@ public class BoardTiles : MonoBehaviour
 		var orientations = PlaceWords.FindWordsOnBoard(content, wordsToFind);
 		///write onto the screen
 		PlaceWords.WriteContentOntoScreen(content, tilesSript2D);
-		if (orientations.Contains(WordOrientationEnum.diagonal) || orientations.Contains(WordOrientationEnum.diagonalBack)) Singleton.wordList.diagonalWords = true;
-		if (orientations.Contains(WordOrientationEnum.diagonalBack) || orientations.Contains(WordOrientationEnum.horizontalBack) ||
-			orientations.Contains(WordOrientationEnum.verticalBack)) Singleton.wordList.reversedWords = true;
+		if (orientations.Contains(WordOrientationEnum.diagonal) || orientations.Contains(WordOrientationEnum.diagonalReverse)) Singleton.wordList.diagonalWords = true;
+		if (orientations.Contains(WordOrientationEnum.diagonalReverse) || orientations.Contains(WordOrientationEnum.horizontalReverse) ||
+			orientations.Contains(WordOrientationEnum.verticalReverse)) Singleton.wordList.reversedWords = true;
 
 		Singleton.boardUiEvents.RefreshBoardUi();
 		ZoomCameraOnBoard();
