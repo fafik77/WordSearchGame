@@ -49,7 +49,6 @@ public class OverlayFoundWord : MonoBehaviour
 	{
 		Vector2[] bothPointsPosition = { bothPoints[0].transform.position, bothPoints[1].transform.position };
 		Vector2[] bothPointsPositionAbs = { (bothPoints[0].transform.position - myTransform.position).Abs(), (bothPoints[1].transform.position - myTransform.position).Abs() };
-		Debug.Log($"bothPoints: {bothPointsPositionAbs[0]}, {bothPointsPositionAbs[1]}");
 		
 		if (!ValidateLineCoords(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
 		{
@@ -98,10 +97,10 @@ public class OverlayFoundWord : MonoBehaviour
 		if (orient.x > 1 || orient.y > 1)
 			findForward = findUnknownOrient;
 		else
-			findForward = findUnknownOrient.Reverse().ToString();
+			findForward = findUnknownOrient.ReverseString();
 
 
-		if (Singleton.wordList.reversedWords) findBackward = findForward.Reverse().ToString();
+		if (Singleton.wordList.reversedWords) findBackward = findForward.ReverseString();
 		foreach (var word in Singleton.wordList.wordsToFind)
 		{
 			var wordLoc = word.ToLower();

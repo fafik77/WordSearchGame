@@ -258,13 +258,13 @@ namespace BoardContent
 					{
 						word = word.wordContaied,
 						posFrom = new Vector2(word.startOffset, h),
-						posTo = new Vector2(word.startOffset + word.wordContaied.Length, h)
+						posTo = new Vector2(word.startOffset + word.wordContaied.Length - 1, h)
 					});
 				}
 				if (wordsFound.Count != 0)
 					wordOrientations.Add(WordOrientationEnum.horizontal);
 				///horizontal reverse
-				lineStr = lineStr.Reverse().ToString();
+				lineStr = lineStr.ReverseString();
 				FindWordsInString(lineStr, out wordsFound, ref words);
 				foreach (var word in wordsFound)
 				{
@@ -272,7 +272,7 @@ namespace BoardContent
 					{
 						word = word.wordContaied,
 						posFrom = new Vector2(width - word.startOffset, h),
-						posTo = new Vector2(width - (word.startOffset + word.wordContaied.Length), h)
+						posTo = new Vector2(width - (word.startOffset + word.wordContaied.Length - 1), h)
 					});
 				}
 				if (wordsFound.Count != 0)
@@ -281,7 +281,7 @@ namespace BoardContent
 				stringBuilder.Clear();
 			}
 			///proccess each coll
-			for (int w = 0; w != width; ++w) 
+			for (int w = 0; w != width; ++w)
 			{
 				for (int h = 0; h != height; ++h)
 					stringBuilder.Append(boardContent[w, h]);
@@ -294,13 +294,13 @@ namespace BoardContent
 					{
 						word = word.wordContaied,
 						posFrom = new Vector2(w, word.startOffset),
-						posTo = new Vector2(w, word.startOffset + word.wordContaied.Length)
+						posTo = new Vector2(w, word.startOffset + word.wordContaied.Length - 1)
 					});
 				}
 				if (wordsFound.Count != 0)
 					wordOrientations.Add(WordOrientationEnum.vertical);
 				///vertical reverse
-				lineStr = lineStr.Reverse().ToString();
+				lineStr = lineStr.ReverseString();
 				FindWordsInString(lineStr, out wordsFound, ref words);
 				foreach (var word in wordsFound)
 				{
@@ -308,7 +308,7 @@ namespace BoardContent
 					{
 						word = word.wordContaied,
 						posFrom = new Vector2(w, height - word.startOffset),
-						posTo = new Vector2(w, height - (word.startOffset + word.wordContaied.Length))
+						posTo = new Vector2(w, height - (word.startOffset + word.wordContaied.Length - 1))
 					});
 				}
 				if (wordsFound.Count != 0)
@@ -316,22 +316,125 @@ namespace BoardContent
 
 				stringBuilder.Clear();
 			}
-            ///proccess each diagonal /
-            
+
+			///early exit 1
+			if (words.Count == 0)
+			{
+				Singleton.wordList.list = wordList;
+				return wordOrientations;
+			}
+
+			///proccess each diagonal /
+			///  first the upper triangle
+			for (int w = 0; w != width; ++w)
+			{
+				int innerH = 0;
+				int innerW = w;
+				while (innerH != height && innerW >= 0)
+				{
+					stringBuilder.Append(boardContent[innerW, innerH]);
+					--innerW;
+					++innerH;
+				}
+				string lineStr = stringBuilder.ToString().ToLower();
+				///diagonal normal
+				FindWordsInString(lineStr, out wordsFound, ref words);
+				foreach (var word in wordsFound)
+				{
+					int wLen = word.wordContaied.Length - 1;
+					wordList.Add(new WordListEntry()
+					{
+						word = word.wordContaied,
+						posFrom = new Vector2(w - word.startOffset, 0 + word.startOffset),
+						posTo = new Vector2(w - word.startOffset - wLen, 0 + word.startOffset + wLen),
+					});
+				}
+				if (wordsFound.Count != 0)
+					wordOrientations.Add(WordOrientationEnum.diagonal);
+				///diagonal reverse
+				lineStr = lineStr.ReverseString();
+				FindWordsInString(lineStr, out wordsFound, ref words);
+				foreach (var word in wordsFound)
+				{
+					int wLen = word.wordContaied.Length - 1;
+					wordList.Add(new WordListEntry()
+					{
+						word = word.wordContaied,
+						posFrom = new Vector2(0 + word.startOffset, height - word.startOffset - 1),
+						posTo = new Vector2(0 + word.startOffset + wLen, height - word.startOffset - wLen - 1),
+					});
+				}
+				if (wordsFound.Count != 0)
+					wordOrientations.Add(WordOrientationEnum.diagonalReverse);
+
+				stringBuilder.Clear();
+			}
+			///  then the lower triangle
+			for (int h = height - 1; h >= 0; --h)
+			{
+				int innerH = h;
+				int innerW = width - 1;
+				while (innerH != height && innerW >= 0)
+				{
+					stringBuilder.Append(boardContent[innerW, innerH]);
+					--innerW;
+					++innerH;
+				}
+				string lineStr = stringBuilder.ToString().ToLower();
+				///diagonal normal
+				FindWordsInString(lineStr, out wordsFound, ref words);
+				foreach (var word in wordsFound)
+				{
+					int wLen = word.wordContaied.Length - 1;
+					wordList.Add(new WordListEntry()
+					{
+						word = word.wordContaied,
+						posFrom = new Vector2(width - 1 - word.startOffset, h - word.startOffset),
+						posTo = new Vector2(width - 1 - word.startOffset - wLen, h - word.startOffset + wLen),
+					});
+				}
+				if (wordsFound.Count != 0)
+					wordOrientations.Add(WordOrientationEnum.diagonal);
+				///diagonal reverse
+				lineStr = lineStr.ReverseString();
+				FindWordsInString(lineStr, out wordsFound, ref words);
+				foreach (var word in wordsFound)
+				{
+					int wLen = word.wordContaied.Length - 1;
+					wordList.Add(new WordListEntry()
+					{
+						word = word.wordContaied,
+						posFrom = new Vector2(width - 1 - word.startOffset - wLen, h + word.startOffset + wLen),
+						posTo = new Vector2(width - 1 - word.startOffset, h + word.startOffset),
+					});
+				}
+				if (wordsFound.Count != 0)
+					wordOrientations.Add(WordOrientationEnum.diagonalReverse);
+
+				stringBuilder.Clear();
+			}
+
+
+			///early exit 2
+			if (words.Count == 0)
+			{
+				Singleton.wordList.list = wordList;
+				return wordOrientations;
+			}
 			///proccess each backDiagonal \
-			
-            /*	123
-			 *	456
-			 *	789
-			 *	from 2D board get all (Rows + Cols) then reverse it (that is O(R+C) instead of O(R*C) )
-			 *	for diagonal that is sqrt(R^2+C^2) and reverse it.
-			 *	from those (exactly 8) lists take out all the words ONCE.
-			 *	  additionall benefit of that: if word exists in said list in marks WordOrientationEnum
-			 *	in the end the complexity is O(8*(R+C)* ?words * ?avgLetters)
-			 *	memory usage is 4*RC+4*Diagonals
-			 *	++memory will be continous, just with this benefit it will be faster than accessing a random point in memory
-			 */
-            Singleton.wordList.list = wordList;
+
+			/*	123
+				*	456
+				*	789
+				*	from 2D board get all (Rows + Cols) then reverse it (that is O(R+C) instead of O(R*C) )
+				*	for diagonal that is sqrt(R^2+C^2) and reverse it.
+				*	from those (exactly 8) lists take out all the words ONCE.
+				*	  additionall benefit of that: if word exists in said list in marks WordOrientationEnum
+				*	in the end the complexity is O(8*(R+C)* ?words * ?avgLetters)
+				*	memory usage is 4*RC+4*Diagonals
+				*	++memory will be continous, just with this benefit it will be faster than accessing a random point in memory
+				*/
+			Singleton.wordList.list = wordList;
 			return wordOrientations;
 		}
 
@@ -344,6 +447,7 @@ namespace BoardContent
 		private static void FindWordsInString(string inString, out List<WordContainedFrom> wordsFound, ref List<string> wordsToFind)
 		{
 			wordsFound = new();
+			if (string.IsNullOrEmpty(inString) || inString.Length == 1) return;
 			for (int i = wordsToFind.Count - 1; i >= 0; --i)
 			{
 				Regex wordReg = new Regex(wordsToFind[i]);
@@ -563,13 +667,13 @@ namespace BoardContent
 						break;
 					}
 				case WordOrientationEnum.diagonalReverse:	// /
-                    {
+					{
 						xmod = -1;
 						ymod = 1;
 						break;
 					}
 				case WordOrientationEnum.backDiagonalReverse:   // \
-                    {
+					{
 						xmod = -1;
 						ymod = -1;
 						break;
