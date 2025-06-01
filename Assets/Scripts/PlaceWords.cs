@@ -271,8 +271,8 @@ namespace BoardContent
 					wordList.Add(new WordListEntry()
 					{
 						word = word.wordContaied,
-						posFrom = new Vector2(width - word.startOffset, h),
-						posTo = new Vector2(width - (word.startOffset + word.wordContaied.Length - 1), h)
+						posFrom = new Vector2(width - 1 - word.startOffset, h),
+						posTo = new Vector2(width - 1 - (word.startOffset + word.wordContaied.Length - 1), h)
 					});
 				}
 				if (wordsFound.Count != 0)
@@ -307,8 +307,8 @@ namespace BoardContent
 					wordList.Add(new WordListEntry()
 					{
 						word = word.wordContaied,
-						posFrom = new Vector2(w, height - word.startOffset),
-						posTo = new Vector2(w, height - (word.startOffset + word.wordContaied.Length - 1))
+						posFrom = new Vector2(w, height - 1 - word.startOffset),
+						posTo = new Vector2(w, height - 1 - (word.startOffset + word.wordContaied.Length - 1))
 					});
 				}
 				if (wordsFound.Count != 0)
@@ -360,8 +360,8 @@ namespace BoardContent
 					wordList.Add(new WordListEntry()
 					{
 						word = word.wordContaied,
-						posFrom = new Vector2(0 + word.startOffset, height - word.startOffset - 1),
-						posTo = new Vector2(0 + word.startOffset + wLen, height - word.startOffset - wLen - 1),
+						posFrom = new Vector2(0 + word.startOffset, height - 1 - word.startOffset),
+						posTo = new Vector2(0 + word.startOffset + wLen, height - 1 - word.startOffset - wLen),
 					});
 				}
 				if (wordsFound.Count != 0)

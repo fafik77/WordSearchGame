@@ -142,9 +142,9 @@ public class BoardTiles : MonoBehaviour
 	public string ExportBoard()
 	{
 		StringBuilder streamWriter = new StringBuilder();
-		foreach (var word in Singleton.wordList.wordsToFind)
+		foreach (var word in Singleton.wordList.list)
 		{
-			streamWriter.Append(word + " ");
+			streamWriter.Append(word.word + " ");
 		}
 		streamWriter.Append("\n");
 		var width = tilesSript2D.GetLength(0);
