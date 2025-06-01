@@ -6,6 +6,7 @@ using System.IO;
 using System;
 using System.Text;
 
+
 public class BoardTiles : MonoBehaviour
 {
 	/// <summary>
@@ -20,7 +21,7 @@ public class BoardTiles : MonoBehaviour
 	private List<GameObject> tilesPool = new List<GameObject>();
 	private int reservingTilesAmount;
 	//private Mutex mutexTilesPool = new Mutex();
-	private bool ModyfyingTilesPool = false;
+	//private bool ModyfyingTilesPool = false;
 	Camera mainCamera;
 	CameraZoom mainCameraZoom;
 
@@ -111,9 +112,9 @@ public class BoardTiles : MonoBehaviour
 		var orientations = PlaceWords.FindWordsOnBoard(content, wordsToFind);
 		///write onto the screen
 		PlaceWords.WriteContentOntoScreen(content, tilesSript2D);
-		if (orientations.Contains(WordOrientationEnum.diagonal) || orientations.Contains(WordOrientationEnum.diagonalBack)) Singleton.wordList.diagonalWords = true;
-		if (orientations.Contains(WordOrientationEnum.diagonalBack) || orientations.Contains(WordOrientationEnum.horizontalBack) ||
-			orientations.Contains(WordOrientationEnum.verticalBack)) Singleton.wordList.reversedWords = true;
+		if (orientations.Contains(WordOrientationEnum.diagonal) || orientations.Contains(WordOrientationEnum.diagonalReverse)) Singleton.wordList.diagonalWords = true;
+		if (orientations.Contains(WordOrientationEnum.diagonalReverse) || orientations.Contains(WordOrientationEnum.horizontalReverse) ||
+			orientations.Contains(WordOrientationEnum.verticalReverse)) Singleton.wordList.reversedWords = true;
 
 		Singleton.boardUiEvents.RefreshBoardUi();
 		ZoomCameraOnBoard();
@@ -141,9 +142,9 @@ public class BoardTiles : MonoBehaviour
 	public string ExportBoard()
 	{
 		StringBuilder streamWriter = new StringBuilder();
-		foreach (var word in Singleton.wordList.wordsToFind)
+		foreach (var word in Singleton.wordList.list)
 		{
-			streamWriter.Append(word + " ");
+			streamWriter.Append(word.word + " ");
 		}
 		streamWriter.Append("\n");
 		var width = tilesSript2D.GetLength(0);
@@ -199,10 +200,8 @@ public class BoardTiles : MonoBehaviour
 		tile.SetActive(false);  //set all new tiles to not render
 		var results = InstantiateAsync(tile, amountToCreate, tilesParent);
 		results.WaitForCompletion();
-		ModyfyingTilesPool = true;
 		tilesPool.AddRange(results.Result);
 		reservingTilesAmount = 0;
-		ModyfyingTilesPool = false;
 		return amountToCreate;
 	}
 

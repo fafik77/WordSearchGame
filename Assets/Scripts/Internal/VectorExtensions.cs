@@ -1,6 +1,7 @@
 ﻿using System;
+using UnityEngine;
 
-namespace UnityEngine
+namespace Assets.Scripts.Internal
 {
 	public static class VectorExtensions
 	{

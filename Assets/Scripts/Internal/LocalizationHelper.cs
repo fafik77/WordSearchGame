@@ -6,23 +6,28 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
-public class LocalizationHelper
+
+namespace Assets.Scripts.Internal
 {
-	/// <summary>
-	/// Gets localized string from StringTable
-	/// </summary>
-	/// <param name="key"></param>
-	/// <param name="arguments">additionall params</param>
-	/// <returns>localized string</returns>
-	/// <exception cref="NotFoundException">the 'key' was not found</exception>
-	public static string GetTranslation(string key, params object[] arguments)
+	public class LocalizationHelper
 	{
-		//LocalizationSettings.SelectedLocale
-		var res = LocalizationSettings.StringDatabase.GetLocalizedString("StringTable", key, arguments: arguments);
-		if (res == null)
-			throw new NotFoundException($"Localization Key: {key} Not Found");
-		//localiCache.Add(key, res);
-		return res;
+		/// <summary>
+		/// Gets localized string from StringTable
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="arguments">additionall params</param>
+		/// <returns>localized string</returns>
+		/// <exception cref="NotFoundException">the 'key' was not found</exception>
+		public static string GetTranslation(string key, params object[] arguments)
+		{
+			//LocalizationSettings.SelectedLocale
+			var res = LocalizationSettings.StringDatabase.GetLocalizedString("StringTable", key, arguments: arguments);
+			if (res == null)
+				throw new NotFoundException($"Localization Key: {key} Not Found");
+			//localiCache.Add(key, res);
+			return res;
+		}
+
 	}
 
 }

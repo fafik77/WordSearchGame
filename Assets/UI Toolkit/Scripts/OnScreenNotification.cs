@@ -1,3 +1,4 @@
+using Assets.Scripts.Internal;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,6 +14,7 @@ public class OnScreenNotification : MonoBehaviour
 	{
 		var root = ui.rootVisualElement;
 		label = root.Q<Label>();
+		ui.PickingMode_Ignore();
 	}
 	private void OnDisable()
 	{

@@ -1,3 +1,4 @@
+using Assets.Scripts.Internal;
 using BoardContent;
 using System;
 using System.Linq;
@@ -48,6 +49,7 @@ public class OverlayFoundWord : MonoBehaviour
 	{
 		Vector2[] bothPointsPosition = { bothPoints[0].transform.position, bothPoints[1].transform.position };
 		Vector2[] bothPointsPositionAbs = { (bothPoints[0].transform.position - myTransform.position).Abs(), (bothPoints[1].transform.position - myTransform.position).Abs() };
+		
 		if (!ValidateLineCoords(bothPointsPositionAbs[0], bothPointsPositionAbs[1]))
 		{
 			Debug.Log("Invalid Move!");
@@ -95,10 +97,10 @@ public class OverlayFoundWord : MonoBehaviour
 		if (orient.x > 1 || orient.y > 1)
 			findForward = findUnknownOrient;
 		else
-			findForward = findUnknownOrient.Reverse().ToString();
+			findForward = findUnknownOrient.ReverseString();
 
 
-		if (Singleton.wordList.reversedWords) findBackward = findForward.Reverse().ToString();
+		if (Singleton.wordList.reversedWords) findBackward = findForward.ReverseString();
 		foreach (var word in Singleton.wordList.wordsToFind)
 		{
 			var wordLoc = word.ToLower();
@@ -126,24 +128,24 @@ public class OverlayFoundWord : MonoBehaviour
 		newLRF.SetPositions(fromPos, toPos);
 	}
 
-	public static bool ValidateLineCoords(Vector2 fromPos, Vector2 toPos, bool allowDiagonal=true)
+	public static bool ValidateLineCoords(Vector2 fromPos, Vector2 toPos, bool allowDiagonal = true)
 	{
-		if (fromPos == toPos)		// ! .
+		if (fromPos == toPos)       // ! .
 			return false;
-		if (fromPos.x == toPos.x)	//  ----
+		if (fromPos.x == toPos.x)   //  ----
 			return true;
-		if (fromPos.y == toPos.y)	//  ||
+		if (fromPos.y == toPos.y)   //  ||
 			return true;            //  ||
 
 		if (allowDiagonal == false) return false;
-		var xalign = fromPos.x - toPos.x;
+		int xalign = (int)(fromPos.x - toPos.x);
 		if (xalign < 0) xalign *= -1;
 
-		var yalign = fromPos.y - toPos.y;
+		int yalign = (int)(fromPos.y - toPos.y);
 		if (yalign < 0) yalign *= -1;
-		//   /
-		//  /
-		if ((int)xalign == (int)yalign)
+		//  \/
+		//  /\
+		if (xalign == yalign)
 			return true;
 
 		return false;
